@@ -8,7 +8,7 @@ A calm, editorial **WordPress block theme** for studios, spas, clinics and maker
 
 ## Install
 
-**Download [`unhurried.zip`](https://github.com/Object-ions/unhurried/releases/latest/download/unhurried.zip)** from the latest release.
+**Download [`unhurried.zip`](https://github.com/switchcasestudio/unhurried/releases/latest/download/unhurried.zip)** from the latest release.
 
 1. In WordPress, go to **Appearance → Themes → Add New → Upload Theme**.
 2. Choose `unhurried.zip`, click **Install Now**, then **Activate**.
