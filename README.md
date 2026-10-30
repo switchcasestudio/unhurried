@@ -8,14 +8,11 @@ A calm, editorial **WordPress block theme** for studios, spas, clinics and maker
 
 ## Install
 
-**Download [`unhurried.zip`](https://github.com/switchcasestudio/unhurried/releases/latest/download/unhurried.zip)** from the latest release.
+Unhurried is in the [WordPress.org theme directory](https://wordpress.org/themes/unhurried/). In WordPress, go to **Appearance → Themes → Add New**, search for **Unhurried**, click **Install**, then **Activate**. Updates arrive like any other theme's.
 
-1. In WordPress, go to **Appearance → Themes → Add New → Upload Theme**.
-2. Choose `unhurried.zip`, click **Install Now**, then **Activate**.
+To install from a zip instead, download [`unhurried.zip`](https://github.com/switchcasestudio/unhurried/releases/latest/download/unhurried.zip) from the latest release and upload it under **Appearance → Themes → Add New → Upload Theme**.
 
 > Use the release zip, not GitHub's green **Code → Download ZIP** button. That one unpacks into a folder called `unhurried-main`, which breaks theme updates and Unhurried Pro.
-
-Once the theme is approved on WordPress.org you can also search for **Unhurried** under Appearance → Themes → Add New.
 
 ## Set up your homepage (2 minutes)
 
