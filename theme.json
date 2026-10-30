@@ -4,6 +4,9 @@
 	"settings": {
 		"appearanceTools": true,
 		"useRootPaddingAwareAlignments": true,
+		"position": {
+			"sticky": false
+		},
 		"color": {
 			"defaultPalette": false,
 			"defaultGradients": false,
