@@ -48,6 +48,12 @@ Select the image and choose the Keep colour style, or remove the `unhurried-mono
 
 == Changelog ==
 
+= 1.0.2 =
+* Sticky footer on pages shorter than the window.
+* Selected text is visible on dark sections (translucent accent highlight).
+* The Position > Sticky block option is hidden; the header capsule stays sticky.
+* Theme URI added.
+
 = 1.0.1 =
 * Credits use the author's canonical name, Moses Atia Poston.
 
