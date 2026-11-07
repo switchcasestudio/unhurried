@@ -75,6 +75,12 @@ img { height: auto; }
 .unhurried-header .wp-block-button__link { padding: .6rem 1.3rem; white-space: nowrap; }
 .unhurried-capsule > .wp-block-group { flex-shrink: 1; min-width: 0; }
 .unhurried-capsule .wp-block-site-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Centred capsule (Header, centred title pattern): the outer children share
+   the spare width so the title sits in the exact middle */
+.unhurried-capsule.is-centred > :first-child,
+.unhurried-capsule.is-centred > :last-child { flex: 1 1 0; min-width: 0; }
+.unhurried-capsule.is-centred > .wp-block-navigation { padding-left: clamp(.5rem, 1.5vw, 1.25rem); }
+.unhurried-capsule.is-centred > .wp-block-group:nth-child(2) { flex: 0 0 auto; }
 @media (max-width: 480px) {
 	.unhurried-capsule { gap: .5rem !important; }
 	.unhurried-capsule > .wp-block-group { gap: .5rem !important; }
