@@ -78,6 +78,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 					?>
 				</p>
 			</div>
+			<hr class="wp-header-end">
 
 			<div class="ua-grid">
 				<div class="ua-card">
