@@ -12,6 +12,7 @@ All notable changes to the free Unhurried theme.
 - Patterns: opening hours card, newsletter Ink band, names strip. New helper classes `unhurried-hours`, `unhurried-names`, `unhurried-dim`.
 - Style variation: Mist (cool paper, slate ink, ochre accent; all pairs pass WCAG AA).
 - Dev: `dev/blueprint-woo.json` boots Playground with WooCommerce active and the free theme alone.
+- Polish after a pixel review: Hairline buttons on Ink sections now fill Bone on hover instead of vanishing Ink-on-Ink; the services index keeps "From $180" on one line on phones (price column 6rem, thumbnail 56px); the frosted accordion no longer draws a stray hairline above its first row; the hours card leads with "The door is open" and shows times in Ink; the About screen's second row of cards hugs its content.
 
 ## 1.0.2 (2026-10-30)
 - Sticky footer: on a page shorter than the window (a 404, a one-screen landing) the footer now sits at the bottom of the window instead of leaving the page background showing under it. `.wp-site-blocks` is a column flexbox of at least one viewport and `main` grows.

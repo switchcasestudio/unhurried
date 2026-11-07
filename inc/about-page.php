@@ -67,6 +67,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				.unhurried-about .ua-plugins.is-tiles li { display: block; border: 1px solid #D8D5CE; border-radius: 14px; padding: 14px; }
 				.unhurried-about .ua-plugins.is-tiles li span { display: block; margin: 4px 0 10px; }
 				.unhurried-about .ua-review { margin-top: 20px; }
+				.unhurried-about .ua-grid.is-loose { align-items: start; margin-top: 20px; }
 			</style>
 
 			<div class="ua-hero">
@@ -101,7 +102,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				</div>
 			</div>
 
-			<div class="ua-grid" style="margin-top:20px">
+			<div class="ua-grid is-loose">
 				<?php unhurried_render_pro_card(); ?>
 				<?php unhurried_render_plugins_card(); ?>
 			</div>

@@ -58,6 +58,7 @@ Select the image and choose the Keep colour style, or remove the `unhurried-mono
 * Header patterns: centred title; quiet (no navigation).
 * Patterns: opening hours card, newsletter band, names strip.
 * Style variation: Mist.
+* Fixes: hairline buttons on dark sections keep their pill on hover; the services index keeps prices on one line on phones; no stray line above the first accordion row.
 
 = 1.0.2 =
 * Sticky footer on pages shorter than the window.

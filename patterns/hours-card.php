@@ -29,7 +29,7 @@ $unhurried_hours = array(
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Hours', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'When the door<br>is <em>open</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'The door is<br><em>open</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
 			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Walk in for the shelf. Book ahead for a room.', 'unhurried' ); ?></p>
@@ -44,8 +44,8 @@ $unhurried_hours = array(
 				<!-- wp:paragraph {"fontFamily":"display","style":{"typography":{"fontWeight":"500"}}} -->
 				<p class="has-display-font-family" style="font-weight:500"><?php echo esc_html( $unhurried_row[0] ); ?></p>
 				<!-- /wp:paragraph -->
-				<!-- wp:paragraph {"textColor":"contrast-2"} -->
-				<p class="has-contrast-2-color has-text-color"><?php echo esc_html( $unhurried_row[1] ); ?></p>
+				<!-- wp:paragraph -->
+				<p><?php echo esc_html( $unhurried_row[1] ); ?></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->

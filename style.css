@@ -94,6 +94,14 @@ img { height: auto; }
 	margin-top: var(--wp--custom--seam--overlap) !important;
 }
 
+/* Hairline buttons on Ink surfaces: the hover fills Bone, not Ink-on-Ink
+   (the block style's own hover would make the pill vanish into the section) */
+.is-style-section-ink .wp-block-button.is-style-hairline .wp-block-button__link:hover {
+	background: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+	border-color: var(--wp--preset--color--base);
+}
+
 /* ─── Display helpers ────────────────────────────────────────────────────── */
 .unhurried-indent { padding-left: 10%; }
 .unhurried-first-indent { text-indent: 10%; }
@@ -170,6 +178,13 @@ img { height: auto; }
 @media (hover: hover) {
 	.unhurried-row:hover { background-color: var(--wp--preset--color--base-2); }
 }
+@media (max-width: 600px) {
+	/* !important: the price column's inline flex-basis (20%) is too narrow for "From $180" on a phone */
+	.unhurried-row > .wp-block-column:last-child { flex-basis: 6rem !important; }
+	.unhurried-row > .wp-block-column:last-child p { white-space: nowrap; }
+	.unhurried-row > .wp-block-column:first-child { flex-basis: 56px !important; }
+	.unhurried-row > .wp-block-column:first-child img { width: 56px; }
+}
 
 /* Journal cards */
 .unhurried-cards .wp-block-post-featured-image img { aspect-ratio: 4 / 5; object-fit: cover; transition: transform .6s var(--wp--custom--motion--ease); }
@@ -203,6 +218,7 @@ img { height: auto; }
 }
 .wp-block-details[open] summary::after { transform: rotate(45deg); }
 .wp-block-details > :not(summary) { max-width: 60ch; }
+.is-style-glass > .wp-block-details:first-child { border-top: 0; padding-top: 0; }
 
 /* Giant wordmark in the footer */
 .unhurried-wordmark {
