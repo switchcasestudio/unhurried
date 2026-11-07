@@ -227,13 +227,13 @@ img { height: auto; }
 .comment-form textarea:focus { border-color: var(--wp--preset--color--contrast); outline: none; }
 .wp-block-search__button { margin-left: .5rem; }
 
-/* ─── Reveal on scroll (opt-in with the class "unhurried-reveal") ────────── */
+/* ─── Reveal on scroll (class "unhurried-reveal" or the Reveal block style) ─ */
 @media (prefers-reduced-motion: no-preference) {
-	.has-unhurried-reveal .unhurried-reveal:not(.is-revealed) {
+	.has-unhurried-reveal :is(.unhurried-reveal, .is-style-reveal):not(.is-revealed) {
 		opacity: .4;
 		transform: translateY(16px);
 	}
-	.has-unhurried-reveal .unhurried-reveal {
+	.has-unhurried-reveal :is(.unhurried-reveal, .is-style-reveal) {
 		transition: opacity var(--wp--custom--motion--duration) var(--wp--custom--motion--ease),
 			transform var(--wp--custom--motion--duration) var(--wp--custom--motion--ease);
 	}

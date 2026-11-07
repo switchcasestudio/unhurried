@@ -74,6 +74,15 @@ if ( ! function_exists( 'unhurried_block_styles' ) ) :
 				'label' => __( 'Keep colour', 'unhurried' ),
 			)
 		);
+		foreach ( array( 'core/group', 'core/columns', 'core/column', 'core/image', 'core/heading', 'core/paragraph', 'core/cover', 'core/quote' ) as $unhurried_block ) {
+			register_block_style(
+				$unhurried_block,
+				array(
+					'name'  => 'reveal',
+					'label' => __( 'Reveal on scroll', 'unhurried' ),
+				)
+			);
+		}
 	}
 endif;
 add_action( 'init', 'unhurried_block_styles' );

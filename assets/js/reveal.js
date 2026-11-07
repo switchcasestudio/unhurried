@@ -1,7 +1,8 @@
 /**
  * Unhurried: gentle reveal on scroll.
  *
- * Elements with the class "unhurried-reveal" rise into place as they enter
+ * Elements with the class "unhurried-reveal", or the Reveal block style
+ * (class "is-style-reveal"), rise into place as they enter
  * the viewport. Content is fully visible without JavaScript, and nothing
  * moves when the visitor prefers reduced motion.
  */
@@ -13,7 +14,7 @@
 		return;
 	}
 
-	var items = document.querySelectorAll( '.unhurried-reveal' );
+	var items = document.querySelectorAll( '.unhurried-reveal, .is-style-reveal' );
 	if ( ! items.length ) {
 		return;
 	}
