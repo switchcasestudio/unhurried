@@ -54,6 +54,19 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				.unhurried-about .ua-credit p { color: rgba(246, 244, 239, .82); font-size: 15px; max-width: 64ch; }
 				.unhurried-about .ua-credit a { color: #F6F4EF; }
 				.unhurried-about .ua-small { font-size: 13px; color: #5A564E; }
+				.unhurried-about .ua-pro h3 { font-size: 28px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 500; margin: 0 0 10px; }
+				.unhurried-about .ua-pro h3 em { font-family: Georgia, serif; font-weight: 400; }
+				.unhurried-about .ua-pro p { max-width: 60ch; }
+				.unhurried-about .ua-plugins ul { list-style: none; margin: 0; padding: 0; }
+				.unhurried-about .ua-plugins li { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; align-items: center; padding: 12px 0; border-top: 1px solid #D8D5CE; }
+				.unhurried-about .ua-plugins li:first-child { border-top: 0; padding-top: 0; }
+				.unhurried-about .ua-plugins li strong { font-weight: 600; }
+				.unhurried-about .ua-plugins li span { grid-column: 1; color: #5A564E; font-size: 13px; }
+				.unhurried-about .ua-plugins li .button, .unhurried-about .ua-plugins li em { grid-column: 2; grid-row: 1 / span 2; font-style: normal; color: #5A564E; }
+				.unhurried-about .ua-plugins.is-tiles ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+				.unhurried-about .ua-plugins.is-tiles li { display: block; border: 1px solid #D8D5CE; border-radius: 14px; padding: 14px; }
+				.unhurried-about .ua-plugins.is-tiles li span { display: block; margin: 4px 0 10px; }
+				.unhurried-about .ua-review { margin-top: 20px; }
 			</style>
 
 			<div class="ua-hero">
@@ -85,6 +98,11 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 						<li><?php esc_html_e( 'Try the Nocturne and Linen styles under Styles in the Site Editor.', 'unhurried' ); ?></li>
 					</ul>
 				</div>
+			</div>
+
+			<div class="ua-grid" style="margin-top:20px">
+				<?php unhurried_render_pro_card(); ?>
+				<?php unhurried_render_plugins_card(); ?>
 			</div>
 
 			<div class="ua-credit">
@@ -119,6 +137,15 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 					<li><?php esc_html_e( 'Hanken Grotesk, Inter and Fraunces: SIL Open Font License 1.1.', 'unhurried' ); ?></li>
 					<li><?php esc_html_e( 'Theme images: created for Unhurried, CC0 1.0.', 'unhurried' ); ?></li>
 				</ul>
+				<p class="ua-review">
+					<?php
+					printf(
+						/* translators: %s: WordPress.org review link. */
+						esc_html__( 'If Unhurried has been good to you, %s helps other studios find it.', 'unhurried' ),
+						'<a href="' . esc_url( UNHURRIED_REVIEW_URL ) . '">' . esc_html__( 'a short review on WordPress.org', 'unhurried' ) . '</a>'
+					);
+					?>
+				</p>
 			</div>
 		</div>
 		<?php
