@@ -10,6 +10,7 @@
  */
 
 require_once get_template_directory() . '/inc/about-page.php';
+require_once get_template_directory() . '/inc/recommended.php';
 
 if ( ! function_exists( 'unhurried_setup' ) ) :
 	/**
