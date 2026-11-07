@@ -10,7 +10,11 @@ All notable changes to the free Unhurried theme.
 - Pattern buttons link to the Contact and Services pages when those pages exist (`unhurried_page_link()`); the contact card button is a mailto link. No more `#` links.
 - Header patterns: centred title (navigation left, title centre, button right) and quiet (logo, title, one button).
 - Patterns: opening hours card, newsletter Ink band, names strip. New helper classes `unhurried-hours`, `unhurried-names`, `unhurried-dim`.
-- Style variation: Mist (cool paper, slate ink, ochre accent; all pairs pass WCAG AA).
+- Style variations, seventeen new ones, every text pair measured against WCAG AA (4.5:1 for text and muted text on paper, ground and band; 3:1 for the accent; 4.5:1 for paper on the accent button hover):
+  - Eight colour themes with three or four hues spread across the hero band (`ground`), the quiet bands (`base-2`), the dark sections (`contrast`) and the accent: Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace, Dusk.
+  - Eight tinted papers with one ink and one accent: Mist, Moss, Harbour, Plum, Clay, Blush, Olive, Cobalt.
+  - Folio, which keeps the colours and swaps the heading face.
+- Text selection tint now follows the accent (`color-mix`, terracotta rgba as the fallback), so coloured looks do not select in terracotta.
 - Dev: `dev/blueprint-woo.json` boots Playground with WooCommerce active and the free theme alone.
 - Patterns: story rows (three alternating image and text rows, image first on phones), gift card (an Ink card drawn from the site title, at credit-card proportions, beside the pitch and price), map and directions (address, travel notes, a Get directions button and a drawn map placeholder with a pin and a glass note), and a quiet footer without the wordmark. New helper classes `unhurried-story`, `unhurried-giftcard`, `unhurried-map`.
 - Style variation: Folio. Headings set in Fraunces italic, with the accent word flipped to upright Hanken Grotesk; h4 to h6, buttons, navigation and the wordmark stay sans. Colours unchanged.

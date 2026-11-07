@@ -22,7 +22,7 @@ The theme includes:
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep colour images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
-* Four extra style variations: Nocturne (dark), Linen (warm, with a sage accent), Mist (cool, with an ochre accent) and Folio (headings in Fraunces italic).
+* Nineteen style variations under Styles in the Site Editor. Eight colour themes with three or four hues each: Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace and Dusk. Ten tinted papers with one ink and one accent: Nocturne, Linen, Mist, Moss, Harbour, Plum, Clay, Blush, Olive and Cobalt. And Folio, which keeps the colours and sets headings in Fraunces italic. Every text pair in every look passes WCAG AA.
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in greyscale.
@@ -57,7 +57,7 @@ Select the image and choose the Keep colour style, or remove the `unhurried-mono
 * Pattern buttons link to your Contact and Services pages when those pages exist.
 * Header patterns: centred title; quiet (no navigation).
 * Patterns: opening hours card, newsletter band, names strip, story rows, gift card, map and directions, quiet footer.
-* Style variations: Mist (cool palette) and Folio (serif italic headings).
+* Seventeen new style variations: eight colour themes (Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace, Dusk), eight tinted papers (Mist, Moss, Harbour, Plum, Clay, Blush, Olive, Cobalt) and Folio (serif italic headings).
 * Fixed: text inside the Glass style was unreadable in Nocturne.
 * Fixes: hairline buttons on dark sections keep their pill on hover; the services index keeps prices on one line on phones; no stray line above the first accordion row.
 

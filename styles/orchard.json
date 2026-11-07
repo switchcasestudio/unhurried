@@ -1,0 +1,58 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+	"version": 3,
+	"title": "Orchard",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"slug": "base",
+					"name": "Chalk",
+					"color": "#F7F5EE"
+				},
+				{
+					"slug": "base-2",
+					"name": "Apricot",
+					"color": "#F3E3D1"
+				},
+				{
+					"slug": "ground",
+					"name": "Sage",
+					"color": "#CDD8C2"
+				},
+				{
+					"slug": "contrast",
+					"name": "Fir",
+					"color": "#1E2A23"
+				},
+				{
+					"slug": "contrast-2",
+					"name": "Fir Muted",
+					"color": "#45544B"
+				},
+				{
+					"slug": "accent",
+					"name": "Plum",
+					"color": "#8A3B5C"
+				},
+				{
+					"slug": "hairline",
+					"name": "Hairline",
+					"color": "#D3CFC0"
+				}
+			]
+		}
+	},
+	"styles": {
+		"elements": {
+			"button": {
+				":hover": {
+					"color": {
+						"background": "var(--wp--preset--color--accent)",
+						"text": "var(--wp--preset--color--base)"
+					}
+				}
+			}
+		}
+	}
+}

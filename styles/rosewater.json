@@ -1,0 +1,58 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+	"version": 3,
+	"title": "Rosewater",
+	"settings": {
+		"color": {
+			"palette": [
+				{
+					"slug": "base",
+					"name": "Milk",
+					"color": "#FBF4F1"
+				},
+				{
+					"slug": "base-2",
+					"name": "Blush",
+					"color": "#F4DED7"
+				},
+				{
+					"slug": "ground",
+					"name": "Rose",
+					"color": "#E6C4BB"
+				},
+				{
+					"slug": "contrast",
+					"name": "Oxblood",
+					"color": "#381A1E"
+				},
+				{
+					"slug": "contrast-2",
+					"name": "Oxblood Muted",
+					"color": "#6B474C"
+				},
+				{
+					"slug": "accent",
+					"name": "Sage",
+					"color": "#4E6B49"
+				},
+				{
+					"slug": "hairline",
+					"name": "Hairline",
+					"color": "#E1CCC6"
+				}
+			]
+		}
+	},
+	"styles": {
+		"elements": {
+			"button": {
+				":hover": {
+					"color": {
+						"background": "var(--wp--preset--color--accent)",
+						"text": "var(--wp--preset--color--base)"
+					}
+				}
+			}
+		}
+	}
+}

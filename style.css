@@ -26,7 +26,7 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 /* Selection: a translucent accent tint that reads on light and dark sections
    alike. (1.0.1 painted selected text contrast-on-base, which vanished on Ink
    sections and dark footers: the text looked unselectable.) */
-::selection { background: rgba(212, 75, 25, .4); }
+::selection { background: rgba(212, 75, 25, .4); background: color-mix(in srgb, var(--wp--preset--color--accent) 40%, transparent); }
 
 :where(a, button, input, select, textarea, summary):focus-visible {
 	outline: 2px solid var(--wp--preset--color--accent);
