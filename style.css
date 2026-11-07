@@ -217,6 +217,14 @@ img { height: auto; }
 .unhurried-arch img,
 .wp-block-image.is-style-arch img { border-radius: 999px 999px 16px 16px; }
 
+/* ─── Hours rows, names strip ────────────────────────────────────────────── */
+.unhurried-hours { border-top: 1px solid var(--wp--preset--color--hairline); }
+/* !important: the first row's inline padding-top from the block must go so the card edge is tight */
+.unhurried-hours:first-child { border-top: 0; padding-top: 0 !important; }
+.unhurried-hours > p { margin: 0; }
+.unhurried-names > p { opacity: .72; margin: 0; transition: opacity .3s var(--wp--custom--motion--ease); }
+@media (hover: hover) { .unhurried-names > p:hover { opacity: 1; } }
+
 /* Forms (comments, search) */
 .wp-block-search__input,
 .comment-form input:not([type="submit"]):not([type="checkbox"]),
