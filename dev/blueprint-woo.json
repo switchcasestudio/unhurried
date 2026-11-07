@@ -1,0 +1,35 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "steps": [
+    {
+      "step": "activateTheme",
+      "themeFolderName": "unhurried"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "theme-check"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; require_once ABSPATH.'wp-admin/includes/image.php'; require_once ABSPATH.'wp-admin/includes/file.php'; require_once ABSPATH.'wp-admin/includes/media.php';\n$dir=get_theme_file_path('assets/images/');\nfunction u_att($f,$dir){ $tmp=wp_tempnam($f); copy($dir.$f,$tmp); $id=media_handle_sideload(array('name'=>$f,'tmp_name'=>$tmp),0); return is_wp_error($id)?0:$id; }\n$pages=array('Home'=>array('page-home','page-ground'),'About'=>array('page-about','page-canvas'),'Services'=>array('page-services','page-canvas'),'Contact'=>array('page-contact','page-canvas'));\n$ids=array(); foreach($pages as $t=>$p){ $ids[$t]=wp_insert_post(array('post_type'=>'page','post_status'=>'publish','post_title'=>$t,'post_content'=>(false ? '': '<!-- wp:pattern {\"slug\":\"unhurried/'.$p[0].'\"} /-->'),'page_template'=>$p[1])); }\n$j=wp_insert_post(array('post_type'=>'page','post_status'=>'publish','post_title'=>'Journal'));\nupdate_option('show_on_front','page'); update_option('page_on_front',$ids['Home']); update_option('page_for_posts',$j);\nupdate_option('blogname','Unhurried'); update_option('blogdescription','A small studio for rest and ritual.');\n$posts=array(array('What a first consultation is really for','orb.webp'),array('Five slow habits for calmer skin','vessel.webp'),array('Why we never book back-to-back','light-window.webp'),array('On restraint','arch.webp'),array('Reading your skin in winter','branch-shadow.webp'),array('The case for fewer products','pedestal.webp'));\nforeach($posts as $i=>$p){ $pid=wp_insert_post(array('post_status'=>'publish','post_title'=>$p[0],'post_excerpt'=>'A short note from the studio on care, pace and paying attention.','post_content'=>\"<!-- wp:paragraph -->\\n<p>We started this studio because good care takes time. This note explains how we think about it, and what that means for you.</p>\\n<!-- /wp:paragraph -->\\n\\n<!-- wp:heading -->\\n<h2 class=\\\"wp-block-heading\\\">Begin by <em>listening</em></h2>\\n<!-- /wp:heading -->\\n\\n<!-- wp:paragraph -->\\n<p>Most of what matters happens before any treatment starts. We ask questions, we look closely, and we write it down.</p>\\n<!-- /wp:paragraph -->\\n\\n<!-- wp:quote -->\\n<blockquote class=\\\"wp-block-quote\\\"><!-- wp:paragraph -->\\n<p>Restraint is a skill, not a lack of ambition.</p>\\n<!-- /wp:paragraph --></blockquote>\\n<!-- /wp:quote -->\",'post_date'=>date('Y-m-d H:i:s',time()-$i*86400*4))); $a=u_att($p[1],$dir); if($a) set_post_thumbnail($pid,$a); }\n\n\n$ct=get_term_by('name','Uncategorized','category'); $c1=wp_insert_term('Rituals','category'); $c2=wp_insert_term('At home','category');\nforeach(get_posts(array('numberposts'=>-1)) as $k=>$po){ wp_set_post_categories($po->ID,array($k%2? $c1['term_id']:$c2['term_id'])); wp_set_post_tags($po->ID,array('slow living','care')); }\n$fp=get_posts(array('numberposts'=>1)); if($fp){ wp_insert_comment(array('comment_post_ID'=>$fp[0]->ID,'comment_author'=>'June','comment_content'=>'This is exactly why I keep coming back. Thank you for writing it down.','comment_approved'=>1)); }\n\n$nav=wp_insert_post(array('post_type'=>'wp_navigation','post_status'=>'publish','post_title'=>'Primary','post_content'=>'<!-- wp:navigation-link {\"label\":\"About\",\"type\":\"page\",\"id\":'.$ids['About'].',\"url\":\"'.get_permalink($ids['About']).'\",\"kind\":\"post-type\"} /--><!-- wp:navigation-link {\"label\":\"Services\",\"type\":\"page\",\"id\":'.$ids['Services'].',\"url\":\"'.get_permalink($ids['Services']).'\",\"kind\":\"post-type\"} /--><!-- wp:navigation-link {\"label\":\"Journal\",\"type\":\"page\",\"id\":'.$j.',\"url\":\"'.get_permalink($j).'\",\"kind\":\"post-type\"} /--><!-- wp:navigation-link {\"label\":\"Contact\",\"type\":\"page\",\"id\":'.$ids['Contact'].',\"url\":\"'.get_permalink($ids['Contact']).'\",\"kind\":\"post-type\"} /-->'));\nwp_delete_post(1,true); wp_set_password('password',1); echo 'seeded';"
+    }
+  ]
+}
