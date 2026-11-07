@@ -3,7 +3,7 @@ Contributors: switchcasestudio
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,12 +22,14 @@ The theme includes:
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep colour images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
-* Two extra style variations: Nocturne (dark) and Linen (warm, with a sage accent).
+* Three extra style variations: Nocturne (dark), Linen (warm, with a sage accent) and Mist (cool, with an ochre accent).
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
-* A small, optional reveal-on-scroll effect. Add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
+* A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in greyscale.
 
-* An About Unhurried screen under Appearance, with getting-started steps and credits.
+* Two header patterns: centred title, and quiet (no navigation).
+* An opening hours card, a newsletter band and a names strip for stockists or press.
+* An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
 == Installation ==
 
@@ -47,6 +49,15 @@ No. Forms are plugin territory. The Contact pattern has a card where you can dro
 Select the image and choose the Keep colour style, or remove the `unhurried-mono` class from its parent block.
 
 == Changelog ==
+
+= 1.1.0 =
+* About Unhurried: a card about Unhurried Pro, a Plugins that fit card (WooCommerce, Contact Form 7, ReviewScribe; installing is always your own click), and a one-line review ask.
+* Two notices, each permanently dismissible, shown only on the Dashboard, Themes and About screens: Unhurried Pro when WooCommerce is active and Pro is not; a review ask after 14 days.
+* Reveal on scroll is now a block style for Group, Columns, Column, Image, Heading, Paragraph, Cover and Quote. The class still works.
+* Pattern buttons link to your Contact and Services pages when those pages exist.
+* Header patterns: centred title; quiet (no navigation).
+* Patterns: opening hours card, newsletter band, names strip.
+* Style variation: Mist.
 
 = 1.0.2 =
 * Sticky footer on pages shorter than the window.

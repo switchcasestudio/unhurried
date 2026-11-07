@@ -25,11 +25,11 @@ There is a getting-started screen at **Appearance → About Unhurried**.
 
 ## What is included
 
-- 27 patterns: homepage, about, services and contact pages; heroes; a visit/process panel; a services accordion; gallery; values statement; stories grid; testimonial; call to action; price list; membership tiers; FAQ; contact details; team feature.
+- 32 patterns: homepage, about, services and contact pages; heroes; a visit/process panel; a services accordion; gallery; values statement; stories grid; testimonial; call to action; price list; membership tiers; FAQ; contact details; team feature; opening hours card; newsletter band; names strip; two header patterns (centred title, quiet).
 - A blog: stories grid, category and tag archives, single posts with comments.
 - Section styles for any Group (Panel, Card, Ink, Ground, Glass) and block styles (Eyebrow, Statement, Hairline and Text-link buttons, Arch and Keep-colour images).
-- Style variations: default, **Nocturne** (dark) and **Linen** (warm).
-- Tips: write an *italic* word in a heading for the Fraunces accent; add the class `unhurried-reveal` to any block for a gentle scroll reveal; `unhurried-mono` shows a block's images in greyscale.
+- Style variations: default, **Nocturne** (dark), **Linen** (warm) and **Mist** (cool).
+- Tips: write an *italic* word in a heading for the Fraunces accent; pick the **Reveal on scroll** block style (or add the class `unhurried-reveal`) for a gentle scroll reveal; `unhurried-mono` shows a block's images in greyscale.
 
 ## Want a shop?
 
