@@ -112,3 +112,18 @@ if ( ! function_exists( 'unhurried_pattern_categories' ) ) :
 	}
 endif;
 add_action( 'init', 'unhurried_pattern_categories' );
+
+if ( ! function_exists( 'unhurried_page_link' ) ) :
+	/**
+	 * Permalink of a published page by slug, or a fallback, for pattern buttons.
+	 *
+	 * @since 1.1.0
+	 * @param string $slug     Page slug, e.g. 'contact'.
+	 * @param string $fallback Used when the page does not exist.
+	 * @return string
+	 */
+	function unhurried_page_link( $slug, $fallback = '#' ) {
+		$page = get_page_by_path( $slug );
+		return ( $page && 'publish' === $page->post_status ) ? get_permalink( $page ) : $fallback;
+	}
+endif;

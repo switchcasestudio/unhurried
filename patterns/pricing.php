@@ -46,10 +46,10 @@ $unhurried_tiers = array(
 			<div class="wp-block-buttons">
 				<?php if ( $unhurried_tier[3] ) : ?>
 				<!-- wp:button -->
-				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
 				<?php else : ?>
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
 				<?php endif; ?>
 				<!-- /wp:button -->
 			</div>

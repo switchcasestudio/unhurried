@@ -32,10 +32,10 @@
 		<!-- wp:buttons {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
 		<div class="wp-block-buttons">
 			<!-- wp:button -->
-			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'Book a visit', 'unhurried' ); ?></a></div>
+			<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Book a visit', 'unhurried' ); ?></a></div>
 			<!-- /wp:button -->
 			<!-- wp:button {"className":"is-style-text-link"} -->
-			<div class="wp-block-button is-style-text-link"><a class="wp-block-button__link wp-element-button" href="#"><?php esc_html_e( 'See our services', 'unhurried' ); ?></a></div>
+			<div class="wp-block-button is-style-text-link"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'services' ) ); ?>"><?php esc_html_e( 'See our services', 'unhurried' ); ?></a></div>
 			<!-- /wp:button -->
 		</div>
 		<!-- /wp:buttons -->
