@@ -97,7 +97,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 						<li><?php esc_html_e( 'Italic words in headings turn into the Fraunces accent face.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-reveal to any block for a gentle scroll reveal.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-mono to show a block\'s images in greyscale.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Try the Nocturne and Linen styles under Styles in the Site Editor.', 'unhurried' ); ?></li>
+						<li><?php esc_html_e( 'Try the Nocturne, Linen, Mist and Folio styles under Styles in the Site Editor.', 'unhurried' ); ?></li>
 					</ul>
 				</div>
 			</div>

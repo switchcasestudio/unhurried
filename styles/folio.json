@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+	"version": 3,
+	"title": "Folio",
+	"styles": {
+		"elements": {
+			"heading": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--accent)",
+					"fontStyle": "italic",
+					"fontWeight": "400",
+					"letterSpacing": "-0.02em",
+					"lineHeight": "1"
+				}
+			},
+			"h1": {
+				"typography": {
+					"fontWeight": "300",
+					"letterSpacing": "-0.03em",
+					"lineHeight": "0.96"
+				}
+			},
+			"h4": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--display)",
+					"fontStyle": "normal",
+					"fontWeight": "600",
+					"letterSpacing": "0"
+				}
+			},
+			"h5": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--display)",
+					"fontStyle": "normal",
+					"fontWeight": "600"
+				}
+			},
+			"h6": {
+				"typography": {
+					"fontFamily": "var(--wp--preset--font-family--display)",
+					"fontStyle": "normal",
+					"fontWeight": "600"
+				}
+			}
+		},
+		"css": "h1 em, h2 em, h3 em { font-family: var(--wp--preset--font-family--display); font-style: normal; font-weight: 500; letter-spacing: -0.03em; }"
+	}
+}

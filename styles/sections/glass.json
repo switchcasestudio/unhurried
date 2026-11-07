@@ -1,7 +1,7 @@
 { "$schema": "https://schemas.wp.org/wp/6.6/theme.json", "version": 3, "title": "Glass", "slug": "glass", "blockTypes": [ "core/group" ],
-  "styles": { "color": { "background": "rgba(22,20,15,.6)", "text": "var(--wp--preset--color--base)" },
+  "styles": { "color": { "background": "rgba(22,20,15,.6)", "text": "#F6F4EF" },
     "border": { "radius": "var(--wp--custom--radius--card)", "color": "rgba(246,244,239,.16)", "width": "1px", "style": "solid" },
     "spacing": { "padding": { "top": "1.5rem", "bottom": "1.5rem", "left": "1.5rem", "right": "1.5rem" } },
-    "elements": { "link": { "color": { "text": "var(--wp--preset--color--base)" } } },
+    "elements": { "link": { "color": { "text": "#F6F4EF" } } },
     "blocks": { "core/details": { "border": { "top": { "color": "rgba(246,244,239,.18)" } } } },
     "css": "backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);" } }

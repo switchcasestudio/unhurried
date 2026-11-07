@@ -243,6 +243,51 @@ img { height: auto; }
 .unhurried-dim { opacity: .75; }
 @media (hover: hover) { .unhurried-names > p:hover { opacity: 1; } }
 
+/* ─── Story rows, gift card, map placeholder ─────────────────────────────── */
+/* Flipped story rows put the text first in the markup; on a phone the image goes back on top */
+@media (max-width: 781px) {
+	.unhurried-story.is-flipped { flex-direction: column-reverse; }
+}
+/* Gift card: an Ink card at credit-card proportions, resting at a slight tilt */
+.unhurried-giftcard {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	aspect-ratio: 1.586 / 1;
+	border-radius: var(--wp--custom--radius--card);
+	box-shadow: var(--wp--preset--shadow--float);
+	transform: rotate(-2deg);
+}
+.unhurried-giftcard .wp-block-site-title a { text-decoration: none; }
+/* Map placeholder: Stone, a dot grid, an accent pin in the middle, the note card bottom left */
+.unhurried-map {
+	position: relative;
+	aspect-ratio: 4 / 3;
+	border-radius: var(--wp--custom--radius--card);
+	background-color: var(--wp--preset--color--base-2);
+	background-image: radial-gradient(var(--wp--preset--color--hairline) 1.5px, transparent 1.6px);
+	background-size: 28px 28px;
+	overflow: hidden;
+}
+.unhurried-map::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	margin: -7px 0 0 -7px;
+	border-radius: 50%;
+	background: var(--wp--preset--color--accent);
+	box-shadow: 0 0 0 8px rgba(212, 75, 25, .22);
+	box-shadow: 0 0 0 8px color-mix(in srgb, var(--wp--preset--color--accent) 22%, transparent);
+}
+.unhurried-map > .unhurried-note {
+	position: absolute;
+	left: clamp(1rem, 3vw, 2rem);
+	bottom: clamp(1rem, 3vw, 2rem);
+}
+
 /* Forms (comments, search) */
 .wp-block-search__input,
 .comment-form input:not([type="submit"]):not([type="checkbox"]),

@@ -12,6 +12,9 @@ All notable changes to the free Unhurried theme.
 - Patterns: opening hours card, newsletter Ink band, names strip. New helper classes `unhurried-hours`, `unhurried-names`, `unhurried-dim`.
 - Style variation: Mist (cool paper, slate ink, ochre accent; all pairs pass WCAG AA).
 - Dev: `dev/blueprint-woo.json` boots Playground with WooCommerce active and the free theme alone.
+- Patterns: story rows (three alternating image and text rows, image first on phones), gift card (an Ink card drawn from the site title, at credit-card proportions, beside the pitch and price), map and directions (address, travel notes, a Get directions button and a drawn map placeholder with a pin and a glass note), and a quiet footer without the wordmark. New helper classes `unhurried-story`, `unhurried-giftcard`, `unhurried-map`.
+- Style variation: Folio. Headings set in Fraunces italic, with the accent word flipped to upright Hanken Grotesk; h4 to h6, buttons, navigation and the wordmark stay sans. Colours unchanged.
+- Fixed: the Glass style's text is always Bone now. In Nocturne it inherited the inverted base colour and became Ink on dark glass, so the frosted accordion and the note cards on covers were unreadable (a 1.0 bug).
 - Polish after a pixel review: Hairline buttons on Ink sections now fill Bone on hover instead of vanishing Ink-on-Ink; the services index keeps "From $180" on one line on phones (price column 6rem, thumbnail 56px); the frosted accordion no longer draws a stray hairline above its first row; the hours card leads with "The door is open" and shows times in Ink; the About screen's second row of cards hugs its content.
 
 ## 1.0.2 (2026-10-30)

@@ -22,13 +22,13 @@ The theme includes:
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep colour images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
-* Three extra style variations: Nocturne (dark), Linen (warm, with a sage accent) and Mist (cool, with an ochre accent).
+* Four extra style variations: Nocturne (dark), Linen (warm, with a sage accent), Mist (cool, with an ochre accent) and Folio (headings in Fraunces italic).
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in greyscale.
 
 * Two header patterns: centred title, and quiet (no navigation).
-* An opening hours card, a newsletter band and a names strip for stockists or press.
+* An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, and a quiet footer.
 * An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
 == Installation ==
@@ -56,8 +56,9 @@ Select the image and choose the Keep colour style, or remove the `unhurried-mono
 * Reveal on scroll is now a block style for Group, Columns, Column, Image, Heading, Paragraph, Cover and Quote. The class still works.
 * Pattern buttons link to your Contact and Services pages when those pages exist.
 * Header patterns: centred title; quiet (no navigation).
-* Patterns: opening hours card, newsletter band, names strip.
-* Style variation: Mist.
+* Patterns: opening hours card, newsletter band, names strip, story rows, gift card, map and directions, quiet footer.
+* Style variations: Mist (cool palette) and Folio (serif italic headings).
+* Fixed: text inside the Glass style was unreadable in Nocturne.
 * Fixes: hairline buttons on dark sections keep their pill on hover; the services index keeps prices on one line on phones; no stray line above the first accordion row.
 
 = 1.0.2 =

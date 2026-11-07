@@ -30,8 +30,8 @@
 	<!-- /wp:group -->
 	<!-- wp:group {"className":"is-style-glass unhurried-note unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"default"}} -->
 	<div class="wp-block-group is-style-glass unhurried-note unhurried-reveal">
-		<!-- wp:paragraph {"fontSize":"small","textColor":"base"} -->
-		<p class="has-base-color has-text-color has-small-font-size"><?php esc_html_e( 'Arrive ten minutes early. The kettle is always on.', 'unhurried' ); ?></p>
+		<!-- wp:paragraph {"fontSize":"small"} -->
+		<p class="has-small-font-size"><?php esc_html_e( 'Arrive ten minutes early. The kettle is always on.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
