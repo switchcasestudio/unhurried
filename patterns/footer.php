@@ -29,7 +29,7 @@
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Explore', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
-			<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"blockGap":"0.5rem"}}} /-->
+			<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"blockGap":"0.25rem"}}} /-->
 		</div>
 		<!-- /wp:column -->
 		<!-- wp:column {"width":"25%","style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->

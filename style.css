@@ -220,6 +220,11 @@ img { height: auto; }
 .wp-block-details > :not(summary) { max-width: 60ch; }
 .is-style-glass > .wp-block-details:first-child { border-top: 0; padding-top: 0; }
 
+/* Navigation links: underline on hover and keyboard focus; vertical menus get taller touch targets */
+.wp-block-navigation a:hover,
+.wp-block-navigation a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+.wp-block-navigation.is-vertical .wp-block-navigation-item__content { padding-block: .35rem; }
+
 /* Giant wordmark in the footer */
 .unhurried-wordmark {
 	line-height: .82 !important;
@@ -286,6 +291,7 @@ img { height: auto; }
 	position: absolute;
 	left: clamp(1rem, 3vw, 2rem);
 	bottom: clamp(1rem, 3vw, 2rem);
+	background: rgba(22, 20, 15, .86); /* over light Stone the usual .6 glass left the eyebrow under 4.5:1 */
 }
 
 /* Forms (comments, search) */
