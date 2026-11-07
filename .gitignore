@@ -3,3 +3,4 @@ dev/*.jpg
 dev/*.log
 *.zip
 .DS_Store
+docs/internal/
