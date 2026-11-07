@@ -223,6 +223,8 @@ img { height: auto; }
 .unhurried-hours:first-child { border-top: 0; padding-top: 0 !important; }
 .unhurried-hours > p { margin: 0; }
 .unhurried-names > p { opacity: .72; margin: 0; transition: opacity .3s var(--wp--custom--motion--ease); }
+/* Dim: a secondary line that keeps the section's own text colour (works on Ink and in every variation) */
+.unhurried-dim { opacity: .75; }
 @media (hover: hover) { .unhurried-names > p:hover { opacity: 1; } }
 
 /* Forms (comments, search) */

@@ -25,8 +25,8 @@
 			<!-- wp:heading {"fontSize":"xx-large"} -->
 			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'A note from us,<br><em>now and then</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
-			<!-- wp:paragraph {"fontSize":"large","style":{"typography":{"lineHeight":"1.45"},"color":{"text":"rgba(246,244,239,.72)"}}} -->
-			<p class="has-text-color has-large-font-size" style="color:rgba(246,244,239,.72);line-height:1.45"><?php esc_html_e( 'One short letter a season: what is new on the shelf, a recipe, a reading list. Nothing else.', 'unhurried' ); ?></p>
+			<!-- wp:paragraph {"className":"unhurried-dim","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
+			<p class="unhurried-dim has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'One short letter a season: what is new on the shelf, a recipe, a reading list. Nothing else.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
