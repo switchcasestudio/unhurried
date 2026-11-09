@@ -3,7 +3,7 @@
  * Title: Pricing tiers
  * Slug: unhurried/pricing
  * Categories: featured, services
- * Keywords: pricing, plans, membership, programmes, tiers
+ * Keywords: pricing, plans, membership, programs, tiers
  * Viewport width: 1400
  * Description: Three equal-height tiers; the featured tier is set apart by an Ink surface, not by size.
  *

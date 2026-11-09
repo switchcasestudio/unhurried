@@ -6,7 +6,7 @@
  * Keywords: journal, blog, posts, latest, news
  * Block Types: core/query
  * Viewport width: 1400
- * Description: A centred heading and lede above the three latest posts in a scattered grid.
+ * Description: A centered heading and lede above the three latest posts in a scattered grid.
  *
  * @package Unhurried
  * @author  Switch Case Studio

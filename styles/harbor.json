@@ -1,23 +1,23 @@
 {
 	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
 	"version": 3,
-	"title": "Harbour",
+	"title": "Harbor",
 	"settings": {
 		"color": {
 			"palette": [
 				{
 					"slug": "base",
-					"name": "Harbour",
+					"name": "Harbor",
 					"color": "#141A22"
 				},
 				{
 					"slug": "base-2",
-					"name": "Harbour Raised",
+					"name": "Harbor Raised",
 					"color": "#1D2530"
 				},
 				{
 					"slug": "ground",
-					"name": "Deep Harbour",
+					"name": "Deep Harbor",
 					"color": "#0D1218"
 				},
 				{

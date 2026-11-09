@@ -70,8 +70,8 @@ if ( ! function_exists( 'unhurried_block_styles' ) ) :
 		register_block_style(
 			'core/image',
 			array(
-				'name'  => 'colour',
-				'label' => __( 'Keep colour', 'unhurried' ),
+				'name'  => 'color',
+				'label' => __( 'Keep color', 'unhurried' ),
 			)
 		);
 		foreach ( array( 'core/group', 'core/columns', 'core/column', 'core/image', 'core/heading', 'core/paragraph', 'core/cover', 'core/quote' ) as $unhurried_block ) {

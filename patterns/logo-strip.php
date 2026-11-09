@@ -5,7 +5,7 @@
  * Categories: featured, text
  * Keywords: logos, press, partners, clients, stockists, as seen in
  * Viewport width: 1400
- * Description: A centred eyebrow over a row of names set in the accent italic. Swap the names for stockists, press or partners, or replace each with a logo image.
+ * Description: A centered eyebrow over a row of names set in the accent italic. Swap the names for stockists, press or partners, or replace each with a logo image.
  *
  * @package Unhurried
  * @author  Switch Case Studio

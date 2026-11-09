@@ -7,7 +7,7 @@ Description: Unhurried is a calm, editorial block theme for studios, clinics, sp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Version: 1.1.0
+Version: 1.1.1
 Copyright: (c) 2026 Moses Atia Poston, Switch Case Studio
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -75,12 +75,12 @@ img { height: auto; }
 .unhurried-header .wp-block-button__link { padding: .6rem 1.3rem; white-space: nowrap; }
 .unhurried-capsule > .wp-block-group { flex-shrink: 1; min-width: 0; }
 .unhurried-capsule .wp-block-site-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* Centred capsule (Header, centred title pattern): the outer children share
+/* Centered capsule (Header, centered title pattern): the outer children share
    the spare width so the title sits in the exact middle */
-.unhurried-capsule.is-centred > :first-child,
-.unhurried-capsule.is-centred > :last-child { flex: 1 1 0; min-width: 0; }
-.unhurried-capsule.is-centred > .wp-block-navigation { padding-left: clamp(.5rem, 1.5vw, 1.25rem); }
-.unhurried-capsule.is-centred > .wp-block-group:nth-child(2) { flex: 0 0 auto; }
+.unhurried-capsule.is-centered > :first-child,
+.unhurried-capsule.is-centered > :last-child { flex: 1 1 0; min-width: 0; }
+.unhurried-capsule.is-centered > .wp-block-navigation { padding-left: clamp(.5rem, 1.5vw, 1.25rem); }
+.unhurried-capsule.is-centered > .wp-block-group:nth-child(2) { flex: 0 0 auto; }
 @media (max-width: 480px) {
 	.unhurried-capsule { gap: .5rem !important; }
 	.unhurried-capsule > .wp-block-group { gap: .5rem !important; }
@@ -131,13 +131,13 @@ img { height: auto; }
 	.unhurried-step:hover::before { transform: scaleY(1); }
 }
 
-/* Gallery-monochrome imagery; the "Colour" image style opts back out. */
+/* Gallery-monochrome imagery; the "Color" image style opts back out. */
 .unhurried-mono img,
 .unhurried-mono .wp-block-cover__image-background,
 .unhurried-mono video {
 	filter: grayscale(1) contrast(1.02);
 }
-.unhurried-mono .is-style-colour img { filter: none; }
+.unhurried-mono :is(.is-style-color, .is-style-colour) img { filter: none; } /* is-style-colour: images saved before 1.1.1 */
 
 /* On narrow screens the side scrim becomes an even veil so text stays legible */
 @media (max-width: 781px) {
@@ -244,7 +244,7 @@ img { height: auto; }
 .unhurried-hours:first-child { border-top: 0; padding-top: 0 !important; }
 .unhurried-hours > p { margin: 0; }
 .unhurried-names > p { opacity: .72; margin: 0; transition: opacity .3s var(--wp--custom--motion--ease); }
-/* Dim: a secondary line that keeps the section's own text colour (works on Ink and in every variation) */
+/* Dim: a secondary line that keeps the section's own text color (works on Ink and in every variation) */
 .unhurried-dim { opacity: .75; }
 @media (hover: hover) { .unhurried-names > p:hover { opacity: 1; } }
 

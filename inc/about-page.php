@@ -96,8 +96,8 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 					<ul>
 						<li><?php esc_html_e( 'Italic words in headings turn into the Fraunces accent face.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-reveal to any block for a gentle scroll reveal.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Add the class unhurried-mono to show a block\'s images in greyscale.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Twenty looks live under Styles in the Site Editor: eight colour themes, ten tinted papers and Folio. Switching never moves your content.', 'unhurried' ); ?></li>
+						<li><?php esc_html_e( 'Add the class unhurried-mono to show a block\'s images in grayscale.', 'unhurried' ); ?></li>
+						<li><?php esc_html_e( 'Twenty looks live under Styles in the Site Editor: eight color themes, ten tinted papers and Folio. Switching never moves your content.', 'unhurried' ); ?></li>
 					</ul>
 				</div>
 			</div>
@@ -123,7 +123,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 					<?php
 					printf(
 						/* translators: %s: Studio link. */
-						esc_html__( 'Need it set up with your own content, photos and colours? %s can do it for you.', 'unhurried' ),
+						esc_html__( 'Need it set up with your own content, photos and colors? %s can do it for you.', 'unhurried' ),
 						'<a href="' . esc_url( 'https://switchcasestudio.com' ) . '">Switch Case Studio</a>'
 					);
 					?>

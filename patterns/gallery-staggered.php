@@ -5,7 +5,7 @@
  * Categories: featured, gallery
  * Keywords: gallery, images, materials, products
  * Viewport width: 1400
- * Description: A centred heading over four staggered monochrome images.
+ * Description: A centered heading over four staggered monochrome images.
  *
  * @package Unhurried
  * @author  Switch Case Studio

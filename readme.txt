@@ -3,7 +3,7 @@ Contributors: switchcasestudio
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,14 +20,14 @@ The theme includes:
 * Full-page patterns for a homepage, about, services and contact page.
 * Heroes (staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
-* Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep colour images.
+* Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep color images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
-* Nineteen style variations under Styles in the Site Editor. Eight colour themes with three or four hues each: Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace and Dusk. Ten tinted papers with one ink and one accent: Nocturne, Linen, Mist, Moss, Harbour, Plum, Clay, Blush, Olive and Cobalt. And Folio, which keeps the colours and sets headings in Fraunces italic. Every text pair in every look passes WCAG AA.
+* Nineteen style variations under Styles in the Site Editor. Eight color themes with three or four hues each: Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace and Dusk. Ten tinted papers with one ink and one accent: Nocturne, Linen, Mist, Moss, Harbor, Plum, Clay, Blush, Olive and Cobalt. And Folio, which keeps the colors and sets headings in Fraunces italic. Every text pair in every look passes WCAG AA.
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
-* Add the class `unhurried-mono` to any block to show its images in greyscale.
+* Add the class `unhurried-mono` to any block to show its images in grayscale.
 
-* Two header patterns: centred title, and quiet (no navigation).
+* Two header patterns: centered title, and quiet (no navigation).
 * An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, and a quiet footer.
 * An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
@@ -44,20 +44,23 @@ The theme includes:
 
 No. Forms are plugin territory. The Contact pattern has a card where you can drop in the block from any form or booking plugin.
 
-= How do I keep an image in colour? =
+= How do I keep an image in color? =
 
-Select the image and choose the Keep colour style, or remove the `unhurried-mono` class from its parent block.
+Select the image and choose the Keep color style, or remove the `unhurried-mono` class from its parent block.
 
 == Changelog ==
+
+= 1.1.1 =
+* American English throughout: the Harbor look, the Header, centered title pattern and the Keep color image style carry their American names now. Images already set to the old image style keep working.
 
 = 1.1.0 =
 * About Unhurried: a card about Unhurried Pro, a Plugins that fit card (WooCommerce, Contact Form 7, ReviewScribe; installing is always your own click), and a one-line review ask.
 * Two notices, each permanently dismissible, shown only on the Dashboard, Themes and About screens: Unhurried Pro when WooCommerce is active and Pro is not; a review ask after 14 days.
 * Reveal on scroll is now a block style for Group, Columns, Column, Image, Heading, Paragraph, Cover and Quote. The class still works.
 * Pattern buttons link to your Contact and Services pages when those pages exist.
-* Header patterns: centred title; quiet (no navigation).
+* Header patterns: centered title; quiet (no navigation).
 * Patterns: opening hours card, newsletter band, names strip, story rows, gift card, map and directions, quiet footer.
-* Seventeen new style variations: eight colour themes (Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace, Dusk), eight tinted papers (Mist, Moss, Harbour, Plum, Clay, Blush, Olive, Cobalt) and Folio (serif italic headings).
+* Seventeen new style variations: eight color themes (Orchard, Tide, Saffron, Lagoon, Rosewater, Studio, Terrace, Dusk), eight tinted papers (Mist, Moss, Harbor, Plum, Clay, Blush, Olive, Cobalt) and Folio (serif italic headings).
 * Fixed: text inside the Glass style was unreadable in Nocturne.
 * Fixes: hairline buttons on dark sections keep their pill on hover; the services index keeps prices on one line on phones; no stray line above the first accordion row.
 
