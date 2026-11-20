@@ -7,7 +7,7 @@ Description: Unhurried is a calm, editorial block theme for studios, clinics, sp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Version: 1.1.1
+Version: 1.1.2
 Copyright: (c) 2026 Moses Atia Poston, Switch Case Studio
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -79,8 +79,19 @@ img { height: auto; }
    the spare width so the title sits in the exact middle */
 .unhurried-capsule.is-centered > :first-child,
 .unhurried-capsule.is-centered > :last-child { flex: 1 1 0; min-width: 0; }
-.unhurried-capsule.is-centered > .wp-block-navigation { padding-left: clamp(.5rem, 1.5vw, 1.25rem); }
+.unhurried-capsule.is-centered > .wp-block-navigation { padding-inline-start: clamp(.5rem, 1.5vw, 1.25rem); }
 .unhurried-capsule.is-centered > .wp-block-group:nth-child(2) { flex: 0 0 auto; }
+/* A long menu, or no menu at all (the Navigation block then lists every
+   published page), wraps the capsule onto two rows. From eight top-level links
+   the capsule keeps the menu button at every width. */
+.unhurried-capsule .wp-block-navigation:has(.wp-block-navigation__container > :nth-child(8), .wp-block-page-list > :nth-child(8)) .wp-block-navigation__responsive-container:not(.is-menu-open) { display: none; }
+.unhurried-capsule .wp-block-navigation:has(.wp-block-navigation__container > :nth-child(8), .wp-block-page-list > :nth-child(8)) .wp-block-navigation__responsive-container-open { display: flex; }
+/* Between 600px (where core shows the links) and 1024px, five or more links
+   already wrap the capsule next to the title and button. */
+@media (max-width: 1023px) {
+	.unhurried-capsule .wp-block-navigation:has(.wp-block-navigation__container > :nth-child(5), .wp-block-page-list > :nth-child(5)) .wp-block-navigation__responsive-container:not(.is-menu-open) { display: none; }
+	.unhurried-capsule .wp-block-navigation:has(.wp-block-navigation__container > :nth-child(5), .wp-block-page-list > :nth-child(5)) .wp-block-navigation__responsive-container-open { display: flex; }
+}
 @media (max-width: 480px) {
 	.unhurried-capsule { gap: .5rem !important; }
 	.unhurried-capsule > .wp-block-group { gap: .5rem !important; }
@@ -103,10 +114,10 @@ img { height: auto; }
 }
 
 /* ─── Display helpers ────────────────────────────────────────────────────── */
-.unhurried-indent { padding-left: 10%; }
+.unhurried-indent { padding-inline-start: 10%; }
 .unhurried-first-indent { text-indent: 10%; }
 @media (max-width: 899px) {
-	.unhurried-indent { padding-left: 0; }
+	.unhurried-indent { padding-inline-start: 0; }
 	.unhurried-first-indent { text-indent: 0; }
 }
 .unhurried-numeral {
@@ -116,11 +127,12 @@ img { height: auto; }
 	line-height: 1;
 	color: var(--wp--preset--color--contrast-2);
 }
-.unhurried-step { position: relative; padding-left: 1.25rem; }
+.unhurried-step { position: relative; padding-inline-start: 1.25rem; }
 .unhurried-step::before {
 	content: "";
 	position: absolute;
-	inset: 0 auto 0 0;
+	inset-block: 0;
+	inset-inline-start: 0;
 	width: 3px;
 	background: var(--wp--preset--color--accent);
 	transform: scaleY(0);
@@ -145,7 +157,7 @@ img { height: auto; }
 }
 
 /* Small floating note card */
-.unhurried-note { max-width: min(100%, 26rem); margin-left: 0 !important; }
+.unhurried-note { max-width: min(100%, 26rem); margin-inline-start: 0 !important; }
 
 /* Staggered gallery row */
 .unhurried-stagger > .wp-block-image:nth-child(even),
@@ -225,14 +237,47 @@ img { height: auto; }
 .wp-block-navigation a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
 .wp-block-navigation.is-vertical .wp-block-navigation-item__content { padding-block: .35rem; }
 
-/* Giant wordmark in the footer */
+/* Giant wordmark in the footer. It keeps its 15vw size until the site title
+   would not fit, then shrinks to the column: unhurried_size_wordmark() puts the
+   title's estimated width in em on the element as --unhurried-wordmark-em.
+   !important: footers saved before 1.1.2 carry the fixed size inline.
+   overflow: hidden stays as the last resort. */
+.wp-block-group:has(> .unhurried-wordmark) { container-type: inline-size; }
 .unhurried-wordmark {
+	font-size: min(clamp(3.5rem, 15vw, 17rem), calc(min(100cqi, 1360px) / var(--unhurried-wordmark-em, .01))) !important;
 	line-height: .82 !important;
 	letter-spacing: -0.06em !important;
 	white-space: nowrap;
 	overflow: hidden;
+	/* Clip sideways only: with the tight line height, hidden also cut the
+	   descenders of g, j, p, q and y. Browsers without clip keep hidden. */
+	overflow-x: clip;
+	overflow-y: visible;
 }
 .unhurried-wordmark a { text-decoration: none; }
+
+/* Footer lead line: the site tagline, set large (Footer with wordmark, 1.1.2) */
+.unhurried-footer-lead { max-width: 24ch; text-wrap: balance; }
+
+/* Email links in footer columns shrink to fit the column on one line
+   (6.5cqi fits about 30 characters) instead of breaking mid-word. They only
+   ever get smaller, never below 13px; past that floor a very long address
+   wraps rather than overflowing. */
+footer.wp-block-template-part .wp-block-column { container-type: inline-size; }
+footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
+	font-size: max(.8125rem, min(1em, 6.5cqi));
+	word-break: normal;
+	overflow-wrap: anywhere;
+}
+
+/* ─── Mixed-direction text in the header and footer ─────────────────────── */
+/* Each line takes its direction from its own first letter, so an English
+   line on an Arabic site keeps its period at the end ("Made slowly, with
+   care." not ".Made slowly, with care"). */
+:where(header, footer).wp-block-template-part :where(p, .wp-block-heading, .wp-block-site-title, .wp-block-site-tagline) { unicode-bidi: plaintext; }
+/* On right-to-left sites those lines stay on the page's start side. Zero
+   specificity, so an alignment the owner chose still wins. */
+:where(.rtl) :where(header, footer).wp-block-template-part :where(p, .wp-block-heading, .wp-block-site-tagline) { text-align: right; }
 
 /* Arch-topped media */
 .unhurried-arch img,
@@ -289,7 +334,7 @@ img { height: auto; }
 }
 .unhurried-map > .unhurried-note {
 	position: absolute;
-	left: clamp(1rem, 3vw, 2rem);
+	inset-inline-start: clamp(1rem, 3vw, 2rem);
 	bottom: clamp(1rem, 3vw, 2rem);
 	background: rgba(22, 20, 15, .86); /* over light Stone the usual .6 glass left the eyebrow under 4.5:1 */
 }
@@ -308,7 +353,7 @@ img { height: auto; }
 .wp-block-search__input:focus,
 .comment-form input:focus,
 .comment-form textarea:focus { border-color: var(--wp--preset--color--contrast); outline: none; }
-.wp-block-search__button { margin-left: .5rem; }
+.wp-block-search__button { margin-inline-start: .5rem; }
 
 /* ─── Reveal on scroll (class "unhurried-reveal" or the Reveal block style) ─ */
 @media (prefers-reduced-motion: no-preference) {
