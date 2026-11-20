@@ -45,7 +45,7 @@
 				<p class="is-style-eyebrow"><?php esc_html_e( 'Write', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
 				<!-- wp:paragraph -->
-				<p><?php esc_html_e( 'hello@example.com', 'unhurried' ); ?></p>
+				<p><a href="mailto:hello@example.com"><?php esc_html_e( 'hello@example.com', 'unhurried' ); ?></a></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
