@@ -2,6 +2,20 @@
 
 All notable changes to the free Unhurried theme.
 
+## 1.1.2 (2026-11-19)
+
+Nine fixes found by visiting the 13 live sites that use the theme (2026-11-19). Most sites never edit the header and footer, so whatever the theme prints there goes live as it stands. Plan: `docs/internal/2026-11-19-free-1.1.2-plan.md`.
+
+- Footer with wordmark (`unhurried/footer`): the "Take your time." heading and the Visit column (sample address and `hello@example.com`) are gone. The site tagline is the lead line (`unhurried-footer-lead`: display face, x-large, 24ch, balanced); with no tagline only the Explore column shows. Footer, quiet loses its Visit column too.
+- New pattern **Footer with visit details** (`unhurried/footer-visit`): the 1.1.1 layout, for sites that want an address column. Its email is a `mailto:` link, as is the one in Contact, split.
+- Wordmark: `unhurried_size_wordmark()` (`render_block_core/site-title`) puts the title's estimated width in em on the element as `--unhurried-wordmark-em`, from glyph widths measured off the bundled Hanken Grotesk (`unhurried_wordmark_em_width()`); `style.css` caps the size at the column width divided by it. Titles up to about twelve characters keep the 15vw size, so "Unhurried" is unchanged. Reaches footers saved before 1.1.2 (they carry the class). `overflow-x: clip` replaces `overflow: hidden`, so descenders are no longer cut.
+- Header button (`unhurried/header-button`): printed only when a published page with the slug `contact` exists, labeled with its title. Before, it read "Book a visit" and linked to `#` on sites without that page. Unhurried Pro's header uses the same pattern.
+- Blog heading (`unhurried/hidden-blog-heading`): the posts page title with the site name as the eyebrow, else the tagline, else the site name alone; over 32 characters it steps down to xx-large. "Stories" and "Notes on craft" are removed.
+- Pages template: the title band is `unhurried-page-head`; `unhurried_hide_front_page_head()` drops it on a static front page (filter `unhurried_hide_front_page_title` to keep it). Templates edited before 1.1.2 lack the class and are unchanged.
+- Header menu: from eight top-level links (or the page-list fallback with eight pages) the capsule keeps the menu button at every width; below 1024px from five.
+- Right-to-left: header and footer lines use `unicode-bidi: plaintext` and align to the start on `.rtl` sites (zero specificity). `.unhurried-indent`, `.unhurried-step`, `.unhurried-note`, the map note, the centered header's navigation and the search button use logical properties.
+- Email links in footer columns: `font-size: max(.8125rem, min(1em, 6.5cqi))`, wrapping only below the 13px floor.
+
 ## 1.1.1 (2026-11-08)
 
 - American English throughout. The **Harbor** look (`styles/harbor.json`), the **Header, centered title** pattern (`unhurried/header-centered`) and the **Keep color** image style (`is-style-color`) carry their American names now; the old image-style class from 1.0.x still works. Comments, readme and the About screen follow.

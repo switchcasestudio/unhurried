@@ -3,7 +3,7 @@ Contributors: switchcasestudio
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ The theme includes:
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
 
 * Two header patterns: centered title, and quiet (no navigation).
-* An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, and a quiet footer.
+* An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, a quiet footer, and a footer with visit details for your address and email.
 * An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
 == Installation ==
@@ -49,6 +49,17 @@ No. Forms are plugin territory. The Contact pattern has a card where you can dro
 Select the image and choose the Keep color style, or remove the `unhurried-mono` class from its parent block.
 
 == Changelog ==
+
+= 1.1.2 =
+* Nine fixes found by visiting the live sites that use Unhurried. A site whose header and footer were never edited now shows nothing fake.
+* Footer: the lead line is your site tagline (Settings > General) instead of "Take your time.", and the sample address and email are gone. The address layout is now the Footer with visit details pattern.
+* Footer wordmark: a long site title shrinks to fit instead of being cut off, also in footers you have edited. Letters that hang below the line (g, j, p, q, y) are no longer clipped.
+* Header button: shown only when you have a published page at /contact/, and labeled with that page's title. Blogs no longer show "Book a visit" linked to nowhere.
+* Blog heading: shows your posts page title, your tagline or your site name instead of "Notes on craft".
+* Homepage: on a static front page using the default Pages template, the large page title ("Home") above your content is gone. Inner pages keep their titles.
+* Header menu: with eight or more links (or no menu chosen, which lists every page) the header shows the menu button at every width instead of wrapping to two rows; between 600 and 1024 pixels wide it does so from five links.
+* Right-to-left sites: English lines in the header and footer keep their punctuation at the end, and a long site title is cut at its end. Spacing rules now use start and end, not left and right.
+* Email links in footer columns shrink to fit the column instead of breaking mid-word.
 
 = 1.1.1 =
 * American English throughout: the Harbor look, the Header, centered title pattern and the Keep color image style carry their American names now. Images already set to the old image style keep working.
