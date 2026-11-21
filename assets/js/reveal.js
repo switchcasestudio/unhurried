@@ -114,27 +114,72 @@
 		} );
 	} );
 
-	/* Figures count up from zero to their printed value. The real value
-	   stays in the page for screen readers; the moving digits are hidden. */
+	/* Figures count up from zero to their printed value, in the author's own
+	   format ("1,200", "12,5", "1.200.000"), and end as exactly what the
+	   author wrote. While they count, the real value stays in the page for
+	   screen readers and the moving digits are hidden from them. */
 	function countUp( el ) {
 		var text = el.textContent.trim();
 		var match = text.match( /^(\D*)(\d[\d,.]*)(.*)$/ );
 		if ( ! match ) {
 			return;
 		}
-		var target = parseFloat( match[ 2 ].replace( /,/g, '' ) );
-		// A year (four digits, nothing after) counts up from a nearby year.
-		var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
+		// A full stop or comma that ends the figure is punctuation, not part of it.
+		var figure = match[ 2 ].replace( /[.,]+$/, '' );
+		var after = match[ 2 ].slice( figure.length ) + match[ 3 ];
+		// Which mark is the decimal one? With both, the last. With one kind,
+		// used once and not followed by exactly three digits ("12,5", "0.75"),
+		// that one; otherwise it groups thousands ("1,200", "1.200.000").
+		var dot = figure.lastIndexOf( '.' );
+		var comma = figure.lastIndexOf( ',' );
+		var decimalMark = '';
+		if ( dot > -1 && comma > -1 ) {
+			decimalMark = dot > comma ? '.' : ',';
+		} else if ( dot > -1 || comma > -1 ) {
+			var mark = dot > -1 ? '.' : ',';
+			var pieces = figure.split( mark );
+			if ( 2 === pieces.length && ( 3 !== pieces[ 1 ].length || '0' === pieces[ 0 ] ) ) {
+				decimalMark = mark;
+			}
+		}
+		var groupMark = '';
+		if ( '.' !== decimalMark && dot > -1 ) {
+			groupMark = '.';
+		} else if ( ',' !== decimalMark && comma > -1 ) {
+			groupMark = ',';
+		}
+		var whole = decimalMark ? figure.slice( 0, figure.lastIndexOf( decimalMark ) ) : figure;
+		var decimals = decimalMark ? figure.length - figure.lastIndexOf( decimalMark ) - 1 : 0;
+		var digits = whole.replace( /\D/g, '' );
+		var target = parseFloat( digits + ( decimals ? '.' + figure.slice( -decimals ) : '' ) );
 		if ( ! isFinite( target ) ) {
 			return;
 		}
-		var decimals = ( match[ 2 ].split( '.' )[ 1 ] || '' ).length;
+		// A year (four digits, nothing after) counts up from a nearby year.
+		var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
+		// "007" keeps its width.
+		var width = /^0\d/.test( digits ) ? digits.length : 0;
+		function format( value ) {
+			var parts = value.toFixed( decimals ).split( '.' );
+			while ( parts[ 0 ].length < width ) {
+				parts[ 0 ] = '0' + parts[ 0 ];
+			}
+			if ( groupMark ) {
+				parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, groupMark );
+			}
+			return parts[ 0 ] + ( decimals ? decimalMark + parts[ 1 ] : '' );
+		}
+		// Set the author's own nodes aside (the text, and any markup such as
+		// an accent word) and put them back when the count is over.
+		var written = document.createDocumentFragment();
+		while ( el.firstChild ) {
+			written.appendChild( el.firstChild );
+		}
 		var shown = document.createElement( 'span' );
 		shown.setAttribute( 'aria-hidden', 'true' );
 		var real = document.createElement( 'span' );
 		real.className = 'unhurried-visually-hidden';
 		real.textContent = text;
-		el.textContent = '';
 		el.appendChild( shown );
 		el.appendChild( real );
 		var start = null;
@@ -146,10 +191,13 @@
 			var t = Math.min( 1, ( now - start ) / duration );
 			var eased = 1 - Math.pow( 1 - t, 4 );
 			var value = from + ( target - from ) * eased;
-			shown.textContent = match[ 1 ] + value.toFixed( decimals ) + match[ 3 ];
 			if ( t < 1 ) {
+				shown.textContent = match[ 1 ] + format( value ) + after;
 				window.requestAnimationFrame( frame );
+				return;
 			}
+			el.textContent = '';
+			el.appendChild( written );
 		}
 		window.requestAnimationFrame( frame );
 	}
