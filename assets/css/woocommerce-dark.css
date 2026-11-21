@@ -1,0 +1,25 @@
+/**
+ * Unhurried and WooCommerce: legibility in a dark look.
+ *
+ * Loaded only in a look whose page is darker than its text (Nocturne, Moss,
+ * Harbor, Plum, Lagoon, Dusk, or a palette darkened by hand), while
+ * WooCommerce is active and Unhurried Pro is not (inc/woocommerce.php).
+ * The Cart and Checkout blocks get WooCommerce's own dark fields through
+ * the "dark-editor-style" theme support. This file covers the rest: the
+ * account forms and the older cart and checkout, which keep WooCommerce's
+ * white fields.
+ *
+ * @package Unhurried
+ */
+
+body {
+	/* WooCommerce's red (#a00: required marks, field errors, the remove
+	   cross) is made for a white page and drops to about 2:1 on a dark one.
+	   Mixed halfway to the look's text color it reads on the page (4.7:1 or
+	   more) and still carries the white cross on hover (3:1). Its green
+	   (#007518: the edge of a field that passed its check) gets the same. */
+	--wc-red: color-mix(in srgb, #a00 50%, var(--wp--preset--color--contrast));
+	--wc-green: color-mix(in srgb, #007518 50%, var(--wp--preset--color--contrast));
+	/* The edge of a white field, against the dark page around it. */
+	--wc-form-border-color: var(--wp--preset--color--contrast-2);
+}

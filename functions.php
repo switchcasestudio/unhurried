@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/recommended.php';
 require_once get_template_directory() . '/inc/setup.php';
+require_once get_template_directory() . '/inc/woocommerce.php';
 
 if ( ! function_exists( 'unhurried_setup' ) ) :
 	/**
