@@ -2,7 +2,7 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "landingPage": "/",
   "preferredVersions": {
-    "php": "8.2",
+    "php": "8.3",
     "wp": "latest"
   },
   "steps": [
@@ -18,6 +18,26 @@
       }
     },
     {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "newsletter"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "contact-form-7"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
       "step": "defineWpConfigConsts",
       "consts": {
         "UNHURRIED_DEMO": true
@@ -26,6 +46,11 @@
     {
       "step": "runPHP",
       "code": "<?php require '/wordpress/wp-load.php'; require_once ABSPATH.'wp-admin/includes/image.php'; require_once ABSPATH.'wp-admin/includes/file.php'; require_once ABSPATH.'wp-admin/includes/media.php';\n$dir=get_theme_file_path('assets/images/');\nfunction u_att($f,$dir){ $tmp=wp_tempnam($f); copy($dir.$f,$tmp); $id=media_handle_sideload(array('name'=>$f,'tmp_name'=>$tmp),0); return is_wp_error($id)?0:$id; }\n$pages=array('Home'=>array('page-home','page-ground'),'About'=>array('page-about','page-canvas'),'Services'=>array('page-services','page-canvas'),'Contact'=>array('page-contact','page-canvas'),'Topics'=>array('page-topics','page-canvas'),'Work'=>array('page-work','page-canvas'),'Pricing'=>array('page-pricing','page-canvas'),'Visit'=>array('page-visit','page-canvas'));\n$ids=array(); foreach($pages as $t=>$p){ $ids[$t]=wp_insert_post(array('post_type'=>'page','post_status'=>'publish','post_title'=>$t,'post_content'=>(false ? '': '<!-- wp:pattern {\"slug\":\"unhurried/'.$p[0].'\"} /-->'),'page_template'=>$p[1])); }\n$j=wp_insert_post(array('post_type'=>'page','post_status'=>'publish','post_title'=>'Journal'));\nupdate_option('show_on_front','page'); update_option('page_on_front',$ids['Home']); update_option('page_for_posts',$j);\nupdate_option('blogname','Unhurried'); update_option('blogdescription','Lorem ipsum dolor sit amet.');\n$cats=array('Lorem ipsum'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore.','Dolor sit'=>'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.','Consectetur'=>'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla.','Adipiscing'=>'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.','Tempor'=>'Curabitur vitae nunc sed velit dignissim sodales. Integer vitae justo eget magna fermentum iaculis.');\n$cid=array(); foreach($cats as $n=>$d){ $t=wp_insert_term($n,'category',array('description'=>$d)); $cid[]=is_wp_error($t)?0:$t['term_id']; }\n$tags=array('lorem','ipsum','dolor','amet','elit','tempor','magna','aliqua','veniam','nostrud');\n$titles=array('Lorem ipsum dolor sit amet consectetur','Sed do eiusmod tempor incididunt','Ut labore et dolore magna aliqua','Ut enim ad minim veniam','Quis nostrud exercitation ullamco','Duis aute irure dolor in','Excepteur sint occaecat cupidatat','Sunt in culpa qui officia','Curabitur vitae nunc sed velit','Integer vitae justo eget magna','Phasellus vestibulum lorem sed','Morbi tristique senectus et netus');\n$imgs=array('orb.webp','vessel.webp','light-window.webp','arch.webp','branch-shadow.webp','pedestal.webp','drape.webp');\n$para='<!-- wp:paragraph -->'.\"\\n\".'<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>'.\"\\n\".'<!-- /wp:paragraph -->'.\"\\n\\n\";\n$body=$para.$para.'<!-- wp:heading -->'.\"\\n\".'<h2 class=\"wp-block-heading\">Ut enim ad <em>minim</em></h2>'.\"\\n\".'<!-- /wp:heading -->'.\"\\n\\n\".$para.'<!-- wp:list -->'.\"\\n\".'<ul class=\"wp-block-list\"><!-- wp:list-item -->'.\"\\n\".'<li>Lorem ipsum dolor sit amet</li>'.\"\\n\".'<!-- /wp:list-item -->'.\"\\n\\n\".'<!-- wp:list-item -->'.\"\\n\".'<li>Consectetur adipiscing elit</li>'.\"\\n\".'<!-- /wp:list-item -->'.\"\\n\\n\".'<!-- wp:list-item -->'.\"\\n\".'<li>Sed do eiusmod tempor</li>'.\"\\n\".'<!-- /wp:list-item --></ul>'.\"\\n\".'<!-- /wp:list -->'.\"\\n\\n\".$para.'<!-- wp:quote -->'.\"\\n\".'<blockquote class=\"wp-block-quote\"><!-- wp:paragraph -->'.\"\\n\".'<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>'.\"\\n\".'<!-- /wp:paragraph --></blockquote>'.\"\\n\".'<!-- /wp:quote -->'.\"\\n\\n\".'<!-- wp:heading -->'.\"\\n\".'<h2 class=\"wp-block-heading\">Duis aute <em>irure</em></h2>'.\"\\n\".'<!-- /wp:heading -->'.\"\\n\\n\".$para.$para;\n$att=array(); foreach($imgs as $f){ $att[$f]=u_att($f,$dir); }\nforeach($titles as $i=>$t){ $pid=wp_insert_post(array('post_status'=>'publish','post_author'=>1,'post_title'=>$t,'post_excerpt'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.','post_content'=>$body,'post_date'=>date('Y-m-d H:i:s',time()-$i*86400*3)));\n $a=$att[$imgs[$i%count($imgs)]]; if($a) set_post_thumbnail($pid,$a);\n wp_set_post_categories($pid,array($cid[$i%count($cid)]));\n wp_set_post_tags($pid,array($tags[$i%10],$tags[($i+3)%10],$tags[($i+7)%10])); }\nwp_update_user(array('ID'=>1,'display_name'=>'Lorem Ipsum','description'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'));\n$fp=get_posts(array('numberposts'=>1)); if($fp){ wp_insert_comment(array('comment_post_ID'=>$fp[0]->ID,'comment_author'=>'Lorem','comment_content'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','comment_approved'=>1)); }\n$unc=get_term_by('slug','uncategorized','category'); if($unc){ update_option('default_category',$cid[0]); wp_delete_term($unc->term_id,'category'); }\n\n$L=function($t,$id){ return '<!-- wp:navigation-link {\"label\":\"'.$t.'\",\"type\":\"page\",\"id\":'.$id.',\"url\":\"'.get_permalink($id).'\",\"kind\":\"post-type\"} /-->'; };\n$S=function($t,$id,$kids){ return '<!-- wp:navigation-submenu {\"label\":\"'.$t.'\",\"type\":\"page\",\"id\":'.$id.',\"url\":\"'.get_permalink($id).'\",\"kind\":\"post-type\"} -->'.$kids.'<!-- /wp:navigation-submenu -->'; };\n$nav=wp_insert_post(array('post_type'=>'wp_navigation','post_status'=>'publish','post_title'=>'Primary','post_content'=>$S('About',$ids['About'],$L('Work',$ids['Work']).$L('Visit',$ids['Visit'])).$L('Services',$ids['Services']).$L('Pricing',$ids['Pricing']).$S('Journal',$j,$L('Topics',$ids['Topics'])).$L('Contact',$ids['Contact'])));\nwp_delete_post(1,true); wp_set_password('password',1); echo 'seeded';"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/unhurried-dev-autologin.php",
+      "data": "<?php\n// Local Playground only (dev/blueprint.json): opening wp-admin or the login screen signs you in as the admin.\nadd_action( 'init', function () {\n\tif ( is_user_logged_in() || wp_doing_ajax() || wp_doing_cron() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {\n\t\treturn;\n\t}\n\t$uri = isset( $_SERVER['REQUEST_URI'] ) ? (string) $_SERVER['REQUEST_URI'] : '';\n\tif ( false === strpos( $uri, '/wp-admin' ) && false === strpos( $uri, '/wp-login.php' ) ) {\n\t\treturn;\n\t}\n\tif ( false !== strpos( $uri, 'action=logout' ) ) {\n\t\treturn;\n\t}\n\twp_set_current_user( 1 );\n\twp_set_auth_cookie( 1, true );\n\t$to = isset( $_GET['redirect_to'] ) ? wp_unslash( $_GET['redirect_to'] ) : ( false !== strpos( $uri, '/wp-admin' ) ? $uri : admin_url() );\n\twp_safe_redirect( $to );\n\texit;\n} );\n"
     }
   ]
 }

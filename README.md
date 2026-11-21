@@ -14,14 +14,17 @@ To install from a zip instead, download [`unhurried.zip`](https://github.com/swi
 
 > Use the release zip, not GitHub's green **Code → Download ZIP** button. That one unpacks into a folder called `unhurried-main`, which breaks theme updates and Unhurried Pro.
 
-## Set up your homepage (2 minutes)
+## Set up your site
+
+Open **Appearance → About Unhurried**. The setup checklist shows what is done and what is left. **Create the homepage** (and Create About, Services, Contact, Work, Pricing, Visit, Topics, Journal) opens a page with its layout and template already chosen; you edit and publish it. Other steps link straight to menus, the footer (social icons), Styles and the free plugins the theme works with: Newsletter for signups, Contact Form 7 or WPForms Lite for messages.
+
+### By hand (2 minutes)
 
 1. **Pages → Add New**. In the page settings, pick the **Ground artboard** template.
 2. When WordPress offers page patterns, choose **Homepage**. (Or add it later: **+ → Patterns → Pages → Homepage**.)
 3. Publish, then set it under **Settings → Reading → Your homepage displays → A static page**.
 4. Build **About**, **Services** and **Contact** the same way with their page patterns and the **Canvas** template.
 
-There is a getting-started screen at **Appearance → About Unhurried**.
 
 ## What is included
 

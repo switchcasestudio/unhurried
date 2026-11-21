@@ -33,24 +33,8 @@ $unhurried_search     = wp_json_encode(
 		'className'      => 'unhurried-footer-search',
 	)
 );
-/*
- * Newsletter. A theme may not collect addresses itself, so the email form
- * comes from a plugin: Jetpack's Subscribe block when it is active, or any
- * block markup passed through the unhurried_newsletter_block filter (for
- * example a MailPoet or Mailchimp form). Without one, the row offers the
- * site's RSS feed, which every WordPress site has.
- */
-$unhurried_newsletter = '';
-if ( WP_Block_Type_Registry::get_instance()->is_registered( 'jetpack/subscriptions' ) ) {
-	$unhurried_newsletter = '<!-- wp:jetpack/subscriptions {"className":"unhurried-footer-newsletter__form"} /-->';
-}
-/**
- * Filters the newsletter form printed in the footer, as block markup.
- *
- * @since 1.2.0
- * @param string $markup Block markup, or '' for the RSS fallback.
- */
-$unhurried_newsletter = (string) apply_filters( 'unhurried_newsletter_block', $unhurried_newsletter );
+// Newsletter: a plugin's signup form (see unhurried_newsletter_form()), or the RSS feed.
+$unhurried_newsletter = unhurried_newsletter_form();
 
 /*
  * Social profiles. They ship as "#" placeholders, which
@@ -88,7 +72,7 @@ $unhurried_social = array(
 				<!-- wp:paragraph {"fontSize":"small"} -->
 				<p class="has-small-font-size"><?php esc_html_e( 'New posts by email, now and then.', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
-				<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup, parsed and rendered by WordPress. ?>
+				<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
 				<?php else : ?>
 				<!-- wp:paragraph {"fontSize":"small"} -->
 				<p class="has-small-font-size"><?php esc_html_e( 'Follow new posts in your feed reader.', 'unhurried' ); ?></p>

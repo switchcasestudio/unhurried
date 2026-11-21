@@ -11,6 +11,7 @@
 
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/recommended.php';
+require_once get_template_directory() . '/inc/setup.php';
 
 if ( ! function_exists( 'unhurried_setup' ) ) :
 	/**
@@ -292,6 +293,129 @@ if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/group', 'unhurried_marquee_loop', 10, 2 );
+
+if ( ! function_exists( 'unhurried_newsletter_form' ) ) :
+	/**
+	 * Block markup for an email signup form, taken from a newsletter plugin.
+	 *
+	 * A theme may not collect addresses itself, so the form comes from a
+	 * plugin. Supported without setup:
+	 * - Newsletter (https://wordpress.org/plugins/newsletter/): free, GPL and
+	 *   self-hosted, no outside account. Its minimal form: an email field and a button.
+	 * - Jetpack: its Subscribe block.
+	 * Any other plugin can supply block markup through the
+	 * unhurried_newsletter_block filter. Returns '' when there is no form.
+	 *
+	 * @since 1.2.0
+	 * @return string
+	 */
+	function unhurried_newsletter_form() {
+		$markup = '';
+		// Detect the plugin, not its shortcode: Newsletter registers the
+		// shortcode only on the front end, and the Site Editor must get the
+		// same markup, or saving the footer there would drop the form.
+		if ( defined( 'NEWSLETTER_VERSION' ) || class_exists( 'Newsletter' ) ) {
+			$markup = "<!-- wp:shortcode -->\n[newsletter_form type=\"minimal\" button_label=\"" . esc_attr__( 'Subscribe', 'unhurried' ) . "\"]\n<!-- /wp:shortcode -->";
+		} elseif ( WP_Block_Type_Registry::get_instance()->is_registered( 'jetpack/subscriptions' ) ) {
+			$markup = '<!-- wp:jetpack/subscriptions /-->';
+		}
+		/**
+		 * Filters the newsletter signup form the theme prints, as block markup.
+		 *
+		 * @since 1.2.0
+		 * @param string $markup Block markup, or '' for none (the theme then offers the RSS feed).
+		 */
+		return (string) apply_filters( 'unhurried_newsletter_block', $markup );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_contact_form' ) ) :
+	/**
+	 * Block markup for a contact form, taken from a form plugin.
+	 *
+	 * Supported without setup: Contact Form 7 and WPForms (each adds a first
+	 * form when it is activated; the oldest form is used). Any other plugin
+	 * can supply block markup through the unhurried_contact_form_block filter.
+	 * Returns '' when there is no form.
+	 *
+	 * @since 1.2.0
+	 * @return string
+	 */
+	function unhurried_contact_form() {
+		$markup  = '';
+		// Detected by plugin, not shortcode, so the editor gets the same markup.
+		$plugins = array(
+			'contact-form-7' => array( 'wpcf7_contact_form', defined( 'WPCF7_VERSION' ) ),
+			'wpforms'        => array( 'wpforms', defined( 'WPFORMS_VERSION' ) || function_exists( 'wpforms' ) ),
+		);
+		foreach ( $plugins as $shortcode => $plugin ) {
+			list( $post_type, $active ) = $plugin;
+			if ( ! $active ) {
+				continue;
+			}
+			$form = get_posts(
+				array(
+					'post_type'   => $post_type,
+					'post_status' => 'publish',
+					'numberposts' => 1,
+					'orderby'     => 'ID',
+					'order'       => 'ASC',
+					'fields'      => 'ids',
+				)
+			);
+			if ( $form ) {
+				$markup = "<!-- wp:shortcode -->\n[" . $shortcode . ' id="' . (int) $form[0] . "\"]\n<!-- /wp:shortcode -->";
+				break;
+			}
+		}
+		/**
+		 * Filters the contact form the Contact pattern prints, as block markup.
+		 *
+		 * @since 1.2.0
+		 * @param string $markup Block markup, or '' for none (the pattern then shows an Email us button).
+		 */
+		return (string) apply_filters( 'unhurried_contact_form_block', $markup );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_render_newsletter_shortcode' ) ) :
+	/**
+	 * Runs the form shortcodes the theme places (Newsletter, Contact Form 7,
+	 * WPForms) inside templates.
+	 *
+	 * A template part runs shortcodes before it renders the patterns inside
+	 * it, so the footer's [newsletter_form] would print as text. This renders
+	 * those shortcodes, and only while they are still unrendered.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_render_newsletter_shortcode( $block_content ) {
+		$pending = false;
+		foreach ( array( 'newsletter_form', 'contact-form-7', 'wpforms' ) as $tag ) {
+			if ( false !== strpos( $block_content, '[' . $tag ) && shortcode_exists( $tag ) ) {
+				$pending = true;
+			}
+		}
+		if ( ! $pending ) {
+			return $block_content;
+		}
+		$html = do_shortcode( shortcode_unautop( $block_content ) );
+		// The minimal form's email field has only a placeholder; give it a name.
+		if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			$form = new WP_HTML_Tag_Processor( $html );
+			while ( $form->next_tag( array( 'tag_name' => 'input', 'class_name' => 'tnp-email' ) ) ) {
+				if ( null === $form->get_attribute( 'aria-label' ) ) {
+					$form->set_attribute( 'aria-label', __( 'Email address', 'unhurried' ) );
+				}
+			}
+			$html = $form->get_updated_html();
+		}
+		return $html;
+	}
+endif;
+add_filter( 'render_block_core/shortcode', 'unhurried_render_newsletter_shortcode' );
 
 if ( ! function_exists( 'unhurried_hide_placeholder_social' ) ) :
 	/**

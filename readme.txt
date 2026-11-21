@@ -36,14 +36,24 @@ The theme includes:
 
 1. In your admin panel, go to Appearance > Themes and click Add New.
 2. Search for Unhurried, then click Install and Activate.
-3. Create a page, choose the Ground artboard template, and pick the Homepage pattern when WordPress offers page patterns.
-4. Set that page as your homepage under Settings > Reading.
+3. Open Appearance > About Unhurried (the notice on your dashboard links there). Its setup checklist shows what is done and what is left, with one button per step.
+4. Click Create the homepage. The page opens with the full layout and the right template already chosen; change the words and photos, then publish it and pick it as your homepage under Settings > Reading. Every other page (About, Services, Contact, Work, Pricing, Visit, Topics, Journal) works the same way.
+
+You can also do it by hand: create a page, choose the Ground artboard template, and pick the Homepage pattern when WordPress offers page patterns.
 
 == Frequently Asked Questions ==
 
 = Does the theme include a contact or booking form? =
 
-No. Forms are plugin territory. The Contact pattern has a card where you can drop in the block from any form or booking plugin.
+Forms are plugin territory, so the theme works with the free ones you already know. With Contact Form 7 or WPForms Lite active, your first form appears in the card on the Contact page by itself, and the fields and button take on the theme's look. Fields from any other form plugin are styled too; place its block in the card. Developers can supply a form through the `unhurried_contact_form_block` filter.
+
+= How do I add a newsletter signup? =
+
+Install the free Newsletter plugin (wordpress.org/plugins/newsletter), which keeps subscribers in your own WordPress. Its email form then appears in the footer and in the Newsletter band pattern with no setup; run the plugin's short setup wizard to get its thank-you page and confirmation emails. Jetpack's Subscribe block works the same way. Without either, those spots offer your site's RSS feed. Developers can supply any other form through the `unhurried_newsletter_block` filter.
+
+= How do I add my social profiles? =
+
+Open the footer in the Site Editor, select each icon and paste your profile address. An icon without an address stays hidden from visitors, so you can leave the ones you don't use.
 
 = How do I keep an image in color? =
 
@@ -55,8 +65,12 @@ Select the image and choose the Keep color style, or remove the `unhurried-mono`
 * Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
 * A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip, pause under the pointer, and stand still for visitors who ask for reduced motion. It scrolls away; the header stays.
 * Three more page patterns: Work (with a new Numbers section), Pricing and Visit.
-* Footer: a newsletter row under the search (Jetpack's Subscribe block when it is active, otherwise the RSS feed), social icons for Google Business Profile, Instagram, Facebook, X, Pinterest, TikTok, YouTube, LinkedIn and Yelp (an icon stays hidden from visitors until it has an address), and the wordmark in capitals, sized to fill the width, rolling letter by letter on hover.
+* Footer: a newsletter row under the search (the free Newsletter plugin's form, or Jetpack's Subscribe block, when active; otherwise the RSS feed), social icons for Google Business Profile, Instagram, Facebook, X, Pinterest, TikTok, YouTube, LinkedIn and Yelp (an icon stays hidden from visitors until it has an address), and the wordmark in capitals, sized to fill the width, rolling letter by letter on hover.
+* A setup checklist on Appearance > About Unhurried, with live progress: every page opens ready-made with its layout and template (you review and publish it), and each step links straight to the right screen: settings, menus, footer, styles, plugins. A dashboard notice points to it until the site is set up.
+* Contact Form 7 and WPForms: the first form appears in the Contact card by itself. Form fields from any plugin match the theme.
+* Links to a spot on the page glide there and stop below the sticky header.
 * Menu dropdowns are small rounded cards.
+* Buttons and links that lead to a page say where they go (Contact us, Our services, Read the journal, Get directions) instead of placeholder text.
 * New homepage hero, Hero, statue: a full-screen photograph of Michelangelo's David in an inset, rounded frame, with the headline, buttons and a caption over a soft shade.
 * New hero, Hero, spiral: a round image that turns very slowly inside a ring of ticks, with the headline's last word set huge beside it. Motion stops when the visitor asks for reduced motion.
 * Journal: breadcrumbs, topic chips with post counts (the current topic highlighted), a search box that looks only through posts, a results count, reading time on every card and post, an author box, related posts from the same topic, and a reading progress bar on posts.
@@ -82,7 +96,7 @@ Select the image and choose the Keep color style, or remove the `unhurried-mono`
 * American English throughout: the Harbor look, the Header, centered title pattern and the Keep color image style carry their American names now. Images already set to the old image style keep working.
 
 = 1.1.0 =
-* About Unhurried: a card about Unhurried Pro, a Plugins that fit card (WooCommerce, Contact Form 7, ReviewScribe; installing is always your own click), and a one-line review ask.
+* About Unhurried: a card about Unhurried Pro, a Plugins that fit card (WooCommerce, Contact Form 7, Newsletter, ReviewScribe; installing is always your own click), and a one-line review ask.
 * Two notices, each permanently dismissible, shown only on the Dashboard, Themes and About screens: Unhurried Pro when WooCommerce is active and Pro is not; a review ask after 14 days.
 * Reveal on scroll is now a block style for Group, Columns, Column, Image, Heading, Paragraph, Cover and Quote. The class still works.
 * Pattern buttons link to your Contact and Services pages when those pages exist.

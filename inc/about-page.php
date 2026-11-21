@@ -68,6 +68,24 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				.unhurried-about .ua-plugins.is-tiles li span { display: block; margin: 4px 0 10px; }
 				.unhurried-about .ua-review { margin-top: 20px; }
 				.unhurried-about .ua-grid.is-loose { align-items: start; margin-top: 20px; }
+				.unhurried-about .ua-setup { margin-bottom: 20px; padding: 28px 30px; }
+				.unhurried-about .ua-setup-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+				.unhurried-about .ua-setup-count { margin: 0; color: #5A564E; font-size: 13px; }
+				.unhurried-about .ua-setup-bar { height: 4px; border-radius: 4px; background: #E6E1D5; overflow: hidden; margin: 4px 0 18px; }
+				.unhurried-about .ua-setup-bar span { display: block; height: 100%; background: #16140F; }
+				.unhurried-about .ua-steps { list-style: none; margin: 0; padding: 0; }
+				.unhurried-about .ua-step { display: grid; grid-template-columns: 26px 1fr; gap: 14px; padding: 16px 0; border-top: 1px solid #D8D5CE; margin: 0; }
+				.unhurried-about .ua-step:first-child { border-top: 0; }
+				.unhurried-about .ua-step-mark { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #B9B4A9; display: grid; place-items: center; font-size: 12px; margin-top: 2px; }
+				.unhurried-about .ua-step.is-done .ua-step-mark { background: #16140F; border-color: #16140F; color: #F6F4EF; }
+				.unhurried-about .ua-step.is-optional .ua-step-mark { border-style: dashed; }
+				.unhurried-about .ua-step h3 { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+				.unhurried-about .ua-step.is-done h3 { color: #5A564E; }
+				.unhurried-about .ua-step-state { font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #8A857B; margin-left: 6px; }
+				.unhurried-about .ua-step.is-todo .ua-step-state { color: #D44B19; }
+				.unhurried-about .ua-step p { margin: 0; color: #3b3830; max-width: 70ch; }
+				.unhurried-about .ua-step .ua-step-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+				.unhurried-about .ua-step .ua-is-done { color: #5A564E; border-color: #D8D5CE; }
 			</style>
 
 			<div class="ua-hero">
@@ -81,19 +99,13 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 			</div>
 			<hr class="wp-header-end">
 
+			<?php unhurried_render_setup_card(); ?>
+
 			<div class="ua-grid">
-				<div class="ua-card">
-					<h2><?php esc_html_e( 'Start here', 'unhurried' ); ?></h2>
-					<ol>
-						<li><?php esc_html_e( 'Create a page and choose the Ground artboard template.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Pick the Homepage pattern when WordPress offers page patterns.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Set it as your homepage under Settings > Reading.', 'unhurried' ); ?></li>
-					</ol>
-					<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'site-editor.php' ) ); ?>"><?php esc_html_e( 'Open the Site Editor', 'unhurried' ); ?></a></p>
-				</div>
 				<div class="ua-card">
 					<h2><?php esc_html_e( 'Good to know', 'unhurried' ); ?></h2>
 					<ul>
+						<li><?php esc_html_e( 'Every section is a pattern: click + in the editor, open Patterns and browse the Unhurried categories.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Italic words in headings turn into the Fraunces accent face.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-reveal to any block for a gentle scroll reveal.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-mono to show a block\'s images in grayscale.', 'unhurried' ); ?></li>
@@ -137,7 +149,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				<h2><?php esc_html_e( 'Resources', 'unhurried' ); ?></h2>
 				<ul>
 					<li><?php esc_html_e( 'Hanken Grotesk, Inter and Fraunces: SIL Open Font License 1.1.', 'unhurried' ); ?></li>
-					<li><?php esc_html_e( 'Theme images: created for Unhurried, CC0 1.0.', 'unhurried' ); ?></li>
+					<li><?php esc_html_e( 'Photographs: StockSnap.io, the WordPress.org Photo Directory and the Rijksmuseum, all CC0 1.0. Credits per file are in readme.txt.', 'unhurried' ); ?></li>
 				</ul>
 				<p class="ua-review">
 					<?php

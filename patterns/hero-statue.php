@@ -34,10 +34,10 @@ $unhurried_img = get_theme_file_uri( 'assets/images/david.webp' );
 				<!-- wp:buttons {"style":{"spacing":{"blockGap":{"left":"var:preset|spacing|60"}}}} -->
 				<div class="wp-block-buttons">
 					<!-- wp:button -->
-					<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Lorem ipsum', 'unhurried' ); ?></a></div>
+					<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Contact us', 'unhurried' ); ?></a></div>
 					<!-- /wp:button -->
 					<!-- wp:button {"className":"is-style-text-link"} -->
-					<div class="wp-block-button is-style-text-link"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'services' ) ); ?>"><?php esc_html_e( 'Dolor sit amet', 'unhurried' ); ?></a></div>
+					<div class="wp-block-button is-style-text-link"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'services' ) ); ?>"><?php esc_html_e( 'Our services', 'unhurried' ); ?></a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->

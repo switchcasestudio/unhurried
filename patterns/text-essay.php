@@ -67,7 +67,7 @@ $unhurried_journal    = $unhurried_posts_page ? get_permalink( $unhurried_posts_
 			<!-- /wp:paragraph --><cite><?php esc_html_e( 'Lorem Ipsum', 'unhurried' ); ?></cite></blockquote>
 			<!-- /wp:quote -->
 			<!-- wp:paragraph {"className":"unhurried-text-link"} -->
-			<p class="unhurried-text-link"><a href="<?php echo esc_url( $unhurried_journal ); ?>"><?php esc_html_e( 'Lorem ipsum dolor →', 'unhurried' ); ?></a></p>
+			<p class="unhurried-text-link"><a href="<?php echo esc_url( $unhurried_journal ); ?>"><?php esc_html_e( 'Read the journal →', 'unhurried' ); ?></a></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

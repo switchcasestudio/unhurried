@@ -53,6 +53,11 @@ if ( ! function_exists( 'unhurried_recommended_plugins' ) ) :
 				'name' => 'Contact Form 7',
 				'line' => __( 'A plain form for the note card on the Contact page.', 'unhurried' ),
 			),
+			array(
+				'slug' => 'newsletter',
+				'name' => 'Newsletter',
+				'line' => __( 'Free, self-hosted email signups. Its form appears in the footer and the Newsletter band by itself.', 'unhurried' ),
+			),
 		);
 		if ( UNHURRIED_SHOW_REVIEWSCRIBE ) {
 			$plugins[] = array(
@@ -280,7 +285,7 @@ if ( ! function_exists( 'unhurried_dismiss_url' ) ) :
 	 * Nonce-protected URL that dismisses a notice for the current user.
 	 *
 	 * @since 1.1.0
-	 * @param string $notice pro|review.
+	 * @param string $notice pro|review|welcome.
 	 * @return string
 	 */
 	function unhurried_dismiss_url( $notice ) {
@@ -306,7 +311,7 @@ if ( ! function_exists( 'unhurried_dismiss_notice' ) ) :
 	 */
 	function unhurried_dismiss_notice() {
 		$notice = isset( $_GET['notice'] ) ? sanitize_key( wp_unslash( $_GET['notice'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- checked below.
-		if ( ! in_array( $notice, array( 'pro', 'review' ), true ) || ! current_user_can( 'edit_theme_options' ) ) {
+		if ( ! in_array( $notice, array( 'pro', 'review', 'welcome' ), true ) || ! current_user_can( 'edit_theme_options' ) ) {
 			wp_die( esc_html__( 'Nothing to dismiss.', 'unhurried' ) );
 		}
 		check_admin_referer( 'unhurried_dismiss_' . $notice );
@@ -334,6 +339,25 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 			return;
 		}
 		$user = get_current_user_id();
+
+		// Welcome: until the setup checklist is finished or the notice is dismissed (since 1.2.0).
+		if ( 'appearance_page_unhurried-about' !== $screen->id && function_exists( 'unhurried_setup_progress' ) && ! get_user_meta( $user, 'unhurried_dismissed_welcome', true ) ) {
+			$progress = unhurried_setup_progress();
+			if ( $progress['done'] < $progress['total'] ) {
+				?>
+				<div class="notice notice-info">
+					<p><strong><?php esc_html_e( 'Unhurried is ready.', 'unhurried' ); ?></strong>
+					<?php
+					/* translators: 1: Steps done, 2: Steps in total. */
+					printf( esc_html__( 'A short checklist takes your site from empty to finished: each page opens ready-made, and you publish it. %1$d of %2$d steps done.', 'unhurried' ), (int) $progress['done'], (int) $progress['total'] );
+					?>
+					</p>
+					<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'themes.php?page=unhurried-about#unhurried-setup' ) ); ?>"><?php esc_html_e( 'Open the setup checklist', 'unhurried' ); ?></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'welcome' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
+				</div>
+				<?php
+				return;
+			}
+		}
 
 		if ( class_exists( 'WooCommerce' ) && ! unhurried_pro_present() && ! get_user_meta( $user, 'unhurried_dismissed_pro', true ) ) {
 			?>

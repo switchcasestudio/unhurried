@@ -5,13 +5,15 @@
  * Categories: call-to-action, featured
  * Keywords: newsletter, subscribe, email, letter, signup
  * Viewport width: 1400
- * Description: An Ink band with a two-line heading, a short note and a hairline button. Replace the button with your newsletter plugin's form block.
+ * Description: An Ink band with a two-line heading, a short note and an email signup form. The form comes from the free Newsletter plugin or Jetpack when either is active; without one, a button offers the site's RSS feed.
  *
  * @package Unhurried
  * @author  Switch Case Studio
  * @since 1.1.0
  */
 
+// A plugin's signup form (see unhurried_newsletter_form()), or the RSS feed.
+$unhurried_newsletter = unhurried_newsletter_form();
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Newsletter', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ink","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ink" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
@@ -32,13 +34,17 @@
 		<!-- /wp:column -->
 		<!-- wp:column {"verticalAlignment":"bottom","width":"40%","className":"unhurried-signup"} -->
 		<div class="wp-block-column is-vertically-aligned-bottom unhurried-signup" style="flex-basis:40%">
+			<?php if ( '' !== $unhurried_newsletter ) : ?>
+			<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
+			<?php else : ?>
 			<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"right"}} -->
 			<div class="wp-block-buttons">
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com?subject=The%20letter"><?php esc_html_e( 'Lorem qui est labore', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( get_feed_link() ); ?>"><?php esc_html_e( 'Subscribe by RSS', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
+			<?php endif; ?>
 		</div>
 		<!-- /wp:column -->
 	</div>
