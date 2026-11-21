@@ -14,6 +14,10 @@
  * @since 1.2.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 if ( ! function_exists( 'unhurried_starter_pages' ) ) :
 	/**
 	 * Pages the checklist can open ready-made: slug => title, pattern, template.

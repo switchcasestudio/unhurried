@@ -15,6 +15,10 @@
  * @since 1.1.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 if ( ! defined( 'UNHURRIED_PRO_VARIANT' ) ) {
 	define( 'UNHURRIED_PRO_VARIANT', 'shop' ); // shop | time | proof
 }

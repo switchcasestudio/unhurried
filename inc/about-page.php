@@ -7,6 +7,10 @@
  * @since 1.0.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 if ( ! function_exists( 'unhurried_about_menu' ) ) :
 	/**
 	 * Adds Appearance > About Unhurried.

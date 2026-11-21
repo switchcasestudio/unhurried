@@ -9,6 +9,10 @@
  * @since 1.0.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/recommended.php';
 require_once get_template_directory() . '/inc/setup.php';
