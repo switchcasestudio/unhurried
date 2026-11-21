@@ -188,6 +188,34 @@ if ( ! function_exists( 'unhurried_page_exists' ) ) :
 	}
 endif;
 
+if ( ! function_exists( 'unhurried_has_menu' ) ) :
+	/**
+	 * Whether the site has a menu someone made.
+	 *
+	 * Until there is one, WordPress makes a menu by itself the first time a
+	 * page is shown: a single Page List block that prints every published
+	 * page. That is not a menu the owner has set, so it does not count.
+	 *
+	 * @since 1.2.0
+	 * @return bool
+	 */
+	function unhurried_has_menu() {
+		$menus = get_posts(
+			array(
+				'post_type'   => 'wp_navigation',
+				'post_status' => 'publish',
+				'numberposts' => 20,
+			)
+		);
+		foreach ( $menus as $menu ) {
+			if ( '' !== trim( str_replace( '<!-- wp:page-list /-->', '', (string) $menu->post_content ) ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+endif;
+
 if ( ! function_exists( 'unhurried_footer_has_social' ) ) :
 	/**
 	 * Whether the site's own (edited) footer has a social icon with an address.
@@ -229,14 +257,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 			);
 		};
 
-		$nav = get_posts(
-			array(
-				'post_type'   => 'wp_navigation',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'fields'      => 'ids',
-			)
-		);
+		$has_menu = unhurried_has_menu();
 
 		$pages_done = unhurried_page_exists( 'about' ) && unhurried_page_exists( 'services' ) && unhurried_page_exists( 'contact' );
 		$page_links = array();
@@ -339,7 +360,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 				'id'      => 'menu',
 				'title'   => __( 'Set your menu', 'unhurried' ),
 				'text'    => __( 'Choose which pages appear in the header and the footer, and drag them into order. Keep it to the pages people look for; a dropdown only where pages truly belong together, such as Services and its groups.', 'unhurried' ),
-				'done'    => (bool) $nav,
+				'done'    => $has_menu,
 				'actions' => array(
 					array(
 						'label'   => __( 'Open menus', 'unhurried' ),

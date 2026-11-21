@@ -613,6 +613,103 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 endif;
 add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
 
+if ( ! function_exists( 'unhurried_page_list_exclude' ) ) :
+	/**
+	 * Pages kept out of the automatic page list.
+	 *
+	 * Until a site has a menu of its own, the Navigation block prints every
+	 * published page, and with WooCommerce that includes its Checkout, Cart
+	 * and My account pages. Checkout is a step, not a place to go, so it is
+	 * always left out. Cart and My account are left out when the header
+	 * already carries WooCommerce's cart and account icons, which lead to the
+	 * same pages; without the icons the two links stay, as the only way there.
+	 *
+	 * @since 1.2.0
+	 * @return int[] Page IDs.
+	 */
+	function unhurried_page_list_exclude() {
+		$exclude = array();
+		if ( function_exists( 'wc_get_page_id' ) ) {
+			$header    = get_block_template( get_stylesheet() . '//header', 'wp_template_part' );
+			$markup    = $header ? (string) $header->content : '';
+			$exclude[] = (int) wc_get_page_id( 'checkout' );
+			if ( false !== strpos( $markup, 'wp:woocommerce/mini-cart' ) ) {
+				$exclude[] = (int) wc_get_page_id( 'cart' );
+			}
+			if ( false !== strpos( $markup, 'wp:woocommerce/customer-account' ) ) {
+				$exclude[] = (int) wc_get_page_id( 'myaccount' );
+			}
+		}
+		/**
+		 * Filters the pages kept out of the automatic page list.
+		 *
+		 * @since 1.2.0
+		 * @param int[] $exclude Page IDs. Return an empty array to list every page.
+		 */
+		$exclude = (array) apply_filters( 'unhurried_page_list_exclude', $exclude );
+		return array_values( array_filter( array_map( 'intval', $exclude ) ) );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_list_pages' ) ) :
+	/**
+	 * Drops the pages named by unhurried_page_list_exclude() from a list of pages.
+	 *
+	 * @since 1.2.0
+	 * @param WP_Post[] $pages Pages.
+	 * @return WP_Post[]
+	 */
+	function unhurried_page_list_pages( $pages ) {
+		$exclude = unhurried_page_list_exclude();
+		if ( ! $exclude || ! is_array( $pages ) ) {
+			return $pages;
+		}
+		$kept = array();
+		foreach ( $pages as $page ) {
+			if ( ! in_array( (int) $page->ID, $exclude, true ) ) {
+				$kept[] = $page;
+			}
+		}
+		return $kept;
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_list_scope' ) ) :
+	/**
+	 * Applies unhurried_page_list_pages() while a Navigation block renders,
+	 * and only then: the filter goes on as the block starts and comes off
+	 * when it has rendered (unhurried_page_list_unscope()), so no other list
+	 * of pages is touched. The Navigation block renders its Page List itself,
+	 * which is why the scope is the menu and not the list inside it.
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The block about to render.
+	 * @return array
+	 */
+	function unhurried_page_list_scope( $parsed_block ) {
+		if ( isset( $parsed_block['blockName'] ) && 'core/navigation' === $parsed_block['blockName'] ) {
+			add_filter( 'get_pages', 'unhurried_page_list_pages' );
+		}
+		return $parsed_block;
+	}
+endif;
+add_filter( 'render_block_data', 'unhurried_page_list_scope' );
+
+if ( ! function_exists( 'unhurried_page_list_unscope' ) ) :
+	/**
+	 * Takes the page list filter off again once the Navigation block has rendered.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_page_list_unscope( $block_content ) {
+		remove_filter( 'get_pages', 'unhurried_page_list_pages' );
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/navigation', 'unhurried_page_list_unscope' );
+
 if ( ! function_exists( 'unhurried_mark_current_term' ) ) :
 	/**
 	 * Marks the term the visitor is browsing: on a category or tag archive, the
