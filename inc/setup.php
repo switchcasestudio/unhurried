@@ -84,7 +84,7 @@ if ( ! function_exists( 'unhurried_prefill_page' ) ) :
 	 * @return string
 	 */
 	function unhurried_prefill_page( $content, $post ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only choice from a fixed list; the user still publishes.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce: the key only picks one entry of a fixed list, for the auto-draft WordPress has just made for this user (who can edit pages). It sets that draft's template, parent and page key; nothing is published.
 		$slug  = isset( $_GET['unhurried_page'] ) ? sanitize_key( wp_unslash( $_GET['unhurried_page'] ) ) : '';
 		$pages = unhurried_starter_pages();
 		if ( '' === $slug || ! isset( $pages[ $slug ] ) || ! $post instanceof WP_Post || 'page' !== $post->post_type || ! current_user_can( 'edit_pages' ) ) {
@@ -93,6 +93,13 @@ if ( ! function_exists( 'unhurried_prefill_page' ) ) :
 		$page = $pages[ $slug ];
 		if ( '' !== $page['template'] ) {
 			update_post_meta( $post->ID, '_wp_page_template', $page['template'] );
+		}
+		// Remember which of the theme's pages this is. On a translated site its
+		// title, and so its address, is in the site's language, and the user may
+		// rename it; unhurried_find_page() finds it by this mark when the slug
+		// does not. Service pages are many, so they carry none.
+		if ( '' !== $page['title'] ) {
+			update_post_meta( $post->ID, '_unhurried_page', $slug );
 		}
 		// A service group starts nested under Services; a service is placed
 		// under its group by the user (Page settings, Parent).
@@ -163,15 +170,16 @@ endif;
 
 if ( ! function_exists( 'unhurried_page_exists' ) ) :
 	/**
-	 * Whether a published or draft page has this slug.
+	 * Whether the site has this page, published or still a draft: the page
+	 * with this slug or, failing that, the one the checklist made for it
+	 * (see unhurried_find_page()).
 	 *
 	 * @since 1.2.0
-	 * @param string $slug Page slug.
+	 * @param string $slug Page slug, e.g. 'contact'.
 	 * @return WP_Post|null
 	 */
 	function unhurried_page_exists( $slug ) {
-		$page = get_page_by_path( $slug );
-		return ( $page && in_array( $page->post_status, array( 'publish', 'draft', 'future', 'private' ), true ) ) ? $page : null;
+		return unhurried_find_page( $slug, array( 'publish', 'draft', 'future', 'private' ) );
 	}
 endif;
 

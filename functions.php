@@ -587,8 +587,7 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 	function unhurried_mark_contact_link( $block_content ) {
 		static $contact_url = null;
 		if ( null === $contact_url ) {
-			$page        = get_page_by_path( 'contact' );
-			$contact_url = ( $page && 'publish' === $page->post_status ) ? untrailingslashit( (string) get_permalink( $page ) ) : '';
+			$contact_url = untrailingslashit( (string) unhurried_page_link( 'contact', '' ) );
 		}
 		if ( '' === $contact_url || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
 			return $block_content;
@@ -673,17 +672,91 @@ if ( ! function_exists( 'unhurried_term_count_label' ) ) :
 endif;
 add_filter( 'render_block_core/term-count', 'unhurried_term_count_label', 10, 3 );
 
+if ( ! function_exists( 'unhurried_find_page' ) ) :
+	/**
+	 * The page the theme treats as one of its named pages (Contact, Services…).
+	 *
+	 * First the page at that slug, as always. When there is none, the page the
+	 * setup checklist opened for it: the checklist marks each of its pages
+	 * with its key (post meta _unhurried_page), because on a translated site
+	 * the page is titled, and so addressed, in the site's own language
+	 * ("Kontakt", /kontakt/) and the English slug finds nothing.
+	 *
+	 * @since 1.2.0
+	 * @param string   $slug     The page's key: its English slug, e.g. 'contact'.
+	 * @param string[] $statuses Post statuses that count. Default: published only.
+	 * @return WP_Post|null
+	 */
+	function unhurried_find_page( $slug, $statuses = array( 'publish' ) ) {
+		$slug     = (string) $slug;
+		$statuses = (array) $statuses;
+		$page     = '' !== $slug ? get_page_by_path( $slug ) : null;
+		if ( ! $page || ! in_array( $page->post_status, $statuses, true ) ) {
+			$page = null;
+			if ( '' !== $slug ) {
+				$marked = get_posts(
+					array(
+						'post_type'   => 'page',
+						'post_status' => $statuses,
+						'meta_key'    => '_unhurried_page', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Runs only when no page has the slug; a handful of rows; WP_Query caches the result.
+						'meta_value'  => $slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- As above.
+						'orderby'     => 'ID',
+						'order'       => 'ASC',
+						'numberposts' => 10,
+					)
+				);
+				// A published page first, then the oldest of the rest.
+				foreach ( $marked as $candidate ) {
+					if ( 'publish' === $candidate->post_status ) {
+						$page = $candidate;
+						break;
+					}
+				}
+				if ( ! $page && $marked ) {
+					$page = $marked[0];
+				}
+			}
+		}
+		/**
+		 * Filters which page the theme treats as one of its named pages.
+		 *
+		 * A multilingual plugin can return the page for the visitor's language.
+		 *
+		 * @since 1.2.0
+		 * @param int      $page_id  Page ID, or 0 when the theme found none.
+		 * @param string   $slug     The page's key: its English slug, e.g. 'contact'.
+		 * @param string[] $statuses Post statuses that count.
+		 */
+		$page_id = (int) apply_filters( 'unhurried_page_id', $page ? $page->ID : 0, $slug, $statuses );
+		if ( $page && $page_id === $page->ID ) {
+			return $page;
+		}
+		$page = $page_id ? get_post( $page_id ) : null;
+		return ( $page instanceof WP_Post && in_array( $page->post_status, $statuses, true ) ) ? $page : null;
+	}
+endif;
+
 if ( ! function_exists( 'unhurried_page_link' ) ) :
 	/**
 	 * Permalink of a published page by slug, or a fallback, for pattern buttons.
 	 *
 	 * @since 1.1.0
+	 * @since 1.2.0 Also finds the page the setup checklist made (see unhurried_find_page()); filterable.
 	 * @param string $slug     Page slug, e.g. 'contact'.
 	 * @param string $fallback Used when the page does not exist.
 	 * @return string
 	 */
 	function unhurried_page_link( $slug, $fallback = '#' ) {
-		$page = get_page_by_path( $slug );
-		return ( $page && 'publish' === $page->post_status ) ? get_permalink( $page ) : $fallback;
+		$page = unhurried_find_page( $slug );
+		$url  = $page ? get_permalink( $page ) : $fallback;
+		/**
+		 * Filters the address the theme links to for one of its named pages.
+		 *
+		 * @since 1.2.0
+		 * @param string $url      The page's permalink, or the fallback when there is no such page.
+		 * @param string $slug     The page's key: its English slug, e.g. 'contact'.
+		 * @param string $fallback The fallback the caller asked for.
+		 */
+		return apply_filters( 'unhurried_page_link', $url, $slug, $fallback );
 	}
 endif;
