@@ -122,17 +122,22 @@ if ( ! function_exists( 'unhurried_prefill_title' ) ) :
 	 * Gives a page opened from the checklist its title.
 	 *
 	 * @since 1.2.0
-	 * @param string $title Default title.
+	 * @param string       $title Default title.
+	 * @param WP_Post|null $post  The new auto-draft, as default_title passes it.
 	 * @return string
 	 */
-	function unhurried_prefill_title( $title ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only choice from a fixed list.
+	function unhurried_prefill_title( $title, $post = null ) {
+		// Only a new page, and only for someone who may edit pages.
+		if ( $post instanceof WP_Post && ( 'page' !== $post->post_type || ! current_user_can( 'edit_pages' ) ) ) {
+			return $title;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce: the key only picks a title from a fixed list for a draft that is not saved yet.
 		$slug  = isset( $_GET['unhurried_page'] ) ? sanitize_key( wp_unslash( $_GET['unhurried_page'] ) ) : '';
 		$pages = unhurried_starter_pages();
 		return ( '' !== $slug && isset( $pages[ $slug ] ) && '' !== $pages[ $slug ]['title'] ) ? $pages[ $slug ]['title'] : $title;
 	}
 endif;
-add_filter( 'default_title', 'unhurried_prefill_title' );
+add_filter( 'default_title', 'unhurried_prefill_title', 10, 2 );
 
 if ( ! function_exists( 'unhurried_site_editor_url' ) ) :
 	/**
@@ -216,7 +221,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 				'state'   => $state,
 				'actions' => $action['url'] ? array(
 					array(
-						'label'   => sprintf( '%1$s %2$s', $action['label'], $label ),
+						'label'   => unhurried_plugin_action_label( $state, $label ),
 						'url'     => $action['url'],
 						'primary' => true,
 					),

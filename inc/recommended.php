@@ -130,6 +130,34 @@ if ( ! function_exists( 'unhurried_plugin_action' ) ) :
 	}
 endif;
 
+if ( ! function_exists( 'unhurried_plugin_action_label' ) ) :
+	/**
+	 * A whole button label for a plugin's next step, with its name in it
+	 * ("Install Newsletter"), so a translator gets the phrase rather than a
+	 * verb and a name to join in English order.
+	 *
+	 * @since 1.2.0
+	 * @param string $state active|installed|missing.
+	 * @param string $name  Plugin name.
+	 * @return string Empty when the plugin is active and there is nothing to do.
+	 */
+	function unhurried_plugin_action_label( $state, $name ) {
+		if ( 'active' === $state ) {
+			return '';
+		}
+		if ( 'installed' === $state ) {
+			/* translators: %s: Plugin name. */
+			return sprintf( __( 'Activate %s', 'unhurried' ), $name );
+		}
+		if ( current_user_can( 'install_plugins' ) ) {
+			/* translators: %s: Plugin name. */
+			return sprintf( __( 'Install %s', 'unhurried' ), $name );
+		}
+		/* translators: %s: Plugin name. */
+		return sprintf( __( 'View %s', 'unhurried' ), $name );
+	}
+endif;
+
 if ( ! function_exists( 'unhurried_pro_present' ) ) :
 	/**
 	 * True when Unhurried Pro is installed (active or not).
@@ -381,7 +409,17 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 		if ( $since && ( time() - $since ) > $days * DAY_IN_SECONDS && ! get_user_meta( $user, 'unhurried_dismissed_review', true ) ) {
 			?>
 			<div class="notice notice-info">
-				<p><?php esc_html_e( 'Two weeks with Unhurried. If it has been good to you, a short review on WordPress.org helps other studios find it.', 'unhurried' ); ?></p>
+				<p>
+				<?php
+				if ( 14 === $days ) {
+					esc_html_e( 'Two weeks with Unhurried. If it has been good to you, a short review on WordPress.org helps other studios find it.', 'unhurried' );
+				} else {
+					// The unhurried_notice_days filter changed the wait, so name the real one.
+					/* translators: %s: Number of days. */
+					echo esc_html( sprintf( _n( '%s day with Unhurried. If it has been good to you, a short review on WordPress.org helps other studios find it.', '%s days with Unhurried. If it has been good to you, a short review on WordPress.org helps other studios find it.', $days, 'unhurried' ), number_format_i18n( $days ) ) );
+				}
+				?>
+				</p>
 				<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_REVIEW_URL ); ?>"><?php esc_html_e( 'Leave a review', 'unhurried' ); ?></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'review' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
 			</div>
 			<?php
