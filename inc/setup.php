@@ -23,15 +23,18 @@ if ( ! function_exists( 'unhurried_starter_pages' ) ) :
 	 */
 	function unhurried_starter_pages() {
 		$pages = array(
-			'home'     => array( __( 'Home', 'unhurried' ), 'page-home', 'page-ground' ),
-			'about'    => array( __( 'About', 'unhurried' ), 'page-about', 'page-canvas' ),
-			'services' => array( __( 'Services', 'unhurried' ), 'page-services', 'page-canvas' ),
-			'contact'  => array( __( 'Contact', 'unhurried' ), 'page-contact', 'page-canvas' ),
-			'work'     => array( __( 'Work', 'unhurried' ), 'page-work', 'page-canvas' ),
-			'pricing'  => array( __( 'Pricing', 'unhurried' ), 'page-pricing', 'page-canvas' ),
-			'visit'    => array( __( 'Visit', 'unhurried' ), 'page-visit', 'page-canvas' ),
-			'topics'   => array( __( 'Topics', 'unhurried' ), 'page-topics', 'page-canvas' ),
-			'journal'  => array( __( 'Journal', 'unhurried' ), '', '' ),
+			'home'          => array( __( 'Home', 'unhurried' ), 'page-home', 'page-ground' ),
+			'about'         => array( __( 'About', 'unhurried' ), 'page-about', 'page-canvas' ),
+			'services'      => array( __( 'Services', 'unhurried' ), 'page-services', 'page-canvas' ),
+			'contact'       => array( __( 'Contact', 'unhurried' ), 'page-contact', 'page-canvas' ),
+			'work'          => array( __( 'Work', 'unhurried' ), 'page-work', 'page-canvas' ),
+			'pricing'       => array( __( 'Pricing', 'unhurried' ), 'page-pricing', 'page-canvas' ),
+			'visit'         => array( __( 'Visit', 'unhurried' ), 'page-visit', 'page-canvas' ),
+			'topics'        => array( __( 'Topics', 'unhurried' ), 'page-topics', 'page-canvas' ),
+			'journal'       => array( __( 'Journal', 'unhurried' ), '', '' ),
+			// Nested under Services: /services/{group}/{service}/. Untitled, so the user names them.
+			'service-group' => array( '', 'page-service-group', 'page-canvas' ),
+			'service'       => array( '', 'page-service', 'page-canvas' ),
 		);
 		$out = array();
 		foreach ( $pages as $slug => $page ) {
@@ -87,6 +90,17 @@ if ( ! function_exists( 'unhurried_prefill_page' ) ) :
 		if ( '' !== $page['template'] ) {
 			update_post_meta( $post->ID, '_wp_page_template', $page['template'] );
 		}
+		// A service group starts nested under Services; a service is placed
+		// under its group by the user (Page settings, Parent).
+		$services = 'service-group' === $slug ? unhurried_page_exists( 'services' ) : null;
+		if ( $services ) {
+			wp_update_post(
+				array(
+					'ID'          => $post->ID,
+					'post_parent' => $services->ID,
+				)
+			);
+		}
 		return '' !== $page['pattern'] ? '<!-- wp:pattern {"slug":"unhurried/' . $page['pattern'] . '"} /-->' : $content;
 	}
 endif;
@@ -104,7 +118,7 @@ if ( ! function_exists( 'unhurried_prefill_title' ) ) :
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only choice from a fixed list.
 		$slug  = isset( $_GET['unhurried_page'] ) ? sanitize_key( wp_unslash( $_GET['unhurried_page'] ) ) : '';
 		$pages = unhurried_starter_pages();
-		return ( '' !== $slug && isset( $pages[ $slug ] ) ) ? $pages[ $slug ]['title'] : $title;
+		return ( '' !== $slug && isset( $pages[ $slug ] ) && '' !== $pages[ $slug ]['title'] ) ? $pages[ $slug ]['title'] : $title;
 	}
 endif;
 add_filter( 'default_title', 'unhurried_prefill_title' );
@@ -287,9 +301,27 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 				'actions' => $page_links,
 			),
 			array(
+				'id'      => 'services',
+				'title'   => __( 'Group your services', 'unhurried' ),
+				'text'    => __( 'Give each kind of service a page under Services, and each service a page under its kind (Page settings, Parent), for addresses like /services/design/identity/. Services and each group list the pages under them as cards, with breadcrumbs back up; the excerpt and featured image fill each card.', 'unhurried' ),
+				'done'    => null,
+				'actions' => array(
+					array(
+						'label'   => __( 'Add a service group', 'unhurried' ),
+						'url'     => unhurried_new_page_url( 'service-group' ),
+						'primary' => false,
+					),
+					array(
+						'label'   => __( 'Add a service', 'unhurried' ),
+						'url'     => unhurried_new_page_url( 'service' ),
+						'primary' => false,
+					),
+				),
+			),
+			array(
 				'id'      => 'menu',
 				'title'   => __( 'Set your menu', 'unhurried' ),
-				'text'    => __( 'Choose which pages appear in the header and the footer, and drag them into order. Nest a page under another for a dropdown.', 'unhurried' ),
+				'text'    => __( 'Choose which pages appear in the header and the footer, and drag them into order. Keep it to the pages people look for; a dropdown only where pages truly belong together, such as Services and its groups.', 'unhurried' ),
 				'done'    => (bool) $nav,
 				'actions' => array(
 					array(

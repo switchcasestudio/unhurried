@@ -107,7 +107,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 					<ul>
 						<li><?php esc_html_e( 'Every section is a pattern: click + in the editor, open Patterns and browse the Unhurried categories.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Italic words in headings turn into the Fraunces accent face.', 'unhurried' ); ?></li>
-						<li><?php esc_html_e( 'Add the class unhurried-reveal to any block for a gentle scroll reveal.', 'unhurried' ); ?></li>
+						<li><?php esc_html_e( 'Every section moves gently as it scrolls into view, and stays still for visitors who ask for reduced motion. Add the class unhurried-still to any block to keep it still.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Add the class unhurried-mono to show a block\'s images in grayscale.', 'unhurried' ); ?></li>
 						<li><?php esc_html_e( 'Twenty looks live under Styles in the Site Editor: eight color themes, ten tinted papers and Folio. Switching never moves your content.', 'unhurried' ); ?></li>
 					</ul>

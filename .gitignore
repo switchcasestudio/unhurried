@@ -4,3 +4,5 @@ dev/*.log
 *.zip
 .DS_Store
 docs/internal/
+STATUS.md
+dev/release-notes-*.md

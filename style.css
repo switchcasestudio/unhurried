@@ -132,6 +132,9 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	background: var(--wp--preset--color--base-2);
 	text-decoration: none;
 }
+/* Footer menus are plain links: top-level pages only, no dropdowns. */
+.unhurried-nav-plain .wp-block-navigation__submenu-container,
+.unhurried-nav-plain .wp-block-navigation__submenu-icon { display: none !important; }
 .unhurried-capsule .wp-block-navigation__responsive-container.is-menu-open {
 	padding: clamp(1.25rem, 5vw, 4rem);
 }
@@ -453,7 +456,8 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 .comment-form textarea:focus { border-color: var(--wp--preset--color--contrast); outline: none; }
 .wp-block-search__button { margin-inline-start: .5rem; }
 
-/* ─── Reveal on scroll (class "unhurried-reveal" or the Reveal block style) ─ */
+/* ─── Reveal on scroll, the opt-in kind from 1.0 (class "unhurried-reveal" or the Reveal block style).
+   Used only when the automatic motion below is off (filter unhurried_motion). */
 @media (prefers-reduced-motion: no-preference) {
 	.has-unhurried-reveal :is(.unhurried-reveal, .is-style-reveal):not(.is-revealed) {
 		opacity: .4;
@@ -464,6 +468,249 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 			transform var(--wp--custom--motion--duration) var(--wp--custom--motion--ease);
 	}
 }
+
+/* ─── Motion system (1.2.0) ───────────────────────────────────────────────
+   One vocabulary for the whole theme, drawn from the motion tokens in
+   theme.json (settings.custom.motion). Four layers:
+   1. Entrances: assets/js/reveal.js marks each element with data-uh and its
+      kind, and adds .is-in as it scrolls into view; items entering together
+      are staggered by --uh-delay. The hidden "before" states exist only while
+      <html> has .uh-motion, which unhurried_motion_head() adds before the
+      first paint and removes again if the script never starts. No script,
+      reduced motion, the editor: everything is simply visible.
+   2. Feedback: every control answers a hover or a press within the 400 ms
+      Doherty window. Only interactive things react to the pointer.
+   3. Depth: scroll-linked drift on photographs (where supported).
+   4. Continuity: pages cross-fade while the header stays put.
+   Opt out for any block or section with the class "unhurried-still". */
+:root {
+	--uh-ease: var(--wp--custom--motion--ease-out, cubic-bezier(.16, 1, .3, 1));
+	--uh-ease-io: var(--wp--custom--motion--ease-in-out, cubic-bezier(.65, 0, .35, 1));
+	--uh-press: var(--wp--custom--motion--duration-press, 120ms);
+	--uh-quick: var(--wp--custom--motion--duration-quick, 220ms);
+	--uh-reveal: var(--wp--custom--motion--duration-reveal, 900ms);
+	--uh-slow: var(--wp--custom--motion--duration-slow, 1400ms);
+	--uh-rise: var(--wp--custom--motion--distance, 28px);
+}
+
+/* 1. Entrances */
+/* Before the script has marked anything, keep main content back for a
+   moment so the first screen can enter instead of blinking. The failsafe in
+   unhurried_motion_head() lifts this after 2.5 s if the script never runs. */
+.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form) { opacity: 0; }
+.uh-motion [data-uh]:not(.is-in) { opacity: 0; }
+.uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-rise); }
+.uh-motion :is([data-uh="card"], [data-uh="image"]):not(.is-in) { translate: 0 calc(var(--uh-rise) * 1.5); }
+.uh-motion [data-uh="card"]:not(.is-in) { scale: .985; }
+.uh-motion [data-uh="image"]:not(.is-in) img { scale: 1.08; }
+.uh-motion [data-uh="draw"] { transform-origin: 0 50%; }
+.uh-motion[dir="rtl"] [data-uh="draw"], [dir="rtl"] .uh-motion [data-uh="draw"] { transform-origin: 100% 50%; }
+.uh-motion [data-uh="draw"]:not(.is-in) { opacity: 1; scale: 0 1; }
+.uh-motion [data-uh="words"]:not(.is-in) { opacity: 1; }
+.uh-motion [data-uh="words"]:not(.is-in) .unhurried-wordmark__letters > span { translate: 0 110%; }
+.uh-motion [data-uh]:not(.is-done) {
+	transition:
+		opacity var(--uh-reveal) var(--uh-ease) var(--uh-delay, 0ms),
+		translate var(--uh-reveal) var(--uh-ease) var(--uh-delay, 0ms),
+		scale var(--uh-reveal) var(--uh-ease) var(--uh-delay, 0ms);
+}
+.uh-motion [data-uh="draw"]:not(.is-done) { transition-duration: var(--uh-slow); }
+.uh-motion [data-uh="image"]:not(.is-done) img { transition: scale var(--uh-slow) var(--uh-ease) var(--uh-delay, 0ms); }
+.uh-motion [data-uh="words"]:not(.is-done) .unhurried-wordmark__letters > span {
+	transition: translate 1.2s var(--uh-ease) calc(var(--uh-delay, 0ms) + var(--i, 0) * 45ms);
+}
+
+/* Printing shows everything, including what was never scrolled into view. */
+@media print {
+	.uh-motion [data-uh],
+	.uh-motion [data-uh] img,
+	.uh-motion .unhurried-wordmark__letters > span,
+	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer) * { opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; }
+}
+
+/* 2. Feedback */
+/* Buttons lift under the pointer and press in on click. */
+.wp-block-button__link,
+.wp-element-button {
+	transition:
+		transform var(--uh-quick) var(--uh-ease),
+		background-color var(--uh-quick) var(--uh-ease),
+		color var(--uh-quick) var(--uh-ease),
+		border-color var(--uh-quick) var(--uh-ease),
+		box-shadow var(--uh-quick) var(--uh-ease),
+		text-underline-offset var(--uh-quick) var(--uh-ease);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover,
+	.wp-element-button:not(.wp-block-search__button, .wp-block-button__link):hover {
+		transform: translateY(-2px);
+		box-shadow: 0 14px 26px -16px rgba(22, 20, 15, .5);
+	}
+	.wp-block-button.is-style-text-link > .wp-block-button__link:hover { text-underline-offset: 9px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+	.wp-block-button__link:active,
+	.wp-element-button:active {
+		transform: translateY(0) scale(.97);
+		box-shadow: none;
+		transition-duration: var(--uh-press);
+	}
+}
+/* Links: the underline settles closer as the pointer arrives. */
+a:where(:not(.wp-element-button)) {
+	transition: color var(--uh-quick) var(--uh-ease), text-decoration-color var(--uh-quick) var(--uh-ease), text-underline-offset var(--uh-quick) var(--uh-ease);
+}
+/* Menu: the underline rises into place instead of blinking on. */
+.wp-block-navigation .wp-block-navigation-item__content {
+	text-decoration-line: underline;
+	text-decoration-color: transparent;
+	text-underline-offset: 11px;
+	transition: text-decoration-color var(--uh-quick) var(--uh-ease), text-underline-offset var(--uh-quick) var(--uh-ease), background-color var(--uh-quick) var(--uh-ease);
+}
+.wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
+.wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
+/* Dropdowns unfold from the item. */
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
+		transition: opacity var(--uh-quick) var(--uh-ease), translate var(--uh-quick) var(--uh-ease), visibility 0s linear var(--uh-quick) !important;
+		translate: 0 -6px;
+	}
+	.unhurried-capsule .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-container,
+	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container {
+		translate: 0 0;
+		transition: opacity var(--uh-quick) var(--uh-ease), translate var(--uh-quick) var(--uh-ease), visibility 0s !important;
+	}
+}
+/* Cards that lead somewhere rise toward the pointer; their photo leans in. */
+.is-style-card:has(.wp-block-button),
+.is-style-section-card:has(a),
+.wp-block-post .wp-block-post-featured-image img,
+.unhurried-footer-social .wp-social-link {
+	transition: transform .45s var(--uh-ease), box-shadow .45s var(--uh-ease), background-color var(--uh-quick) var(--uh-ease), color var(--uh-quick) var(--uh-ease), border-color var(--uh-quick) var(--uh-ease);
+}
+.wp-block-post .wp-block-post-featured-image { overflow: hidden; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.is-style-card:has(.wp-block-button):hover,
+	.is-style-section-card:has(a):hover { transform: translateY(-6px); box-shadow: 0 34px 60px -34px rgba(22, 20, 15, .45); }
+	.wp-block-post:hover .wp-block-post-featured-image img { transform: scale(1.04); }
+	.unhurried-footer-social .wp-social-link:hover { transform: translateY(-2px); }
+}
+.wp-block-post-title a { text-decoration-line: underline; text-decoration-color: transparent; text-underline-offset: .3em; text-decoration-thickness: 1px; }
+.wp-block-post:hover .wp-block-post-title a,
+.wp-block-post-title a:focus-visible { text-decoration-color: currentColor; text-underline-offset: .14em; }
+/* Chips fill in, fields answer focus with a soft ring. */
+.unhurried-chip a,
+.unhurried-chip-terms .wp-block-term { transition: background-color var(--uh-quick) var(--uh-ease), border-color var(--uh-quick) var(--uh-ease), color var(--uh-quick) var(--uh-ease); }
+:where(.wp-site-blocks) :where(input, textarea, select) { transition: border-color var(--uh-quick) var(--uh-ease), box-shadow var(--uh-quick) var(--uh-ease); }
+:where(.wp-site-blocks) :where(input:not([type="submit"]), textarea, select):focus-visible { box-shadow: 0 0 0 4px color-mix(in srgb, var(--wp--preset--color--accent) 18%, transparent); }
+/* Accordions open and close smoothly where the browser can size to "auto". */
+@supports (interpolate-size: allow-keywords) {
+	@media (prefers-reduced-motion: no-preference) {
+		:root { interpolate-size: allow-keywords; }
+		.wp-block-details::details-content {
+			block-size: 0;
+			overflow-y: clip;
+			transition: block-size .5s var(--uh-ease), content-visibility .5s allow-discrete;
+		}
+		.wp-block-details[open]::details-content { block-size: auto; }
+	}
+}
+.wp-block-details summary { transition: color var(--uh-quick) var(--uh-ease); }
+@media (hover: hover) { .wp-block-details summary:hover { color: var(--wp--preset--color--accent); color: color-mix(in srgb, var(--wp--preset--color--accent) 80%, currentColor); } }
+/* The gift card tilts toward the pointer like a card held in the hand (reveal.js sets the angles). */
+.unhurried-giftcard {
+	position: relative;
+	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
+	transition: transform .6s var(--uh-ease), box-shadow .6s var(--uh-ease);
+}
+.unhurried-giftcard::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: radial-gradient(circle at var(--uh-glare-x, 30%) var(--uh-glare-y, 20%), rgba(246, 244, 239, .16), transparent 55%);
+	opacity: 0;
+	transition: opacity .4s var(--uh-ease);
+	pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-giftcard:hover { transition-duration: .15s; box-shadow: 0 50px 80px -40px rgba(22, 20, 15, .6); }
+	.unhurried-giftcard:hover::after { opacity: 1; }
+}
+/* The map pin breathes: it marks a real place. */
+.unhurried-map::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	margin: -7px 0 0 -7px;
+	border-radius: 50%;
+	border: 2px solid var(--wp--preset--color--accent);
+	opacity: 0;
+	pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-map::after { animation: uh-ping 2.8s var(--uh-ease) infinite; }
+}
+@keyframes uh-ping {
+	0% { opacity: .55; scale: 1; }
+	80%, 100% { opacity: 0; scale: 4.2; }
+}
+
+/* 3. Depth (scroll-linked, where the browser supports it) */
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		/* Cover photographs drift slower than the page. */
+		.wp-block-cover:not(.unhurried-hero-statue__stage) { overflow: clip; }
+		.wp-block-cover:not(.unhurried-hero-statue__stage) > .wp-block-cover__image-background {
+			animation: uh-drift linear both;
+			animation-timeline: view();
+		}
+		/* The staggered gallery's columns float at two speeds. */
+		.unhurried-stagger > .wp-block-image:nth-child(odd) img { animation: uh-float-up linear both; animation-timeline: view(); }
+		.unhurried-stagger > .wp-block-image:nth-child(even) img { animation: uh-float-down linear both; animation-timeline: view(); }
+		/* As the hero scrolls away, the photo sinks and the words fade first. */
+		.unhurried-hero-statue__stage > .wp-block-cover__image-background {
+			animation: unhurried-unveil 3.2s cubic-bezier(.16, .84, .24, 1) both, uh-sink linear both;
+			animation-timeline: auto, view();
+			animation-range: normal, exit 0% exit 100%;
+		}
+		.unhurried-hero-statue__stage > .wp-block-cover__inner-container {
+			animation: uh-recede linear both;
+			animation-timeline: view();
+			animation-range: exit 0% exit 70%;
+		}
+	}
+}
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		/* The header gathers a deeper shadow once the page moves under it. */
+		.unhurried-capsule {
+			animation: uh-capsule-lift linear both;
+			animation-timeline: scroll(root);
+			animation-range: 0 320px;
+		}
+	}
+}
+@keyframes uh-drift { from { translate: 0 -6%; scale: 1.14; } to { translate: 0 6%; scale: 1.14; } }
+@keyframes uh-float-up { from { translate: 0 22px; } to { translate: 0 -22px; } }
+@keyframes uh-float-down { from { translate: 0 -14px; } to { translate: 0 30px; } }
+@keyframes uh-sink { to { translate: 0 16%; } }
+@keyframes uh-recede { to { opacity: .2; translate: 0 -40px; } }
+@keyframes uh-capsule-lift { to { box-shadow: 0 24px 50px -28px rgba(22, 20, 15, .55), 0 0 0 1px rgba(22, 20, 15, .05); } }
+
+/* 4. Continuity: pages cross-fade; the header and marquee stay where they are. */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition { navigation: auto; }
+	.unhurried-capsule { view-transition-name: uh-capsule; }
+	.unhurried-marquee { view-transition-name: uh-marquee; }
+	::view-transition-old(root) { animation: uh-page-out .32s var(--uh-ease-io) both; }
+	::view-transition-new(root) { animation: uh-page-in .55s var(--uh-ease) both; }
+}
+@keyframes uh-page-out { to { opacity: 0; translate: 0 -12px; } }
+@keyframes uh-page-in { from { opacity: 0; translate: 0 18px; } }
 
 /* ─── Hero, statue: a full-screen image in an inset frame ─────────────── */
 .unhurried-hero-statue { --uh-under: 0px; }
@@ -500,8 +747,11 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	}
 }
 @media (prefers-reduced-motion: no-preference) {
-	.unhurried-hero-statue__stage > .wp-block-cover__image-background {
-		animation: unhurried-unveil 3.2s cubic-bezier(.16, .84, .24, 1) both;
+	/* Browsers with scroll-linked animation get this plus the sink (Motion system, Depth). */
+	@supports not (animation-timeline: view()) {
+		.unhurried-hero-statue__stage > .wp-block-cover__image-background {
+			animation: unhurried-unveil 3.2s cubic-bezier(.16, .84, .24, 1) both;
+		}
 	}
 	.unhurried-hero-statue__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
 }

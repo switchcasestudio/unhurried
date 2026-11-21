@@ -101,7 +101,7 @@ $unhurried_social = array(
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Explore', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
-			<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"blockGap":"0.25rem"}}} /-->
+			<!-- wp:navigation {"overlayMenu":"never","showSubmenuIcon":false,"className":"unhurried-nav-plain","layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"blockGap":"0.25rem"}}} /-->
 		</div>
 		<!-- /wp:column -->
 		<?php if ( $unhurried_post_count > 0 ) : ?>

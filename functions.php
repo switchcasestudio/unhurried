@@ -23,13 +23,16 @@ if ( ! function_exists( 'unhurried_setup' ) ) :
 	function unhurried_setup() {
 		add_theme_support( 'wp-block-styles' );
 		add_editor_style( 'style.css' );
+		// A short summary for pages, shown as the lede of service pages and
+		// on the cards that list them.
+		add_post_type_support( 'page', 'excerpt' );
 	}
 endif;
 add_action( 'after_setup_theme', 'unhurried_setup' );
 
 if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 	/**
-	 * Enqueues the stylesheet and the small reveal script.
+	 * Enqueues the stylesheet and the motion script (assets/js/reveal.js).
 	 *
 	 * @since 1.0.0
 	 * @return void
@@ -52,6 +55,35 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 	}
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_enqueue_assets' );
+
+if ( ! function_exists( 'unhurried_motion_head' ) ) :
+	/**
+	 * Turns on the automatic motion before the first paint.
+	 *
+	 * Adds the class "uh-motion" to <html> when the browser can observe
+	 * scrolling and the visitor has not asked for reduced motion, so content
+	 * that is about to rise in starts hidden instead of flashing. If the
+	 * motion script has not started within 2.5 seconds, the class comes off
+	 * again and everything simply shows. Filter unhurried_motion to false to
+	 * keep pages still (the older Reveal style keeps working).
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	function unhurried_motion_head() {
+		/**
+		 * Filters whether pages animate as they scroll.
+		 *
+		 * @since 1.2.0
+		 * @param bool $enabled Default true.
+		 */
+		if ( ! apply_filters( 'unhurried_motion', true ) ) {
+			return;
+		}
+		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement;if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}h.classList.add('uh-motion');w.setTimeout(function(){if(!h.classList.contains('uh-motion-live')){h.classList.remove('uh-motion');}},2500);})(document,window);" );
+	}
+endif;
+add_action( 'wp_head', 'unhurried_motion_head', 1 );
 
 if ( ! function_exists( 'unhurried_block_styles' ) ) :
 	/**
@@ -416,6 +448,60 @@ if ( ! function_exists( 'unhurried_render_newsletter_shortcode' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/shortcode', 'unhurried_render_newsletter_shortcode' );
+
+if ( ! function_exists( 'unhurried_child_pages_query' ) ) :
+	/**
+	 * Query Loops marked "unhurriedChildren" list the pages under the page
+	 * being viewed, in their menu order: Services lists its groups, and a
+	 * group lists its services (/services/design/identity/).
+	 *
+	 * @since 1.2.0
+	 * @param array    $query Query vars.
+	 * @param WP_Block $block The Post Template block.
+	 * @return array
+	 */
+	function unhurried_child_pages_query( $query, $block ) {
+		if ( empty( $block->context['query']['unhurriedChildren'] ) ) {
+			return $query;
+		}
+		$query['post_type']       = 'page';
+		$query['post_parent__in'] = array( is_singular( 'page' ) ? (int) get_queried_object_id() : -1 );
+		$query['orderby']         = array(
+			'menu_order' => 'ASC',
+			'title'      => 'ASC',
+		);
+		return $query;
+	}
+endif;
+add_filter( 'query_loop_block_query_vars', 'unhurried_child_pages_query', 10, 2 );
+
+if ( ! function_exists( 'unhurried_hide_empty_child_pages' ) ) :
+	/**
+	 * Drops the "pages under this page" section, heading and all, on a page
+	 * that has none yet.
+	 *
+	 * @since 1.2.0
+	 * @param string $content Rendered block.
+	 * @param array  $block   Parsed block.
+	 * @return string
+	 */
+	function unhurried_hide_empty_child_pages( $content, $block ) {
+		if ( empty( $block['attrs']['query']['unhurriedChildren'] ) ) {
+			return $content;
+		}
+		if ( ! is_singular( 'page' ) ) {
+			return '';
+		}
+		$children = get_pages(
+			array(
+				'parent' => (int) get_queried_object_id(),
+				'number' => 1,
+			)
+		);
+		return $children ? $content : '';
+	}
+endif;
+add_filter( 'render_block_core/query', 'unhurried_hide_empty_child_pages', 10, 2 );
 
 if ( ! function_exists( 'unhurried_hide_placeholder_social' ) ) :
 	/**

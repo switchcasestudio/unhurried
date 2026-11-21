@@ -28,11 +28,11 @@ Open **Appearance → About Unhurried**. The setup checklist shows what is done 
 
 ## What is included
 
-- 48 patterns: homepage, about, services, contact, topics, work, pricing and visit pages; a marquee line for the top of the page; a numbers row; heroes (a full-screen statue hero and a spiral hero among them); a journal toolbar; an essay; a visit/process panel; a services accordion; gallery; values statement; story rows; stories grid; testimonial; call to action; gift card; price list; membership tiers; FAQ; contact details; opening hours card; map and directions; team feature; newsletter band; names strip; two header patterns (centered title, quiet) and three footers (wordmark, quiet, and one with visit details).
+- 52 patterns: homepage, about, services, contact, topics, work, pricing and visit pages; service group and service pages for nested services (/services/design/identity/), with a section that lists the pages under any page; a marquee line for the top of the page; a numbers row; heroes (a full-screen statue hero and a spiral hero among them); a journal toolbar; an essay; a visit/process panel; a services accordion; gallery; values statement; story rows; stories grid; testimonial; call to action; gift card; price list; membership tiers; FAQ; contact details; opening hours card; map and directions; team feature; newsletter band; names strip; two header patterns (centered title, quiet) and three footers (wordmark, quiet, and one with visit details).
 - A blog: stories grid, category and tag archives, single posts with comments.
 - Section styles for any Group (Panel, Card, Ink, Ground, Glass) and block styles (Eyebrow, Statement, Hairline and Text-link buttons, Arch and Keep-color images).
 - 20 looks under Styles: the default; eight color themes (**Orchard**, **Tide**, **Saffron**, **Lagoon**, **Rosewater**, **Studio**, **Terrace**, **Dusk**); ten tinted papers (**Nocturne**, **Linen**, **Mist**, **Moss**, **Harbor**, **Plum**, **Clay**, **Blush**, **Olive**, **Cobalt**); and **Folio**, serif italic headings on the default colors. Every text pair in every look passes WCAG AA.
-- Tips: write an *italic* word in a heading for the Fraunces accent; pick the **Reveal on scroll** block style (or add the class `unhurried-reveal`) for a gentle scroll reveal; `unhurried-mono` shows a block's images in grayscale.
+- Tips: write an *italic* word in a heading for the Fraunces accent; every section animates gently on scroll (add the class `unhurried-still` to keep a block still, or return false from the `unhurried_motion` filter to turn it off); `unhurried-mono` shows a block's images in grayscale.
 
 ## Want a shop?
 
