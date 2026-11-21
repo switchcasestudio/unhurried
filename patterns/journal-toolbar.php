@@ -18,7 +18,7 @@
 $unhurried_posts_page = ( 'page' === get_option( 'show_on_front' ) ) ? (int) get_option( 'page_for_posts' ) : 0;
 $unhurried_all_url    = $unhurried_posts_page ? get_permalink( $unhurried_posts_page ) : home_url( '/' );
 $unhurried_topics_url = unhurried_page_link( 'topics', '' );
-$unhurried_search     = wp_json_encode(
+$unhurried_search     = serialize_block_attributes(
 	array(
 		'label'          => __( 'Search the journal', 'unhurried' ),
 		'showLabel'      => false,
@@ -48,7 +48,7 @@ $unhurried_search     = wp_json_encode(
 	<!-- /wp:group -->
 	<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|50"}},"layout":{"type":"flex","flexWrap":"wrap","verticalAlignment":"center"}} -->
 	<div class="wp-block-group">
-		<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() of fixed keys and translated strings. ?> /-->
+		<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 		<?php if ( $unhurried_topics_url ) : ?>
 		<!-- wp:paragraph {"className":"unhurried-text-link","fontSize":"small"} -->
 		<p class="unhurried-text-link has-small-font-size"><a href="<?php echo esc_url( $unhurried_topics_url ); ?>"><?php esc_html_e( 'All topics →', 'unhurried' ); ?></a></p>
