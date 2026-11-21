@@ -42,7 +42,12 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 	 * @return void
 	 */
 	function unhurried_enqueue_assets() {
-		$version = wp_get_theme()->get( 'Version' );
+		// These are the parent theme's files, so they carry its version: under a
+		// child theme, wp_get_theme() is the child, and a parent update would
+		// otherwise leave browsers on the old stylesheet and script.
+		$version = wp_get_theme( get_template() )->get( 'Version' );
+		// A child theme may ship its own reveal.js; that copy follows the child's version.
+		$script_version = ( is_child_theme() && file_exists( get_stylesheet_directory() . '/assets/js/reveal.js' ) ) ? wp_get_theme()->get( 'Version' ) : $version;
 
 		wp_enqueue_style( 'unhurried-style', get_template_directory_uri() . '/style.css', array(), $version );
 
@@ -50,7 +55,7 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 			'unhurried-reveal',
 			get_theme_file_uri( 'assets/js/reveal.js' ),
 			array(),
-			$version,
+			$script_version,
 			array(
 				'strategy'  => 'defer',
 				'in_footer' => true,
