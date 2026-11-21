@@ -141,7 +141,10 @@ endif;
 if ( ! function_exists( 'unhurried_pro_card' ) ) :
 	/**
 	 * Copy for the Pro card, by variant. The 'shop' variant swaps its heading
-	 * when WooCommerce is active, because that is when the loss is visible.
+	 * when WooCommerce is active, because that is when there is a shop to lay out.
+	 *
+	 * No price in these strings: a translated or cached copy would outlive a
+	 * price change. The price is on the page the button opens.
 	 *
 	 * @since 1.1.0
 	 * @return array{eyebrow:string,heading:string,body:string,button:string}
@@ -152,21 +155,21 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 			'shop'  => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => $woo
-					? __( 'Your shop pages are still in WooCommerce\'s <em>default</em> look', 'unhurried' )
+					? __( 'A layout for your <em>shop</em>', 'unhurried' )
 					: __( 'Want a <em>shop</em>?', 'unhurried' ),
-				'body'    => __( 'Unhurried Pro styles the shop, product, cart and checkout pages to match the rest of your site, and adds a Shop shelf pattern, a lead-story blog layout and a Coming soon page. One payment of $49, updates included, 14-day money-back guarantee.', 'unhurried' ),
+				'body'    => __( 'Unhurried Pro adds the shop layout. A header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it. Also a Shop shelf pattern, a lead-story blog layout and a Coming soon page. One payment, updates included, 14-day money-back guarantee.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 			'time'  => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => __( 'Keep the calm all the way to <em>checkout</em>', 'unhurried' ),
-				'body'    => __( 'Most shop pages shout. Pro gives WooCommerce the same quiet pace as the rest of Unhurried: tall product photos, hairline buttons, a floating cart panel and a checkout with nothing else on the page. $49 once, with 14 days to change your mind.', 'unhurried' ),
+				'body'    => __( 'Most shop pages shout. Pro gives WooCommerce the same quiet pace as the rest of Unhurried: tall product photos, hairline buttons, a floating cart panel and a checkout with nothing else on the page. One payment, with 14 days to change your mind.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 			'proof' => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => __( 'Made by the same <em>hands</em>', 'unhurried' ),
-				'body'    => __( 'Pro is built by the studio that designed Unhurried, as a child theme, so your pages and Site Editor changes carry over untouched. Shop, product, cart and checkout pages, a Coming soon page, a Shop shelf and a lead story. $49 once, 14-day money-back guarantee.', 'unhurried' ),
+				'body'    => __( 'Pro is built by the studio that designed Unhurried, as a child theme. Your pages, posts, products and menus stay. Pro copies your look and your Site Editor changes when you switch it on. Shop, product, cart and checkout pages, a Coming soon page, a Shop shelf and a lead story. One payment, 14-day money-back guarantee.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 		);
@@ -192,7 +195,7 @@ if ( ! function_exists( 'unhurried_render_pro_card' ) ) :
 			<h2><?php echo esc_html( $card['eyebrow'] ); ?></h2>
 			<h3><?php echo wp_kses( $card['heading'], array( 'em' => array() ) ); ?></h3>
 			<p><?php echo esc_html( $card['body'] ); ?></p>
-			<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>"><?php echo esc_html( $card['button'] ); ?></a></p>
+			<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $card['button'] ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'unhurried' ); ?></span></a></p>
 		</div>
 		<?php
 	}
@@ -362,8 +365,8 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 		if ( class_exists( 'WooCommerce' ) && ! unhurried_pro_present() && ! get_user_meta( $user, 'unhurried_dismissed_pro', true ) ) {
 			?>
 			<div class="notice notice-info">
-				<p><strong><?php esc_html_e( 'WooCommerce is on.', 'unhurried' ); ?></strong> <?php esc_html_e( 'Your shop pages are still in WooCommerce\'s default look. Unhurried Pro styles the shop, product, cart and checkout pages to match the rest of your site.', 'unhurried' ); ?></p>
-				<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>"><?php esc_html_e( 'See Unhurried Pro', 'unhurried' ); ?></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'pro' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
+				<p><strong><?php esc_html_e( 'WooCommerce is on.', 'unhurried' ); ?></strong> <?php esc_html_e( 'Your shop pages keep WooCommerce\'s own layout. Unhurried Pro adds the theme\'s. A header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it.', 'unhurried' ); ?></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'See Unhurried Pro', 'unhurried' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'unhurried' ); ?></span></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'pro' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
 			</div>
 			<?php
 			return;
