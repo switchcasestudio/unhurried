@@ -496,8 +496,11 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 /* 1. Entrances */
 /* Before the script has marked anything, keep main content back for a
    moment so the first screen can enter instead of blinking. The failsafe in
-   unhurried_motion_head() lifts this after 2.5 s if the script never runs. */
-.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form) { opacity: 0; }
+   unhurried_motion_head() lifts this after 2.5 s if the script never runs.
+   Anything marked "unhurried-still" (a block, a section, or the whole page
+   through the body class) is never held back: the script leaves it alone,
+   so it must be readable at first paint, script or no script. */
+.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form):not(.unhurried-still, .unhurried-still *) { opacity: 0; }
 .uh-motion [data-uh]:not(.is-in) { opacity: 0; }
 .uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-rise); }
 .uh-motion :is([data-uh="card"], [data-uh="image"]):not(.is-in) { translate: 0 calc(var(--uh-rise) * 1.5); }
