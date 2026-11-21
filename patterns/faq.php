@@ -13,10 +13,10 @@
  */
 
 $unhurried_faqs = array(
-	array( __( 'What happens at a first visit?', 'unhurried' ), __( 'A short chat, a warm drink and a tour of the room. Then the time is yours.', 'unhurried' ) ),
-	array( __( 'How far ahead should I book?', 'unhurried' ), __( 'A week or two is usually plenty. Weekend mornings go first.', 'unhurried' ) ),
-	array( __( 'Can I change or cancel?', 'unhurried' ), __( 'Yes. Give us 48 hours and there is no fee.', 'unhurried' ) ),
-	array( __( 'Do you sell products?', 'unhurried' ), __( 'A small shelf of things we use ourselves, and nothing we would not.', 'unhurried' ) ),
+	array( __( 'Lorem laboris ut et velit vitae?', 'unhurried' ), __( 'Lorem justo eget, ex diam magna sed ea nunc in sem arcu. Odio non diam id lorem. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.', 'unhurried' ) ),
+	array( __( 'Lorem est morbi veniam Ut amet?', 'unhurried' ), __( 'Lorem nisl eu dui ac aliquip cillum. Commodo proident id netus. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.', 'unhurried' ) ),
+	array( __( 'Lorem Ut fugiat do mollit?', 'unhurried' ), __( 'Lorem. Amet ut 48 fames sit lacus et ad sed. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ) ),
+	array( __( 'Lorem non elit deserunt?', 'unhurried' ), __( 'Lorem velit nulla in mauris id qui curabitur, est officia ut lorem sed. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ) ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'FAQ', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","backgroundColor":"base-2","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
@@ -26,10 +26,10 @@ $unhurried_faqs = array(
 		<!-- wp:column {"width":"38%","style":{"spacing":{"blockGap":"var:preset|spacing|40"}}} -->
 		<div class="wp-block-column" style="flex-basis:38%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'Good to know', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem eu quis', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Questions, <em>answered</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Dignissim, <em>pulvinar</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 		</div>
 		<!-- /wp:column -->

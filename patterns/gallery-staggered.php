@@ -19,11 +19,14 @@ $unhurried_images = array( 'vessel', 'orb', 'pedestal', 'arch' );
 	<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"constrained"}} -->
 	<div class="wp-block-group">
 		<!-- wp:paragraph {"align":"center","className":"is-style-eyebrow"} -->
-		<p class="has-text-align-center is-style-eyebrow"><?php esc_html_e( 'Around the studio', 'unhurried' ); ?></p>
+		<p class="has-text-align-center is-style-eyebrow"><?php esc_html_e( 'Lorem sem mattis', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:heading {"textAlign":"center","fontSize":"x-large"} -->
-		<h2 class="wp-block-heading has-text-align-center has-x-large-font-size"><?php echo wp_kses( __( 'Small <em>things</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+		<h2 class="wp-block-heading has-text-align-center has-x-large-font-size"><?php echo wp_kses( __( 'Lorem <em>ornare</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 		<!-- /wp:heading -->
+		<!-- wp:paragraph {"align":"center","textColor":"contrast-2","style":{"typography":{"lineHeight":"1.55"}}} -->
+		<p class="has-text-align-center has-contrast-2-color has-text-color" style="line-height:1.55"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'unhurried' ); ?></p>
+		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->
 	<!-- wp:columns {"isStackedOnMobile":false,"className":"unhurried-stagger unhurried-mono","style":{"spacing":{"blockGap":{"top":"var:preset|spacing|40","left":"clamp(0.75rem, 2vw, 1.5rem)"}}}} -->

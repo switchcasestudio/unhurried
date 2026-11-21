@@ -25,7 +25,7 @@ There is a getting-started screen at **Appearance → About Unhurried**.
 
 ## What is included
 
-- 37 patterns: homepage, about, services and contact pages; heroes; a visit/process panel; a services accordion; gallery; values statement; story rows; stories grid; testimonial; call to action; gift card; price list; membership tiers; FAQ; contact details; opening hours card; map and directions; team feature; newsletter band; names strip; two header patterns (centered title, quiet) and three footers (wordmark, quiet, and one with visit details).
+- 48 patterns: homepage, about, services, contact, topics, work, pricing and visit pages; a marquee line for the top of the page; a numbers row; heroes (a full-screen statue hero and a spiral hero among them); a journal toolbar; an essay; a visit/process panel; a services accordion; gallery; values statement; story rows; stories grid; testimonial; call to action; gift card; price list; membership tiers; FAQ; contact details; opening hours card; map and directions; team feature; newsletter band; names strip; two header patterns (centered title, quiet) and three footers (wordmark, quiet, and one with visit details).
 - A blog: stories grid, category and tag archives, single posts with comments.
 - Section styles for any Group (Panel, Card, Ink, Ground, Glass) and block styles (Eyebrow, Statement, Hairline and Text-link buttons, Arch and Keep-color images).
 - 20 looks under Styles: the default; eight color themes (**Orchard**, **Tide**, **Saffron**, **Lagoon**, **Rosewater**, **Studio**, **Terrace**, **Dusk**); ten tinted papers (**Nocturne**, **Linen**, **Mist**, **Moss**, **Harbor**, **Plum**, **Clay**, **Blush**, **Olive**, **Cobalt**); and **Folio**, serif italic headings on the default colors. Every text pair in every look passes WCAG AA.
@@ -41,4 +41,4 @@ WordPress Playground demo: `dev/serve.sh free` (or `pro`, which expects `../unhu
 
 ## License and credits
 
-© 2026 Moses Atia Poston, Switch Case Studio. GPL-2.0-or-later (see `LICENSE`). Fonts: Hanken Grotesk, Inter, Fraunces (SIL OFL 1.1). Images: original, CC0. Setup help: [switchcasestudio.com](https://switchcasestudio.com).
+© 2026 Moses Atia Poston, Switch Case Studio. GPL-2.0-or-later (see `LICENSE`). Fonts: Hanken Grotesk, Inter, Fraunces (SIL OFL 1.1). Images: StockSnap.io and WordPress.org Photo Directory, CC0 (credits in `readme.txt`). Setup help: [switchcasestudio.com](https://switchcasestudio.com).

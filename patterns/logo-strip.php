@@ -17,7 +17,7 @@ $unhurried_names = array( 'Linden House', 'Still & Co.', 'Marrow', 'Hearth Studi
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Names strip', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|50"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">
 	<!-- wp:paragraph {"align":"center","className":"is-style-eyebrow"} -->
-	<p class="has-text-align-center is-style-eyebrow"><?php esc_html_e( 'Stocked by', 'unhurried' ); ?></p>
+	<p class="has-text-align-center is-style-eyebrow"><?php esc_html_e( 'Integer id', 'unhurried' ); ?></p>
 	<!-- /wp:paragraph -->
 	<!-- wp:group {"className":"unhurried-names unhurried-reveal","style":{"spacing":{"blockGap":"clamp(1.5rem, 4vw, 4rem)"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"}} -->
 	<div class="wp-block-group unhurried-names unhurried-reveal">

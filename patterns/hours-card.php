@@ -13,10 +13,10 @@
  */
 
 $unhurried_hours = array(
-	array( __( 'Monday', 'unhurried' ), __( 'Closed', 'unhurried' ) ),
-	array( __( 'Tuesday to Friday', 'unhurried' ), __( '10 to 7', 'unhurried' ) ),
-	array( __( 'Saturday', 'unhurried' ), __( '9 to 3', 'unhurried' ) ),
-	array( __( 'Sunday', 'unhurried' ), __( 'Closed', 'unhurried' ) ),
+	array( __( 'Lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
+	array( __( 'Aliquip ut Fugiat', 'unhurried' ), __( '10 lorem 7', 'unhurried' ) ),
+	array( __( 'Suscipit', 'unhurried' ), __( '9 lorem 3', 'unhurried' ) ),
+	array( __( 'Lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Hours', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
@@ -26,13 +26,13 @@ $unhurried_hours = array(
 		<!-- wp:column {"verticalAlignment":"center","width":"42%","className":"unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|50"}}} -->
 		<div class="wp-block-column is-vertically-aligned-center unhurried-reveal" style="flex-basis:42%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'Hours', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'The door is<br><em>open</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem duis ex<br><em>aute</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
-			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Walk in for the shelf. Book ahead for a room.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem ea non qui magna. Sint minim est in sunt.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -51,7 +51,7 @@ $unhurried_hours = array(
 			<!-- /wp:group -->
 			<?php endforeach; ?>
 			<!-- wp:paragraph {"fontSize":"x-small","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}}} -->
-			<p class="has-contrast-2-color has-text-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--50)"><?php esc_html_e( 'Closed on public holidays. The kettle is on from ten.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--50)"><?php esc_html_e( 'Lorem id mattis bibendum. Sed ornare ut eu anim sem.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

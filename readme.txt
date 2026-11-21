@@ -18,7 +18,7 @@ Write an italic word inside any heading and it turns into the Fraunces accent fa
 The theme includes:
 
 * Full-page patterns for a homepage, about, services and contact page.
-* Heroes (staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
+* Heroes (a full-screen image in an inset frame, a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep color images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
@@ -28,6 +28,7 @@ The theme includes:
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
 
 * Two header patterns: centered title, and quiet (no navigation).
+* A journal with breadcrumbs, topic chips, a posts-only search, reading time, related posts, an author box and a reading progress bar, plus a Topics directory page pattern and a long-form Essay pattern.
 * An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, a quiet footer, and a footer with visit details for your address and email.
 * An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
@@ -49,6 +50,22 @@ No. Forms are plugin territory. The Contact pattern has a card where you can dro
 Select the image and choose the Keep color style, or remove the `unhurried-mono` class from its parent block.
 
 == Changelog ==
+
+= 1.2.0 =
+* Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
+* A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip, pause under the pointer, and stand still for visitors who ask for reduced motion. It scrolls away; the header stays.
+* Three more page patterns: Work (with a new Numbers section), Pricing and Visit.
+* Footer: a newsletter row under the search (Jetpack's Subscribe block when it is active, otherwise the RSS feed), social icons for Google Business Profile, Instagram, Facebook, X, Pinterest, TikTok, YouTube, LinkedIn and Yelp (an icon stays hidden from visitors until it has an address), and the wordmark in capitals, sized to fill the width, rolling letter by letter on hover.
+* Menu dropdowns are small rounded cards.
+* New homepage hero, Hero, statue: a full-screen photograph of Michelangelo's David in an inset, rounded frame, with the headline, buttons and a caption over a soft shade.
+* New hero, Hero, spiral: a round image that turns very slowly inside a ring of ticks, with the headline's last word set huge beside it. Motion stops when the visitor asks for reduced motion.
+* Journal: breadcrumbs, topic chips with post counts (the current topic highlighted), a search box that looks only through posts, a results count, reading time on every card and post, an author box, related posts from the same topic, and a reading progress bar on posts.
+* New Topics directory page pattern: every category as a card with its description and count, then every tag.
+* New Essay pattern: long-form text with a drop cap, two columns and a pull quote. The Homepage pattern includes it.
+* Footer: a search box, your topics and latest posts, the year and site name, and a back-to-top link. Columns that would be empty are left out.
+* The header now stays at the top while you scroll. It was meant to since 1.0.0 but scrolled away.
+* The header menu no longer shows Contact next to the Contact button; the open mobile menu still lists it.
+* New sample images (CC0, from WordPress.org Photos).
 
 = 1.1.2 =
 * Nine fixes found by visiting the live sites that use Unhurried. A site whose header and footer were never edited now shows nothing fake.
@@ -117,9 +134,18 @@ Copyright 2020 The Fraunces Project Authors (https://github.com/undercasetype/Fr
 License: SIL Open Font License, Version 1.1, https://openfontlicense.org
 
 Images
-assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp
-Created for this theme by the theme author, generated from original code.
+Photographs from StockSnap.io, the WordPress.org Photo Directory and the Rijksmuseum, cropped for this theme. Patterns show most of them in grayscale.
 License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
+
+assets/images/david.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
+assets/images/spiral.webp: Bango Renders, https://stocksnap.io/photo/abstract-shapes-AGYUJILSQ2
+assets/images/arch.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
+assets/images/pedestal.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/
+assets/images/branch-shadow.webp: creativemz, https://wordpress.org/photos/photo/38665f56ad/
+assets/images/drape.webp: Samuel Scrimshaw, https://stocksnap.io/photo/nature-desert-UV4PIZ1DEK
+assets/images/light-window.webp: Bob Richards, https://stocksnap.io/photo/tree-branch-D74M8ZEETS
+assets/images/orb.webp: Altered Reality, https://stocksnap.io/photo/autumn-minimalist-U9FDQVP6HZ
+assets/images/vessel.webp: Chimene Gaspar, https://stocksnap.io/photo/vase-wall-JGTJS8KF6Q
 
 Screenshot
 screenshot.png is composed from the theme's own patterns and images above.

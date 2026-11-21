@@ -13,15 +13,15 @@
  */
 
 $unhurried_tiers = array(
-	array( __( 'Monthly', 'unhurried' ), '$120', __( 'One visit a month and a member price on everything else.', 'unhurried' ), false ),
-	array( __( 'Fortnightly', 'unhurried' ), '$220', __( 'Two visits a month and a guest pass each season.', 'unhurried' ), true ),
-	array( __( 'Regular', 'unhurried' ), '$390', __( 'Unlimited visits, first pick of new rituals and a guest pass each season.', 'unhurried' ), false ),
+	array( __( 'Eiusmod', 'unhurried' ), '$120', __( 'Lorem velit in month sem id fugiat vitae ut adipiscing amet. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.', 'unhurried' ), false ),
+	array( __( 'Consectetur', 'unhurried' ), '$220', __( 'Lorem mollit eu month sit eu justo elit enim mauris. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ), true ),
+	array( __( 'Nostrud', 'unhurried' ), '$390', __( 'Voluptate turpis, magna quis ac sed ullamco non id lorem nisi duis mattis. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.', 'unhurried' ), false ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Pricing', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|70"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ground" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
 	<!-- wp:heading {"textAlign":"center","fontSize":"xx-large"} -->
-	<h2 class="wp-block-heading has-text-align-center has-xx-large-font-size"><?php echo wp_kses( __( 'Come <em>often</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+	<h2 class="wp-block-heading has-text-align-center has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem <em>morbi</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 	<!-- /wp:heading -->
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"top":"var:preset|spacing|40","left":"var:preset|spacing|40"}}}} -->
 	<div class="wp-block-columns">
@@ -46,10 +46,10 @@ $unhurried_tiers = array(
 			<div class="wp-block-buttons">
 				<?php if ( $unhurried_tier[3] ) : ?>
 				<!-- wp:button -->
-				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></a></div>
 				<?php else : ?>
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Choose', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></a></div>
 				<?php endif; ?>
 				<!-- /wp:button -->
 			</div>

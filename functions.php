@@ -185,7 +185,9 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 		if ( '' === $text ) {
 			return $block_content;
 		}
-		$em        = max( 2.5, unhurried_wordmark_em_width( $text ) * 1.04 + 0.05 );
+		// Since 1.2.0 the wordmark is set in capitals (text-transform), so measure those.
+		$caps      = function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $text, 'UTF-8' ) : strtoupper( $text );
+		$em        = max( 2.5, unhurried_wordmark_em_width( $caps ) * 1.01 + 0.02 );
 		$processor = new WP_HTML_Tag_Processor( $block_content );
 		if ( ! $processor->next_tag() ) {
 			return $block_content;
@@ -199,6 +201,134 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/site-title', 'unhurried_size_wordmark', 10, 2 );
+
+if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
+	/**
+	 * Splits the footer wordmark into one span per letter for the hover roll.
+	 *
+	 * The letters are hidden from assistive technology and the whole title is
+	 * repeated in a visually hidden span, so screen readers still hear one word.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_wordmark_letters( $block_content, $block ) {
+		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) ) {
+			return $block_content;
+		}
+		$split = static function ( $inner ) {
+			$text = trim( html_entity_decode( wp_strip_all_tags( $inner ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
+			if ( '' === $text ) {
+				return $inner;
+			}
+			$letters = '';
+			foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $i => $char ) {
+				$letters .= '<span style="--i:' . (int) $i . '">' . ( ' ' === $char ? '&nbsp;' : esc_html( $char ) ) . '</span>';
+			}
+			return '<span class="unhurried-wordmark__letters" aria-hidden="true">' . $letters . '</span><span class="unhurried-visually-hidden">' . esc_html( $text ) . '</span>';
+		};
+		// Linked title: split the link text. Unlinked: split the element's text.
+		$out = preg_replace_callback(
+			'#(<a\b[^>]*>)(.*?)(</a>)#s',
+			static function ( $m ) use ( $split ) {
+				return $m[1] . $split( $m[2] ) . $m[3];
+			},
+			$block_content,
+			1,
+			$count
+		);
+		if ( ! $count ) {
+			$out = preg_replace_callback(
+				'#^(\s*<[a-z0-9]+\b[^>]*>)(.*)(</[a-z0-9]+>\s*)$#s',
+				static function ( $m ) use ( $split ) {
+					return $m[1] . $split( $m[2] ) . $m[3];
+				},
+				$block_content,
+				1
+			);
+		}
+		return is_string( $out ) ? $out : $block_content;
+	}
+endif;
+add_filter( 'render_block_core/site-title', 'unhurried_wordmark_letters', 11, 2 );
+
+if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
+	/**
+	 * Doubles the Marquee's lines so the drift can loop without a gap.
+	 *
+	 * The copy is hidden from assistive technology and its links leave the
+	 * tab order, so the lines are read and focused once.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_marquee_loop( $block_content, $block ) {
+		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+		if ( false === strpos( $class, 'unhurried-marquee' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$open  = strpos( $block_content, '>' );
+		$close = strrpos( $block_content, '</div>' );
+		if ( false === $open || false === $close || $close <= $open ) {
+			return $block_content;
+		}
+		$inner = substr( $block_content, $open + 1, $close - $open - 1 );
+		if ( '' === trim( $inner ) ) {
+			return '';
+		}
+		$copy = new WP_HTML_Tag_Processor( $inner );
+		while ( $copy->next_tag( 'a' ) ) {
+			$copy->set_attribute( 'tabindex', '-1' );
+		}
+		return substr( $block_content, 0, $open + 1 )
+			. '<div class="unhurried-marquee__track"><div class="unhurried-marquee__set">' . $inner . '</div>'
+			. '<div class="unhurried-marquee__set" aria-hidden="true">' . $copy->get_updated_html() . '</div></div>'
+			. substr( $block_content, $close );
+	}
+endif;
+add_filter( 'render_block_core/group', 'unhurried_marquee_loop', 10, 2 );
+
+if ( ! function_exists( 'unhurried_hide_placeholder_social' ) ) :
+	/**
+	 * Keeps social icons that still point at "#" out of the public footer.
+	 *
+	 * The footer ships with placeholder profiles. People who can edit the site
+	 * see them as a reminder to add real links; visitors see only icons that
+	 * lead somewhere. The Playground demo defines UNHURRIED_DEMO to show all.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_hide_placeholder_social( $block_content, $block ) {
+		$url = isset( $block['attrs']['url'] ) ? trim( (string) $block['attrs']['url'] ) : '';
+		if ( '#' !== $url || ( defined( 'UNHURRIED_DEMO' ) && UNHURRIED_DEMO ) || current_user_can( 'edit_theme_options' ) ) {
+			return $block_content;
+		}
+		return '';
+	}
+endif;
+add_filter( 'render_block_core/social-link', 'unhurried_hide_placeholder_social', 10, 2 );
+
+if ( ! function_exists( 'unhurried_drop_empty_social' ) ) :
+	/**
+	 * Prints nothing for a Social Icons block whose icons were all hidden.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_drop_empty_social( $block_content ) {
+		return ( false === strpos( $block_content, '<li' ) ) ? '' : $block_content;
+	}
+endif;
+add_filter( 'render_block_core/social-links', 'unhurried_drop_empty_social' );
 
 if ( ! function_exists( 'unhurried_hide_front_page_head' ) ) :
 	/**
@@ -228,6 +358,106 @@ if ( ! function_exists( 'unhurried_hide_front_page_head' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/group', 'unhurried_hide_front_page_head', 10, 2 );
+
+if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
+	/**
+	 * Tags the menu item that links to the Contact page with `unhurried-nav-contact`.
+	 *
+	 * The header button already links there, so style.css hides that item in the
+	 * header capsule while the button shows, and keeps it in the open mobile menu.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered navigation block.
+	 * @return string
+	 */
+	function unhurried_mark_contact_link( $block_content ) {
+		static $contact_url = null;
+		if ( null === $contact_url ) {
+			$page        = get_page_by_path( 'contact' );
+			$contact_url = ( $page && 'publish' === $page->post_status ) ? untrailingslashit( (string) get_permalink( $page ) ) : '';
+		}
+		if ( '' === $contact_url || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags   = new WP_HTML_Tag_Processor( $block_content );
+		$in_li  = false;
+		$marked = false;
+		while ( $tags->next_tag() ) {
+			if ( 'LI' === $tags->get_tag() ) {
+				$tags->set_bookmark( 'unhurried-li' );
+				$in_li = true;
+				continue;
+			}
+			if ( $in_li && 'A' === $tags->get_tag() && untrailingslashit( (string) $tags->get_attribute( 'href' ) ) === $contact_url ) {
+				$in_li  = false;
+				$marked = true;
+				$tags->seek( 'unhurried-li' );
+				$tags->add_class( 'unhurried-nav-contact' );
+			}
+		}
+		return $marked ? $tags->get_updated_html() : $block_content;
+	}
+endif;
+add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
+
+if ( ! function_exists( 'unhurried_mark_current_term' ) ) :
+	/**
+	 * Marks the term the visitor is browsing: on a category or tag archive, the
+	 * matching Term Name link gets `is-current` and `aria-current="page"`, so the
+	 * journal's topic chips show where you are.
+	 *
+	 * @since 1.2.0
+	 * @param string   $block_content Rendered term name.
+	 * @param array    $block         Parsed block.
+	 * @param WP_Block $instance      Block instance, carrying the term context.
+	 * @return string
+	 */
+	function unhurried_mark_current_term( $block_content, $block, $instance = null ) {
+		if ( ! ( is_category() || is_tag() || is_tax() ) || ! $instance instanceof WP_Block ) {
+			return $block_content;
+		}
+		$term_id = isset( $instance->context['termId'] ) ? (int) $instance->context['termId'] : 0;
+		if ( ! $term_id || get_queried_object_id() !== $term_id ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( $tags->next_tag() ) {
+			$tags->add_class( 'is-current' );
+			if ( $tags->next_tag( 'a' ) ) {
+				$tags->set_attribute( 'aria-current', 'page' );
+			}
+		}
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/term-name', 'unhurried_mark_current_term', 10, 3 );
+
+if ( ! function_exists( 'unhurried_term_count_label' ) ) :
+	/**
+	 * Term Count blocks with the class `unhurried-term-count` read "3 posts"
+	 * (translated, singular or plural) instead of the bare "(3)".
+	 *
+	 * @since 1.2.0
+	 * @param string   $block_content Rendered term count.
+	 * @param array    $block         Parsed block.
+	 * @param WP_Block $instance      Block instance, carrying the term context.
+	 * @return string
+	 */
+	function unhurried_term_count_label( $block_content, $block, $instance = null ) {
+		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+		if ( false === strpos( $class, 'unhurried-term-count' ) || ! $instance instanceof WP_Block || empty( $instance->context['termId'] ) ) {
+			return $block_content;
+		}
+		$term = get_term( (int) $instance->context['termId'] );
+		if ( ! $term instanceof WP_Term ) {
+			return $block_content;
+		}
+		/* translators: %s: Number of posts in a category or tag. */
+		$label = sprintf( _n( '%s post', '%s posts', (int) $term->count, 'unhurried' ), number_format_i18n( (int) $term->count ) );
+		return preg_replace( '/>[^<]*</', '>' . esc_html( $label ) . '<', $block_content, 1 );
+	}
+endif;
+add_filter( 'render_block_core/term-count', 'unhurried_term_count_label', 10, 3 );
 
 if ( ! function_exists( 'unhurried_page_link' ) ) :
 	/**

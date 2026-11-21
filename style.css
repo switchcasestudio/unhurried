@@ -46,23 +46,92 @@ img { height: auto; }
 .wp-site-blocks > main { flex: 1 0 auto; }
 
 /* ─── Header: floating capsule ───────────────────────────────────────────── */
-.unhurried-header {
+/* The sticky element is the template part's own wrapper: the capsule inside it is
+   its only child, so on its own it had no room to stick and scrolled away. */
+header.wp-block-template-part:has(> .unhurried-header) {
+	--uh-marquee-h: 0px;
 	position: sticky;
-	top: calc(10px + var(--wp-admin--admin-bar--height, 0px));
+	/* A marquee above the capsule scrolls away; the capsule stays. */
+	top: calc(var(--wp-admin--admin-bar--height, 0px) - var(--uh-marquee-h));
 	z-index: 100;
 	pointer-events: none;
 }
+header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --uh-marquee-h: 34px; }
+.unhurried-header { pointer-events: none; }
 .unhurried-header > * { pointer-events: auto; }
 @media (max-width: 600px) {
-	.unhurried-header { top: 8px; }
-	.admin-bar .unhurried-header { top: 8px; }
+	.admin-bar header.wp-block-template-part:has(> .unhurried-header) { top: calc(0px - var(--uh-marquee-h)); }
 }
+/* Marquee: a thin Ink line above the capsule (pattern unhurried/marquee).
+   unhurried_marquee_loop() doubles the lines so the drift loops without a gap. */
+.unhurried-marquee {
+	box-sizing: border-box;
+	height: 34px;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	margin-top: -10px !important;
+	margin-bottom: 10px !important;
+	margin-inline: calc(-1 * clamp(10px, 2vw, 28px));
+	padding: 0 !important;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+.unhurried-marquee__track,
+.unhurried-marquee__set { display: flex; flex: none; }
+.unhurried-marquee p { margin: 0; padding-inline-end: 2.5rem; }
+.unhurried-marquee p::after { content: "\2726"; margin-inline-start: 2.5rem; opacity: .5; }
+.unhurried-marquee a { color: inherit; text-decoration: none; }
+.unhurried-marquee a:hover,
+.unhurried-marquee a:focus-visible { text-decoration: underline; text-underline-offset: .25em; }
+/* The marquee's bottom margin is the gap; the header's block gap would add more. */
+.unhurried-marquee + * { margin-block-start: 0 !important; }
+/* Outside a header (inserted on its own) it runs full width with no offsets. */
+:not(.unhurried-header) > .unhurried-marquee { margin: 0 !important; }
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-marquee__track { animation: unhurried-marquee 70s linear infinite; }
+	.unhurried-marquee:is(:hover, :focus-within) .unhurried-marquee__track { animation-play-state: paused; }
+	[dir="rtl"] .unhurried-marquee__track { animation-name: unhurried-marquee-rtl; }
+}
+@keyframes unhurried-marquee { to { transform: translateX(-50%); } }
+@keyframes unhurried-marquee-rtl { to { transform: translateX(50%); } }
+
+/* The header button already links to Contact, so the menu drops its own Contact
+   link beside it (unhurried_mark_contact_link() tags it). The open mobile menu keeps it. */
+.unhurried-capsule:has(.wp-block-button__link) .wp-block-navigation__container .unhurried-nav-contact { display: none; }
+.unhurried-capsule:has(.wp-block-button__link) .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container .unhurried-nav-contact { display: revert; }
 .unhurried-capsule {
 	min-height: 60px;
 	box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .45);
 	transition: box-shadow .3s ease;
 }
 .unhurried-capsule .wp-block-site-logo img { max-height: 36px; width: auto; }
+/* Dropdowns (navigation submenus): a small rounded card under the item. */
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
+	border: 1px solid var(--wp--preset--color--hairline) !important;
+	border-radius: 16px;
+	background: var(--wp--preset--color--base) !important;
+	color: var(--wp--preset--color--contrast) !important;
+	padding: .4rem !important;
+	min-width: 190px !important;
+	margin-top: .5rem;
+	box-shadow: 0 24px 50px -30px rgba(22, 20, 15, .4);
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container::before {
+	content: "";
+	position: absolute;
+	inset: -.6rem 0 auto;
+	height: .6rem; /* keeps hover alive across the gap */
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	padding: .55rem .8rem;
+	border-radius: 10px;
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover {
+	background: var(--wp--preset--color--base-2);
+	text-decoration: none;
+}
 .unhurried-capsule .wp-block-navigation__responsive-container.is-menu-open {
 	padding: clamp(1.25rem, 5vw, 4rem);
 }
@@ -243,8 +312,11 @@ img { height: auto; }
    !important: footers saved before 1.1.2 carry the fixed size inline.
    overflow: hidden stays as the last resort. */
 .wp-block-group:has(> .unhurried-wordmark) { container-type: inline-size; }
+/* Since 1.2.0: capitals, sized to fill the column exactly (the em width is
+   measured in capitals, so the title runs edge to edge at any length). */
 .unhurried-wordmark {
-	font-size: min(clamp(3.5rem, 15vw, 17rem), calc(min(100cqi, 1360px) / var(--unhurried-wordmark-em, .01))) !important;
+	font-size: calc(min(100cqi, 1360px) / var(--unhurried-wordmark-em, 6)) !important;
+	text-transform: uppercase;
 	line-height: .82 !important;
 	letter-spacing: -0.06em !important;
 	white-space: nowrap;
@@ -255,6 +327,32 @@ img { height: auto; }
 	overflow-y: visible;
 }
 .unhurried-wordmark a { text-decoration: none; }
+/* Hover roll: unhurried_wordmark_letters() wraps each letter; each one slides
+   up in turn and its accent-colored twin (a text shadow) rises into place. */
+.unhurried-wordmark__letters { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em .12em .1em 0; margin: -.1em -.12em -.1em 0; } /* room for the last letter, which the tight tracking pushes past its box */
+.unhurried-wordmark__letters > span {
+	display: inline-block;
+	text-shadow: 0 1.2em var(--wp--preset--color--accent);
+	transition: transform .9s cubic-bezier(.16, .84, .24, 1) calc(var(--i, 0) * 35ms);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-wordmark:is(:hover, :focus-within) .unhurried-wordmark__letters > span { transform: translateY(-1.2em); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.unhurried-wordmark__letters > span { text-shadow: none; transition: none; }
+	.unhurried-wordmark a:is(:hover, :focus-visible) { color: var(--wp--preset--color--accent); }
+}
+.unhurried-visually-hidden {
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
 
 /* Footer lead line: the site tagline, set large (Footer with wordmark, 1.1.2) */
 .unhurried-footer-lead { max-width: 24ch; text-wrap: balance; }
@@ -366,3 +464,283 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 			transform var(--wp--custom--motion--duration) var(--wp--custom--motion--ease);
 	}
 }
+
+/* ─── Hero, statue: a full-screen image in an inset frame ─────────────── */
+.unhurried-hero-statue { --uh-under: 0px; }
+.unhurried-hero-statue:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap)); }
+.unhurried-hero-statue__stage.wp-block-cover {
+	min-height: max(560px, calc(100svh - 90px - var(--wp-admin--admin-bar--height, 0px) + var(--uh-under))) !important;
+	padding-bottom: calc(var(--wp--preset--spacing--70) + var(--uh-under)) !important;
+	overflow: hidden;
+	isolation: isolate;
+}
+/* The shade leans to the lower left, where the words sit; the face stays lit. */
+.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+	background:
+		linear-gradient(90deg, rgba(22, 20, 15, .82) 0%, rgba(22, 20, 15, .5) 36%, rgba(22, 20, 15, 0) 68%),
+		linear-gradient(to top, rgba(22, 20, 15, .55), rgba(22, 20, 15, 0) 45%);
+	background-color: transparent !important;
+	opacity: 1 !important;
+}
+/* Core sizes a positioned cover's content to fit; this one spans the frame. */
+.unhurried-hero-statue__stage > .wp-block-cover__inner-container,
+.unhurried-hero-statue__foot { width: 100% !important; max-width: none !important; }
+.unhurried-hero-statue__stage .wp-block-button:not(.is-style-text-link) > .wp-block-button__link {
+	background-color: var(--wp--preset--color--base);
+	color: var(--wp--preset--color--contrast);
+}
+.unhurried-hero-statue__title { margin-block: .3em clamp(1.5rem, 5vh, 3.5rem) !important; }
+.unhurried-hero-statue__body p { color: color-mix(in srgb, currentColor 80%, transparent); }
+.unhurried-hero-statue__caption { margin: 0; opacity: .7; letter-spacing: .04em; }
+@media (max-width: 781px) {
+	.unhurried-hero-statue__stage.wp-block-cover { min-height: max(560px, calc(100svh - 80px + var(--uh-under))) !important; }
+	.unhurried-hero-statue__stage > .wp-block-cover__image-background { object-position: 72% 30% !important; }
+	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-hero-statue__stage > .wp-block-cover__image-background {
+		animation: unhurried-unveil 3.2s cubic-bezier(.16, .84, .24, 1) both;
+	}
+	.unhurried-hero-statue__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
+}
+@keyframes unhurried-unveil {
+	from { opacity: 0; filter: brightness(.3); transform: scale(1.08); }
+	to { opacity: 1; filter: none; transform: none; }
+}
+
+/* ─── Hero, spiral: a slowly turning image on an Ink stage ──────────────── */
+/* --uh-under: how far a rising panel after the hero reaches up into it. */
+.unhurried-hero-spiral { --uh-under: 0px; }
+.unhurried-hero-spiral:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap)); }
+.unhurried-hero-spiral__stage {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	min-height: max(640px, calc(100svh - 90px - var(--wp-admin--admin-bar--height, 0px) + var(--uh-under)));
+	padding-bottom: calc(var(--wp--preset--spacing--70) + var(--uh-under)) !important;
+}
+/* Spotlight behind the disc, then a whisper of film grain over everything. */
+.unhurried-hero-spiral__stage::before,
+.unhurried-hero-spiral__stage::after {
+	content: "";
+	position: absolute;
+	pointer-events: none;
+}
+.unhurried-hero-spiral__stage::before {
+	inset: -15%;
+	z-index: -1;
+	background: radial-gradient(closest-side at 68% 45%, color-mix(in srgb, var(--wp--preset--color--base) 18%, transparent), color-mix(in srgb, var(--wp--preset--color--base) 5%, transparent) 60%, transparent);
+}
+.unhurried-hero-spiral__stage::after {
+	inset: 0;
+	z-index: 3;
+	opacity: .08;
+	mix-blend-mode: overlay;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.unhurried-hero-spiral__stage > * { position: relative; z-index: 2; }
+/* The disc: centered in the visible stage, as large as the stage allows. */
+.unhurried-hero-spiral__stage > .unhurried-hero-spiral__disc {
+	position: absolute;
+	z-index: 1;
+	inset-inline-end: clamp(1.25rem, 5vw, 6rem);
+	top: calc((100% - var(--uh-under)) / 2);
+	translate: 0 -50%;
+	width: min(50%, calc((100svh - 90px - var(--wp-admin--admin-bar--height, 0px)) * .8), 760px);
+	aspect-ratio: 1;
+	margin: 0;
+	pointer-events: none;
+}
+.unhurried-hero-spiral__disc img { display: block; width: 100%; height: 100%; }
+/* Two rings around the disc: a hairline, and a dashed ring of ticks. */
+.unhurried-hero-spiral__disc::before,
+.unhurried-hero-spiral__disc::after {
+	content: "";
+	position: absolute;
+	border-radius: 50%;
+	pointer-events: none;
+}
+.unhurried-hero-spiral__disc::before { inset: -5%; border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 16%, transparent); }
+.unhurried-hero-spiral__disc::after { inset: -10%; border: 1px dashed color-mix(in srgb, var(--wp--preset--color--base) 22%, transparent); }
+/* Static with no z-index (stage children are z-indexed), so the italic word can slip behind the disc. */
+.unhurried-hero-spiral__stage > .unhurried-hero-spiral__title { position: static; z-index: auto; margin-block: .45em 0; }
+.unhurried-hero-spiral__title em {
+	position: absolute;
+	z-index: 0;
+	inset-inline-start: clamp(.5rem, 3vw, 3.5rem);
+	bottom: calc(var(--uh-under) + clamp(.5rem, 2vh, 1.5rem));
+	font-size: clamp(8rem, 22vw, 22rem);
+	line-height: .78;
+	letter-spacing: -0.03em;
+	white-space: nowrap;
+	pointer-events: none;
+}
+.unhurried-hero-spiral__body { margin-top: clamp(1.5rem, 4vh, 3rem); }
+.unhurried-hero-spiral__body p { color: color-mix(in srgb, currentColor 78%, transparent); }
+@media (min-width: 782px) and (max-width: 1199px) {
+	.unhurried-hero-spiral__body { max-width: 46%; }
+	.unhurried-hero-spiral__stage > .unhurried-hero-spiral__disc { width: min(44%, calc((100svh - 90px) * .8)); }
+}
+@media (max-width: 781px) {
+	.unhurried-hero-spiral__stage { min-height: 0; }
+	.unhurried-hero-spiral__stage > .unhurried-hero-spiral__disc {
+		position: relative;
+		inset: auto;
+		translate: none;
+		width: min(76%, 400px);
+		margin: 1.5rem auto 2.5rem;
+	}
+	.unhurried-hero-spiral__stage::before { background: radial-gradient(closest-side at 50% 22%, color-mix(in srgb, var(--wp--preset--color--base) 18%, transparent), transparent); }
+	.unhurried-hero-spiral__title em { position: static; font-size: inherit; line-height: inherit; }
+}
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-hero-spiral__disc img {
+		animation: unhurried-emerge 2.8s cubic-bezier(.16, .84, .24, 1) both, unhurried-turn 240s linear 2.8s infinite;
+	}
+	.unhurried-hero-spiral__disc::after { animation: unhurried-turn 180s linear infinite reverse; }
+	.unhurried-hero-spiral__stage::before { animation: unhurried-light 20s ease-in-out infinite alternate; }
+	.unhurried-hero-spiral__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
+}
+@keyframes unhurried-emerge {
+	from { opacity: 0; filter: brightness(.15) blur(8px); transform: scale(1.06); }
+	to { opacity: 1; filter: none; transform: none; }
+}
+@keyframes unhurried-turn {
+	to { transform: rotate(360deg); }
+}
+@keyframes unhurried-light {
+	from { transform: translate(-3%, 2%) scale(1); }
+	to { transform: translate(3%, -2%) scale(1.08); }
+}
+@keyframes unhurried-exhale {
+	from { opacity: 0; letter-spacing: .08em; filter: blur(12px); }
+	to { opacity: 1; letter-spacing: -0.03em; filter: none; }
+}
+
+
+/* ─── Footer: search, topic and latest-post lists on Ink ─────────────────── */
+.unhurried-footer .unhurried-footer-list { list-style: none; margin-inline: 0; margin-bottom: 0; padding: 0; display: grid; gap: .55rem; }
+.unhurried-footer .unhurried-footer-list li { margin: 0; }
+.unhurried-footer .unhurried-footer-list a { text-decoration: none; }
+.unhurried-footer .unhurried-footer-list a:hover { text-decoration: underline; text-underline-offset: .2em; }
+.unhurried-footer .wp-block-categories { font-size: var(--wp--preset--font-size--small); color: color-mix(in srgb, currentColor 60%, transparent); }
+.unhurried-footer .wp-block-categories a { color: var(--wp--preset--color--base); }
+.unhurried-footer .wp-block-latest-posts { font-size: var(--wp--preset--font-size--small); gap: .9rem; }
+.unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .6; }
+.unhurried-footer-search { max-width: 26rem; }
+.unhurried-footer-search .wp-block-search__inside-wrapper {
+	border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent);
+	border-radius: 999px;
+	padding: .3rem .3rem .3rem 1.1rem;
+	background: transparent;
+}
+.unhurried-footer-search .wp-block-search__input { background: transparent; border: 0; color: inherit; padding: .4rem 0; }
+.unhurried-footer-search .wp-block-search__input::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent); }
+.unhurried-footer-search .wp-block-search__button { margin: 0; border-radius: 999px; background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); padding: .5rem .7rem; }
+.unhurried-footer-search .wp-block-search__button svg { fill: currentColor; }
+/* Newsletter row under the search (a plugin's form, or the RSS fallback). */
+.unhurried-footer-newsletter { max-width: 26rem; padding-top: var(--wp--preset--spacing--40); border-top: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 16%, transparent); }
+.unhurried-footer-newsletter > p:not(.is-style-eyebrow) { color: color-mix(in srgb, currentColor 70%, transparent); }
+.unhurried-footer-newsletter__rss .wp-block-button__link { font-size: var(--wp--preset--font-size--small); }
+.unhurried-footer-newsletter .wp-block-jetpack-subscriptions form { display: flex; gap: .4rem; border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent); border-radius: 999px; padding: .3rem .3rem .3rem 1.1rem; }
+.unhurried-footer-newsletter .wp-block-jetpack-subscriptions :is(input[type="email"], input[type="text"]) { flex: 1; background: transparent; border: 0; color: inherit; }
+.unhurried-footer-newsletter .wp-block-jetpack-subscriptions button { border-radius: 999px; background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border: 0; }
+/* Social icons: hairline circles that fill on hover. */
+.unhurried-footer-social.wp-block-social-links { margin-inline: 0; margin-bottom: 0; }
+.unhurried-footer-social .wp-social-link {
+	color: var(--wp--preset--color--base);
+	border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent);
+	border-radius: 999px;
+	transition: background-color .25s var(--wp--custom--motion--ease), color .25s var(--wp--custom--motion--ease), border-color .25s var(--wp--custom--motion--ease);
+}
+.unhurried-footer-social .wp-social-link a { padding: .55rem; }
+.unhurried-footer-social .wp-social-link svg { width: 18px; height: 18px; }
+.unhurried-footer-social .wp-social-link:is(:hover, :focus-within) { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); transform: none; }
+
+/* ─── Journal: breadcrumbs, chips, toolbar, card meta, directory ─────────── */
+.unhurried-breadcrumbs { font-size: var(--wp--preset--font-size--x-small); letter-spacing: .02em; color: var(--wp--preset--color--contrast-2); }
+.unhurried-breadcrumbs a { color: inherit; text-decoration: none; }
+.unhurried-breadcrumbs a:hover { color: var(--wp--preset--color--contrast); text-decoration: underline; text-underline-offset: .2em; }
+.unhurried-breadcrumbs [aria-current] { color: var(--wp--preset--color--contrast); }
+
+/* Chips: the "All" link, terms from a Terms Query, and post terms on cards. */
+.unhurried-chip,
+.unhurried-chip-terms .wp-block-term-template { margin: 0; }
+.unhurried-chip-terms .wp-block-term-template { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; }
+.unhurried-chip-terms .wp-block-term { display: inline-flex; align-items: center; margin: 0; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; transition: background-color .2s ease, border-color .2s ease; }
+.unhurried-chip-terms .wp-block-term > * { margin: 0; }
+.unhurried-chip-terms .wp-block-term-name a,
+.unhurried-chip a { display: inline-block; padding: .5rem .95rem; font-size: var(--wp--preset--font-size--small); line-height: 1; color: var(--wp--preset--color--contrast); text-decoration: none; }
+.unhurried-chip-terms .wp-block-term-name a { padding-inline-end: .35rem; }
+.unhurried-chip-terms .wp-block-term-count { padding-inline-end: .95rem; font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--contrast-2); }
+.unhurried-chip a { border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; }
+.unhurried-chip-terms .wp-block-term:hover,
+.unhurried-chip a:hover { border-color: var(--wp--preset--color--contrast); }
+.unhurried-chip.is-current a,
+.unhurried-chip-terms .wp-block-term:has(.is-current) { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); }
+.unhurried-chip.is-current a,
+.unhurried-chip-terms .wp-block-term:has(.is-current) :is(a, .wp-block-term-count) { color: var(--wp--preset--color--base); }
+.unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
+.unhurried-chip-links .wp-block-post-terms__separator { display: none; }
+.unhurried-chip-links a { display: inline-block; padding: .3rem .7rem; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; font-size: var(--wp--preset--font-size--x-small); line-height: 1.1; text-decoration: none; color: var(--wp--preset--color--contrast); }
+.unhurried-chip-links a:hover { border-color: var(--wp--preset--color--contrast); }
+
+/* Search boxes in the journal: a pill with the icon button inside. */
+.unhurried-journal-search { min-width: min(22rem, 100%); }
+.unhurried-journal-search .wp-block-search__inside-wrapper { border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; padding: .25rem .25rem .25rem 1.1rem; background: var(--wp--preset--color--base); }
+.unhurried-journal-search .wp-block-search__input { border: 0; background: transparent; padding: .45rem 0; }
+.unhurried-journal-search .wp-block-search__button { margin: 0; border-radius: 999px; padding: .5rem .7rem; background: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
+.unhurried-journal-search .wp-block-search__button svg { fill: currentColor; }
+.unhurried-text-link a { text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .1em; }
+
+/* Card meta line: topic chip, then date and reading time in small caps-ish type. */
+.unhurried-card-meta { font-size: var(--wp--preset--font-size--x-small); letter-spacing: .04em; color: var(--wp--preset--color--contrast-2); }
+.unhurried-card-meta > :is(.wp-block-post-date, .wp-block-post-time-to-read, .wp-block-post-author-name) { margin: 0; }
+.unhurried-card-meta > .wp-block-post-terms { flex-basis: 100%; }
+.unhurried-card-meta > :is(.wp-block-post-date, .wp-block-post-author-name) + :is(.wp-block-post-date, .wp-block-post-time-to-read)::before { content: "·"; margin-inline-end: .75rem; opacity: .6; }
+.unhurried-query-total { color: var(--wp--preset--color--contrast-2); letter-spacing: .04em; }
+
+/* Topics directory: category cards. */
+.unhurried-topic-cards .wp-block-term-template { list-style: none; padding: 0; margin: 0; }
+.unhurried-topic-cards .wp-block-term > .wp-block-group { height: 100%; transition: transform .3s ease, box-shadow .3s ease; }
+.unhurried-topic-cards .wp-block-term > .wp-block-group:hover { transform: translateY(-3px); }
+.unhurried-topic-cards .wp-block-term-name a { text-decoration: none; }
+.unhurried-topic-cards .wp-block-term-name a::after { content: " →"; font-family: var(--wp--preset--font-family--body); font-size: .6em; opacity: .5; }
+.unhurried-term-count { margin: 0; }
+.unhurried-topic-cards .wp-block-term > .wp-block-group { border: 1px solid var(--wp--preset--color--hairline); border-radius: 22px; background: var(--wp--preset--color--base); }
+.unhurried-topic-cards .wp-block-term > .wp-block-group:hover { border-color: var(--wp--preset--color--contrast); box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .35); }
+@media (max-width: 781px) {
+	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: 1fr; }
+}
+
+/* Single post: author box and the reading progress bar (scroll-linked, no script). */
+.unhurried-author-box { align-items: center; gap: 1.25rem; padding-block: var(--wp--preset--spacing--50); border-block: 1px solid var(--wp--preset--color--hairline); }
+.unhurried-author-box .avatar { border-radius: 50%; }
+.unhurried-author-box .wp-block-post-author__name { font-weight: 600; }
+.unhurried-author-box .wp-block-post-author__bio { color: var(--wp--preset--color--contrast-2); font-size: var(--wp--preset--font-size--small); }
+@supports (animation-timeline: scroll()) {
+	body.single-post::before {
+		content: "";
+		position: fixed;
+		inset: var(--wp-admin--admin-bar--height, 0px) 0 auto 0;
+		height: 3px;
+		z-index: 1000;
+		background: var(--wp--preset--color--accent);
+		transform-origin: 0 50%;
+		transform: scaleX(0);
+		animation: unhurried-progress linear both;
+		animation-timeline: scroll(root);
+	}
+	body.rtl.single-post::before { transform-origin: 100% 50%; }
+}
+@keyframes unhurried-progress { to { transform: scaleX(1); } }
+
+/* ─── Essay: a sticky aside beside long-form text ────────────────────────── */
+@media (min-width: 782px) {
+	.unhurried-essay__aside { position: sticky; top: 110px; align-self: flex-start; }
+}
+.unhurried-essay .has-drop-cap:not(:focus)::first-letter { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-size: 4.4em; line-height: .8; margin: .06em .12em 0 0; }
+.unhurried-essay__quote { margin-block: var(--wp--preset--spacing--40); padding-inline-start: var(--wp--preset--spacing--50); border-inline-start: 2px solid var(--wp--preset--color--accent); }
+.unhurried-essay__quote cite { display: block; margin-top: 1rem; font-size: var(--wp--preset--font-size--x-small); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--wp--preset--color--contrast-2); }

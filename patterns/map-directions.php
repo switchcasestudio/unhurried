@@ -20,21 +20,21 @@
 		<!-- wp:column {"verticalAlignment":"center","width":"42%","className":"unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|50"}}} -->
 		<div class="wp-block-column is-vertically-aligned-center unhurried-reveal" style="flex-basis:42%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'Find us', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem ut', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Ten minutes<br>from the <em>station</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem iaculis<br>nunc sem <em>egestas</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"large"} -->
-			<p class="has-large-font-size"><?php echo wp_kses( __( '12 Linden Row<br>Hillsdale, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
+			<p class="has-large-font-size"><?php echo wp_kses( __( '12 Lorem Sit<br>Malesuada, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:paragraph {"textColor":"contrast-2","style":{"layout":{"selfStretch":"fixed","flexSize":"min(100%, 40ch)"}}} -->
-			<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'By train: Hillsdale, then a slow walk up Linden Row. By car: two hours of free parking behind the building. The door is the green one.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Lorem nulla: Facilisis, arcu ut odio diam et Dolore Sit. Ad sed: non culpa ex amet egestas aliqua qui pariatur. Est nisl ea sed vitae sem.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( 'https://www.google.com/maps/search/?api=1&query=12+Linden+Row+Hillsdale' ); ?>"><?php esc_html_e( 'Get directions', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( 'https://www.google.com/maps/search/?api=1&query=12+Linden+Row+Hillsdale' ); ?>"><?php esc_html_e( 'Lorem adipiscing', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
@@ -47,10 +47,10 @@
 				<!-- wp:group {"className":"is-style-glass unhurried-note","style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"default"}} -->
 				<div class="wp-block-group is-style-glass unhurried-note">
 					<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-					<p class="is-style-eyebrow"><?php esc_html_e( 'The studio', 'unhurried' ); ?></p>
+					<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem veniam', 'unhurried' ); ?></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"fontSize":"small"} -->
-					<p class="has-small-font-size"><?php esc_html_e( '12 Linden Row, Hillsdale', 'unhurried' ); ?></p>
+					<p class="has-small-font-size"><?php esc_html_e( '12 Lorem Est, Consequat', 'unhurried' ); ?></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->

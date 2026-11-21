@@ -13,10 +13,10 @@
  */
 
 $unhurried_rows = array(
-	array( 'orb', __( 'Signature massage', 'unhurried' ), __( 'Warm oil, slow hands, ninety minutes.', 'unhurried' ), __( '90 min', 'unhurried' ), __( 'From $180', 'unhurried' ) ),
-	array( 'vessel', __( 'Hot stone ritual', 'unhurried' ), __( 'Warm stones and slow pressure.', 'unhurried' ), __( '45 min', 'unhurried' ), __( 'From $140', 'unhurried' ) ),
-	array( 'pedestal', __( 'First visit', 'unhurried' ), __( 'An easy first visit to get to know you.', 'unhurried' ), __( '30 min', 'unhurried' ), __( 'Free', 'unhurried' ) ),
-	array( 'arch', __( 'Ritual for two', 'unhurried' ), __( 'For two, side by side.', 'unhurried' ), __( '4 visits', 'unhurried' ), __( 'From $620', 'unhurried' ) ),
+	array( 'orb', __( 'Cupidatat officia', 'unhurried' ), __( 'Lorem qui, esse dolor, mauris laborum. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ), __( '90 lorem', 'unhurried' ), __( 'Lorem $180', 'unhurried' ) ),
+	array( 'vessel', __( 'Lorem magna turpis', 'unhurried' ), __( 'Lorem mattis sem anim deserunt.', 'unhurried' ), __( '45 lorem', 'unhurried' ), __( 'Lorem $140', 'unhurried' ) ),
+	array( 'pedestal', __( 'Lorem irure', 'unhurried' ), __( 'Lorem eget velit nulla ex vel ea diam est. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ), __( '30 lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
+	array( 'arch', __( 'Lorem sem sit', 'unhurried' ), __( 'Lorem sed, arcu in odio.', 'unhurried' ), __( '4 lorem', 'unhurried' ), __( 'Lorem $620', 'unhurried' ) ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Services index', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|70"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
@@ -24,10 +24,10 @@ $unhurried_rows = array(
 	<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
 	<div class="wp-block-group">
 		<!-- wp:heading {"fontSize":"xx-large"} -->
-		<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'The <em>menu</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+		<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem <em>amet</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"textColor":"contrast-2","style":{"layout":{"selfStretch":"fixed","flexSize":"min(100%, 36ch)"}}} -->
-		<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Prices include tea, time to linger and no rush at the door.', 'unhurried' ); ?></p>
+		<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Lorem sodales qui, nisl id dolore est ut amet eu sed elit. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

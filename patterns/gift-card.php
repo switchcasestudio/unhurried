@@ -20,18 +20,18 @@
 		<!-- wp:column {"verticalAlignment":"center","width":"52%","className":"unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|50"}}} -->
 		<div class="wp-block-column is-vertically-aligned-center unhurried-reveal" style="flex-basis:52%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'Gift cards', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem dolor', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Give someone<br>an <em>hour</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem laborum<br>eu <em>aute</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"},"layout":{"selfStretch":"fixed","flexSize":"min(100%, 36ch)"}}} -->
-			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Any amount from $60, good for a year, sent by post or by email the same day.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem tempor esse $60, sint vel ac sunt, anim id nunc ut do magna est eget dui.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 				<!-- wp:button -->
-				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Buy a gift card', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( unhurried_page_link( 'contact' ) ); ?>"><?php esc_html_e( 'Lorem ut diam nunc', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
@@ -44,10 +44,10 @@
 				<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"nowrap"}} -->
 				<div class="wp-block-group">
 					<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-					<p class="is-style-eyebrow"><?php esc_html_e( 'Gift card', 'unhurried' ); ?></p>
+					<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem odio', 'unhurried' ); ?></p>
 					<!-- /wp:paragraph -->
 					<!-- wp:paragraph {"fontFamily":"accent","fontSize":"medium","style":{"typography":{"fontStyle":"italic"}}} -->
-					<p class="has-accent-font-family has-medium-font-size" style="font-style:italic"><?php esc_html_e( 'for someone you like', 'unhurried' ); ?></p>
+					<p class="has-accent-font-family has-medium-font-size" style="font-style:italic"><?php esc_html_e( 'lorem sodales sit diam', 'unhurried' ); ?></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->
@@ -55,7 +55,7 @@
 				<div class="wp-block-group">
 					<!-- wp:site-title {"level":0,"fontSize":"x-large","style":{"typography":{"fontWeight":"500","letterSpacing":"-0.03em","lineHeight":"1"}}} /-->
 					<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-					<p class="is-style-eyebrow"><?php esc_html_e( 'Valid twelve months', 'unhurried' ); ?></p>
+					<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem labore dolore', 'unhurried' ); ?></p>
 					<!-- /wp:paragraph -->
 				</div>
 				<!-- /wp:group -->

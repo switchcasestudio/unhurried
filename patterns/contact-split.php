@@ -22,27 +22,27 @@
 			<!-- wp:group {"style":{"spacing":{"blockGap":"0.5rem"}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group">
 				<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-				<p class="is-style-eyebrow"><?php esc_html_e( 'Visit', 'unhurried' ); ?></p>
+				<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
 				<!-- wp:paragraph {"fontSize":"large"} -->
-				<p class="has-large-font-size"><?php echo wp_kses( __( '12 Linden Row<br>Hillsdale, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
+				<p class="has-large-font-size"><?php echo wp_kses( __( '12 Lorem Sit<br>Consequat, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"0.5rem"}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group">
 				<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-				<p class="is-style-eyebrow"><?php esc_html_e( 'Hours', 'unhurried' ); ?></p>
+				<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
 				<!-- wp:paragraph -->
-				<p><?php echo wp_kses( __( 'Tuesday to Friday, 10 to 7<br>Saturday, 9 to 3', 'unhurried' ), array( 'br' => array() ) ); ?></p>
+				<p><?php echo wp_kses( __( 'Eiusmod do Labore, 10 ut 7<br>Pariatur, 9 et 3', 'unhurried' ), array( 'br' => array() ) ); ?></p>
 				<!-- /wp:paragraph -->
 			</div>
 			<!-- /wp:group -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"0.5rem"}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group">
 				<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-				<p class="is-style-eyebrow"><?php esc_html_e( 'Write', 'unhurried' ); ?></p>
+				<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
 				<!-- wp:paragraph -->
 				<p><a href="mailto:hello@example.com"><?php esc_html_e( 'hello@example.com', 'unhurried' ); ?></a></p>
@@ -54,15 +54,15 @@
 		<!-- wp:column {"width":"58%","className":"is-style-card unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|50"},"shadow":"var:preset|shadow|float"}} -->
 		<div class="wp-block-column is-style-card unhurried-reveal" style="box-shadow:var(--wp--preset--shadow--float);flex-basis:58%">
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Send a <em>note</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem ad <em>elit</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2"} -->
-			<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Questions, gift cards or a group booking. We answer every note ourselves.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Voluptate, enim magna ex ea minim nostrud. In dolore irure quis excepteur. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 				<!-- wp:button -->
-				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com"><?php esc_html_e( 'Email the studio', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com"><?php esc_html_e( 'Lorem sed aliqua', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

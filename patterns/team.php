@@ -27,13 +27,13 @@
 		<!-- wp:column {"verticalAlignment":"center","width":"60%","className":"unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|60"}}} -->
 		<div class="wp-block-column is-vertically-aligned-center unhurried-reveal" style="flex-basis:60%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'Our team', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem enim', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"huge","style":{"typography":{"lineHeight":"0.92","letterSpacing":"-0.04em"}}} -->
-			<h2 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.92"><?php echo wp_kses( __( 'The people you will <em>meet</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.92"><?php echo wp_kses( __( 'Lorem aliqua sit quis <em>nisi</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
-			<p class="has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Three of us, each with a decade of practice. You will get to know us by name.', 'unhurried' ); ?></p>
+			<p class="has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem eu eu, duis aute ac veniam id pharetra. Sit esse sed ut sint do ut sunt. Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

@@ -13,9 +13,9 @@
  */
 
 $unhurried_rows = array(
-	array( 'light-window', __( 'The room', 'unhurried' ), __( 'Big windows, <em>soft</em> light', 'unhurried' ), __( 'One treatment room with a window onto the garden. We keep it warm, quiet and yours alone for the length of your visit.', 'unhurried' ), __( 'Book the room', 'unhurried' ), 'contact' ),
-	array( 'vessel', __( 'The tea', 'unhurried' ), __( 'A cup before <em>anything</em>', 'unhurried' ), __( 'Every visit starts with ten minutes and a pot of something warm. Nobody is asked to hurry through it.', 'unhurried' ), __( 'See the menu', 'unhurried' ), 'services' ),
-	array( 'pedestal', __( 'The shelf', 'unhurried' ), __( 'Things we <em>use</em> ourselves', 'unhurried' ), __( 'A small shelf by the door: the oil from the room, a candle, a tin of the tea. Nothing we would not take home.', 'unhurried' ), __( 'Ask about the shelf', 'unhurried' ), 'contact' ),
+	array( 'light-window', __( 'Lorem nisi', 'unhurried' ), __( 'Lorem sodales, <em>duis</em> ipsum', 'unhurried' ), __( 'Lorem fermentum aute esse in mollit sint sem mauris. Id sunt ut anim, dolor sit magna minim sit sed turpis eu nunc irure. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.', 'unhurried' ), __( 'Lorem non diam', 'unhurried' ), 'contact' ),
+	array( 'vessel', __( 'Lorem est', 'unhurried' ), __( 'Lorem sed mattis <em>volutpat</em>', 'unhurried' ), __( 'Lorem nulla ornare nunc sem integer non ac vel id phasellus arcu. Tempor ut culpa do vitae iaculis ut. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet.', 'unhurried' ), __( 'Lorem dui odio', 'unhurried' ), 'services' ),
+	array( 'pedestal', __( 'Lorem velit', 'unhurried' ), __( 'Lorem et <em>sit</em> tristique', 'unhurried' ), __( 'Lorem vitae justo ex sit diam: sed non amet qui nisl, ea dolore, in est id sed sem. Egestas ut magna non amet elit. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores.', 'unhurried' ), __( 'Lorem lorem est morbi', 'unhurried' ), 'contact' ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Story rows', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|80"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->

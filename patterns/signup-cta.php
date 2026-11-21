@@ -20,13 +20,13 @@
 		<!-- wp:column {"verticalAlignment":"bottom","width":"60%","style":{"spacing":{"blockGap":"var:preset|spacing|50"}}} -->
 		<div class="wp-block-column is-vertically-aligned-bottom" style="flex-basis:60%">
 			<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-			<p class="is-style-eyebrow"><?php esc_html_e( 'A letter', 'unhurried' ); ?></p>
+			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem turpis', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'A note from us,<br><em>now and then</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem odio diam in,<br><em>dui sem amet</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"className":"unhurried-dim","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
-			<p class="unhurried-dim has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'One short letter a season: what is new on the shelf, a recipe, a reading list. Nothing else.', 'unhurried' ); ?></p>
+			<p class="unhurried-dim has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem morbi mattis id ornare: nisl ut sit eu sed netus, eu tempor, ac ullamco amet. Laboris elit.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -35,7 +35,7 @@
 			<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"right"}} -->
 			<div class="wp-block-buttons">
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com?subject=The%20letter"><?php esc_html_e( 'Ask for the letter', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="mailto:hello@example.com?subject=The%20letter"><?php esc_html_e( 'Lorem qui est labore', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->

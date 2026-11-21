@@ -18,14 +18,14 @@
 	<!-- wp:group {"className":"is-style-panel unhurried-reveal","style":{"spacing":{"blockGap":"var:preset|spacing|60"}},"layout":{"type":"constrained","contentSize":"980px"}} -->
 	<div class="wp-block-group is-style-panel unhurried-reveal">
 		<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
-		<p class="is-style-eyebrow"><?php esc_html_e( 'In their words', 'unhurried' ); ?></p>
+		<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem fames lacus', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:quote -->
 		<blockquote class="wp-block-quote">
 			<!-- wp:paragraph -->
-			<p><?php esc_html_e( 'I walked out lighter than I walked in, and I have come back every month since.', 'unhurried' ); ?></p>
+			<p><?php esc_html_e( 'Lorem cillum non egestas anim Ex fugiat ea, qui In nunc eget diam velit month nulla. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
-			<cite><?php esc_html_e( 'A regular, since the first spring', 'unhurried' ); ?></cite>
+			<cite><?php esc_html_e( 'Lorem eiusmod, lorem est ipsum mollit', 'unhurried' ); ?></cite>
 		</blockquote>
 		<!-- /wp:quote -->
 	</div>
