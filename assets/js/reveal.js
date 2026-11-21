@@ -162,28 +162,48 @@
 		}, delay + long );
 	}
 
-	var observer = new IntersectionObserver(
+	var observer;
+	var tallObserver;
+
+	function enter( el, step ) {
+		var delay = Math.min( step, MAX_STEPS ) * STAGGER;
+		el.style.setProperty( '--uh-delay', delay + 'ms' );
+		el.classList.add( 'is-in' );
+		observer.unobserve( el );
+		tallObserver.unobserve( el );
+		if ( el.getAttribute( 'data-uh' ) === 'count' ) {
+			window.setTimeout( function () {
+				countUp( el );
+			}, delay );
+		}
+		finish( el, delay );
+	}
+
+	// An element enters once 15% of it is in view.
+	observer = new IntersectionObserver(
 		function ( entries ) {
 			var step = 0;
 			entries.forEach( function ( entry ) {
-				if ( ! entry.isIntersecting ) {
-					return;
+				if ( entry.isIntersecting && ! entry.target.classList.contains( 'is-in' ) ) {
+					enter( entry.target, step++ );
 				}
-				var el = entry.target;
-				var delay = Math.min( step, MAX_STEPS ) * STAGGER;
-				step++;
-				el.style.setProperty( '--uh-delay', delay + 'ms' );
-				el.classList.add( 'is-in' );
-				observer.unobserve( el );
-				if ( el.getAttribute( 'data-uh' ) === 'count' ) {
-					window.setTimeout( function () {
-						countUp( el );
-					}, delay );
-				}
-				finish( el, delay );
 			} );
 		},
 		{ rootMargin: '0px', threshold: 0.15 }
+	);
+	// Something taller than the window may never show 15% of itself (past
+	// about 6.7 screens it cannot: a long form on a phone stayed hidden), so
+	// it enters once it fills 15% of the window instead.
+	tallObserver = new IntersectionObserver(
+		function ( entries ) {
+			var step = 0;
+			entries.forEach( function ( entry ) {
+				if ( entry.isIntersecting && entry.boundingClientRect.height > window.innerHeight && ! entry.target.classList.contains( 'is-in' ) ) {
+					enter( entry.target, step++ );
+				}
+			} );
+		},
+		{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
 	);
 	// Switch from the pre-paint hold to the per-element states, and make the
 	// browser compute them now, so items already on screen animate from
@@ -192,6 +212,7 @@
 	void document.body.offsetWidth;
 	targets.forEach( function ( el ) {
 		observer.observe( el );
+		tallObserver.observe( el );
 	} );
 
 	/* ── Gift card: tilts toward the pointer, like a card in the hand ── */
