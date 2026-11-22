@@ -124,6 +124,11 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .45);
 	transition: box-shadow .3s ease;
 }
+/* Right to left: the capsule's uneven padding (roomy before the title, tight
+   after the button) is written as left and right in the block's own style,
+   so the two sides trade places. Only a capsule that still has that padding
+   is touched, and !important is there only because the values are inline. */
+[dir="rtl"] .unhurried-capsule[style*="padding-right:0.5rem"][style*="padding-left:clamp("] { padding-left: .5rem !important; padding-right: clamp(1rem, 2vw, 1.75rem) !important; }
 .unhurried-capsule .wp-block-site-logo img { max-height: 36px; width: auto; }
 /* Dropdowns (navigation submenus): a small rounded card under the item. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
