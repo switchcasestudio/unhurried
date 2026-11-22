@@ -839,8 +839,11 @@ a:where(:not(.wp-element-button)) {
 	}
 	.unhurried-hero-statue__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
 }
+/* The hero's own entrances (this photo, the spiral disc, the accent word) start
+   at opacity .4 like the rest of the first screen, never 0 (DESIGN-GUIDE
+   section 6): nothing looks missing, and the browser counts them as painted. */
 @keyframes unhurried-unveil {
-	from { opacity: 0; filter: brightness(.3); transform: scale(1.08); }
+	from { opacity: .4; filter: brightness(.3); transform: scale(1.08); }
 	to { opacity: 1; filter: none; transform: none; }
 }
 
@@ -938,7 +941,7 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-hero-spiral__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
 }
 @keyframes unhurried-emerge {
-	from { opacity: 0; filter: brightness(.15) blur(8px); transform: scale(1.06); }
+	from { opacity: .4; filter: brightness(.15) blur(8px); transform: scale(1.06); }
 	to { opacity: 1; filter: none; transform: none; }
 }
 @keyframes unhurried-turn {
@@ -949,7 +952,7 @@ a:where(:not(.wp-element-button)) {
 	to { transform: translate(3%, -2%) scale(1.08); }
 }
 @keyframes unhurried-exhale {
-	from { opacity: 0; letter-spacing: .08em; filter: blur(12px); }
+	from { opacity: .4; letter-spacing: .08em; filter: blur(12px); }
 	to { opacity: 1; letter-spacing: -0.03em; filter: none; }
 }
 
