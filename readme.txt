@@ -59,6 +59,12 @@ Open the footer in the Site Editor, select each icon and paste your profile addr
 
 Select the image and choose the Keep color style, or remove the `unhurried-mono` class from its parent block.
 
+= A form field is hard to read in a dark look =
+
+In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells the browser the page is dark, so scrollbars, dropdown lists and fields the theme does not style turn dark too. A plugin field that sets only a white background, or only dark text, can then be hard to read. To keep the browser's light drawing, add this line to a small plugin or to a child theme's functions.php:
+
+`add_filter( 'unhurried_dark_color_scheme', '__return_false' );`
+
 == Changelog ==
 
 = 1.2.0 =
@@ -84,12 +90,12 @@ Select the image and choose the Keep color style, or remove the `unhurried-mono`
 * New sample images (CC0, from WordPress.org Photos).
 * WooCommerce without Unhurried Pro: the cart, checkout and account pages can be read in the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk). The cart and checkout use WooCommerce's own dark fields there, so labels no longer vanish, and required marks and error messages are light enough to read. In every look the cart's quantity control has a clearer edge. The shop's layout stays Unhurried Pro's.
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
-* Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page, and its Cart and My account pages when the header shows the cart and account icons. A menu you made is shown exactly as you saved it.
+* Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page, and its Cart and My account pages when the header shows the cart and account icons. A menu you made is shown exactly as you saved it. A menu that holds nothing but an untouched Page List block counts as the automatic one, because that is exactly what WordPress saves by itself; choose a parent page for it, or add any link, and it is yours.
 * The setup checklist works on sites in other languages: a page it opens is recognized whatever its title and address, so the Contact button turns on and buttons lead to the right pages. "Set your menu" is done only when you have made a menu.
 * Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields) and on the site title and post pictures, where it was cut off; and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
 * Screen readers: one header landmark instead of two, the header and footer menus are named "Main" and "Footer", and each search form has a name.
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
-* Dark looks get the browser's dark scrollbars, dropdown lists and checkboxes.
+* Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
 * Right-to-left languages: the header's inner spacing mirrors.
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
 * Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them.

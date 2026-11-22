@@ -5,8 +5,10 @@
  * Harbor, Plum, Lagoon, Dusk, or a palette darkened by hand; see
  * unhurried_is_dark_look()). Tells the browser so, and the things it draws
  * itself follow: scrollbars, the lists of native selects, date pickers,
- * checkboxes, spin buttons, autofill. Light looks load nothing and stay as
- * they are.
+ * spin buttons, autofill. Light looks load nothing and stay as they are.
+ * Return false from the filter unhurried_dark_color_scheme to leave this
+ * file out (for a plugin field that has only a white fill or only dark
+ * text, which the dark scheme would make unreadable).
  *
  * @package Unhurried
  */
@@ -24,3 +26,10 @@
    card field, a sign-up widget, a captcha badge). Frames stay "light", the
    scheme they had before this file existed. */
 :where(iframe, embed, object) { color-scheme: light; }
+
+/* Native checkboxes and radio buttons keep the light scheme they had before
+   this file: a white box, which stands out on every dark page in every
+   browser. Drawn in the dark scheme, an unchecked one is 2.5:1 against the
+   page in Safari (WebKit), under the 3:1 a control's edge needs. Boxes a
+   plugin draws itself (appearance: none) are not affected. */
+:where(input[type="checkbox"], input[type="radio"]) { color-scheme: light; }

@@ -55,9 +55,25 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 			// Text over photographs stays light on a dark shade (printed inline).
 			wp_enqueue_style( 'unhurried-dark-covers', get_template_directory_uri() . '/assets/css/dark-covers.css', array( 'unhurried-style' ), $version );
 			wp_style_add_data( 'unhurried-dark-covers', 'path', get_template_directory() . '/assets/css/dark-covers.css' );
-			// A dark look says so to the browser (color-scheme), in a few lines printed inline.
-			wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
-			wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+			/**
+			 * Filters whether a dark look tells the browser it is dark.
+			 *
+			 * In a dark look the theme declares `color-scheme: dark`
+			 * (assets/css/dark.css, printed inline), so what the browser draws
+			 * itself follows: scrollbars, the lists of selects, date pickers,
+			 * fields the theme does not style. A plugin field that sets only a
+			 * white fill, or only dark text, can become unreadable that way.
+			 * Return false to keep the browser's light scheme:
+			 *
+			 *     add_filter( 'unhurried_dark_color_scheme', '__return_false' );
+			 *
+			 * @since 1.2.0
+			 * @param bool $dark True in a dark look.
+			 */
+			if ( apply_filters( 'unhurried_dark_color_scheme', true ) ) {
+				wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
+				wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+			}
 		}
 
 		wp_enqueue_script(
@@ -119,7 +135,11 @@ if ( ! function_exists( 'unhurried_theme_image_file' ) ) :
 		static $folders = null;
 		if ( null === $folders ) {
 			$folders = array();
-			foreach ( array( get_stylesheet_directory_uri() => get_stylesheet_directory(), get_template_directory_uri() => get_template_directory() ) as $uri => $dir ) {
+			$themes  = array(
+				get_stylesheet_directory_uri() => get_stylesheet_directory(),
+				get_template_directory_uri()   => get_template_directory(),
+			);
+			foreach ( $themes as $uri => $dir ) {
 				$folders[ (string) wp_parse_url( $uri, PHP_URL_PATH ) . '/assets/images/' ] = $dir . '/assets/images/';
 			}
 		}
@@ -752,11 +772,15 @@ add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
 
 if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
 	/**
-	 * Whether block markup is nothing but one Page List block.
+	 * Whether block markup is nothing but one Page List block, as it comes.
 	 *
 	 * That is the menu WordPress makes by itself when a site has none: it
 	 * prints every published page. A menu with anything else in it, a Page
-	 * List among other links included, is one somebody made.
+	 * List among other links included, is one somebody made. So is a lone
+	 * Page List with a setting of its own (a parent page, say): WordPress
+	 * never saves one like that. A lone Page List without settings is
+	 * exactly what WordPress saves, so the two cannot be told apart and it
+	 * counts as the automatic menu.
 	 *
 	 * @since 1.2.0
 	 * @param string $content Block markup, e.g. the content of a menu.
@@ -769,7 +793,7 @@ if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
 				$blocks[] = $block;
 			}
 		}
-		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'];
+		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'] && empty( $blocks[0]['attrs'] );
 	}
 endif;
 
@@ -789,7 +813,7 @@ if ( ! function_exists( 'unhurried_navigation_is_automatic' ) ) :
 	 */
 	function unhurried_navigation_is_automatic( $parsed_block ) {
 		if ( ! empty( $parsed_block['innerBlocks'] ) ) {
-			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'];
+			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'] && empty( $parsed_block['innerBlocks'][0]['attrs'] );
 		}
 		if ( ! empty( $parsed_block['attrs']['ref'] ) ) {
 			$menu = get_post( (int) $parsed_block['attrs']['ref'] );

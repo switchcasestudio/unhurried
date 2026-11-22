@@ -502,7 +502,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 .comment-form textarea:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: 2px; }
 /* The pill searches (footer, journal) draw the ring around the pill, not around the bare field inside it. */
 @supports selector(:has(a)) {
-	:is(.unhurried-footer-search, .unhurried-journal-search) .wp-block-search__input:focus-visible { outline: none; }
+	:is(.unhurried-footer-search, .unhurried-journal-search) .wp-block-search__input:focus-visible { outline: none; box-shadow: none; } /* the soft field glow showed inside the ring */
 	:is(.unhurried-footer-search, .unhurried-journal-search) .wp-block-search__inside-wrapper:has(.wp-block-search__input:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 2px; }
 }
 .wp-block-search__button { margin-inline-start: .5rem; }
