@@ -51,6 +51,11 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 		$script_version = ( is_child_theme() && file_exists( get_stylesheet_directory() . '/assets/js/reveal.js' ) ) ? wp_get_theme()->get( 'Version' ) : $version;
 
 		wp_enqueue_style( 'unhurried-style', get_template_directory_uri() . '/style.css', array(), $version );
+		// A dark look says so to the browser (color-scheme), in a few lines printed inline.
+		if ( function_exists( 'unhurried_is_dark_look' ) && unhurried_is_dark_look() ) {
+			wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
+			wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+		}
 
 		wp_enqueue_script(
 			'unhurried-reveal',

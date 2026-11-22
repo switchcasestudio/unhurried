@@ -1,0 +1,19 @@
+/**
+ * Unhurried in a dark look.
+ *
+ * Loaded only in a look whose page is darker than its text (Nocturne, Moss,
+ * Harbor, Plum, Lagoon, Dusk, or a palette darkened by hand; see
+ * unhurried_is_dark_look()). Tells the browser so, and the things it draws
+ * itself follow: scrollbars, the lists of native selects, date pickers,
+ * checkboxes, spin buttons, autofill. Light looks load nothing and stay as
+ * they are.
+ *
+ * @package Unhurried
+ */
+
+:root { color-scheme: dark; }
+
+/* In a dark look the Ink sections (the footer) and the marquee are the light
+   ones, so what the browser draws inside them stays light. */
+.is-style-section-ink,
+.unhurried-marquee { color-scheme: light; }
