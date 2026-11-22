@@ -1028,6 +1028,13 @@ a:where(:not(.wp-element-button)) {
 
 /* Anchor links glide, and stop below the sticky header. */
 html { scroll-padding-top: 96px; }
+/* Firefox does not use that padding when Shift+Tab moves focus to a control
+   above, and left the control under the sticky header. A scroll margin on
+   the control itself it does honor. Firefox only, so other browsers, which
+   already clear the header, do not add the two together. */
+@supports (-moz-appearance: none) {
+	:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) { scroll-margin-top: 96px; }
+}
 @media (prefers-reduced-motion: no-preference) {
 	html { scroll-behavior: smooth; }
 }
