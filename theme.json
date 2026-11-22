@@ -141,7 +141,7 @@
 				{
 					"slug": "display",
 					"name": "Hanken Grotesk",
-					"fontFamily": "\"Hanken Grotesk\", \"Helvetica Neue\", Arial, sans-serif",
+					"fontFamily": "\"Hanken Grotesk\", \"Hanken Grotesk Fallback\", \"Helvetica Neue\", Arial, sans-serif",
 					"fontFace": [
 						{
 							"fontFamily": "Hanken Grotesk",
@@ -157,7 +157,7 @@
 				{
 					"slug": "body",
 					"name": "Inter",
-					"fontFamily": "Inter, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+					"fontFamily": "Inter, \"Inter Fallback\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
 					"fontFace": [
 						{
 							"fontFamily": "Inter",
@@ -182,7 +182,7 @@
 				{
 					"slug": "accent",
 					"name": "Fraunces Italic",
-					"fontFamily": "Fraunces, Georgia, \"Times New Roman\", serif",
+					"fontFamily": "Fraunces, \"Fraunces Fallback\", Georgia, \"Times New Roman\", serif",
 					"fontFace": [
 						{
 							"fontFamily": "Fraunces",

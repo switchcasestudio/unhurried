@@ -15,6 +15,41 @@ Text Domain: unhurried
 Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, block-styles, custom-colors, custom-logo, custom-menu, editor-style, featured-images, full-site-editing, style-variations, threaded-comments, translation-ready
 */
 
+/* ─── Fallback faces with the web fonts' metrics (1.2.0) ─────────────────── */
+/* Text shows in a fallback until the theme's fonts arrive (font-display: swap).
+   These local faces take the width, ascent and descent of the web font they
+   stand in for, so the swap changes the letters but not where lines break:
+   the hero headline used to go from three lines to two. Nothing is downloaded;
+   where the local font is missing, the next family in theme.json is used.
+   Widths measured in the page against Hanken Grotesk 500 and Inter 400 (the
+   same at every size) and Fraunces italic, whose optical size makes it wider
+   at small sizes: 94% matches it at 29 to 48px (quotes, headings on phones). */
+@font-face {
+	font-family: "Hanken Grotesk Fallback";
+	src: local("Arial"), local("ArialMT");
+	size-adjust: 101.3%;
+	ascent-override: 98.7%;
+	descent-override: 29.6%;
+	line-gap-override: 0%;
+}
+@font-face {
+	font-family: "Inter Fallback";
+	src: local("Arial"), local("ArialMT");
+	size-adjust: 106.6%;
+	ascent-override: 91%;
+	descent-override: 22.5%;
+	line-gap-override: 0%;
+}
+@font-face {
+	font-family: "Fraunces Fallback";
+	font-style: italic;
+	src: local("Georgia Italic"), local("Georgia-Italic");
+	size-adjust: 94%;
+	ascent-override: 104.3%;
+	descent-override: 27.7%;
+	line-gap-override: 0%;
+}
+
 /* ─── Accent words: <em> inside display text becomes Fraunces italic ─────── */
 :where(h1, h2, h3, .has-huge-font-size, .has-xx-large-font-size, .is-style-statement) em {
 	font-family: var(--wp--preset--font-family--accent);
