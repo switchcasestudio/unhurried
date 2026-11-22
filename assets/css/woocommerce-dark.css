@@ -32,3 +32,9 @@ body {
 	/* The edge of a white field, against the dark page around it. */
 	--wc-form-border-color: var(--wp--preset--color--contrast-2);
 }
+
+/* WooCommerce's notices stay light in a dark look, with its own dark text.
+   The focus ring of a link in one ("View cart") was the look's accent, a
+   light color there, and vanished on the notice (1.4 to 1.8:1). It takes
+   the color of the link's own text. */
+.wc-block-components-notice-banner { --uh-focus: currentColor; }
