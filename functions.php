@@ -51,10 +51,29 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 		$script_version = ( is_child_theme() && file_exists( get_stylesheet_directory() . '/assets/js/reveal.js' ) ) ? wp_get_theme()->get( 'Version' ) : $version;
 
 		wp_enqueue_style( 'unhurried-style', get_template_directory_uri() . '/style.css', array(), $version );
-		// A dark look says so to the browser (color-scheme), in a few lines printed inline.
 		if ( function_exists( 'unhurried_is_dark_look' ) && unhurried_is_dark_look() ) {
-			wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
-			wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+			// Text over photographs stays light on a dark shade (printed inline).
+			wp_enqueue_style( 'unhurried-dark-covers', get_template_directory_uri() . '/assets/css/dark-covers.css', array( 'unhurried-style' ), $version );
+			wp_style_add_data( 'unhurried-dark-covers', 'path', get_template_directory() . '/assets/css/dark-covers.css' );
+			/**
+			 * Filters whether a dark look tells the browser it is dark.
+			 *
+			 * In a dark look the theme declares `color-scheme: dark`
+			 * (assets/css/dark.css, printed inline), so what the browser draws
+			 * itself follows: scrollbars, the lists of selects, date pickers,
+			 * fields the theme does not style. A plugin field that sets only a
+			 * white fill, or only dark text, can become unreadable that way.
+			 * Return false to keep the browser's light scheme:
+			 *
+			 *     add_filter( 'unhurried_dark_color_scheme', '__return_false' );
+			 *
+			 * @since 1.2.0
+			 * @param bool $dark True in a dark look.
+			 */
+			if ( apply_filters( 'unhurried_dark_color_scheme', true ) ) {
+				wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
+				wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+			}
 		}
 
 		wp_enqueue_script(
@@ -76,11 +95,14 @@ if ( ! function_exists( 'unhurried_motion_head' ) ) :
 	 * Turns on the automatic motion before the first paint.
 	 *
 	 * Adds the class "uh-motion" to <html> when the browser can observe
-	 * scrolling and the visitor has not asked for reduced motion, so content
-	 * that is about to rise in starts hidden instead of flashing. If the
-	 * motion script has not started within 2.5 seconds, the class comes off
-	 * again and everything simply shows. Filter unhurried_motion to false to
-	 * keep pages still (the older Reveal style keeps working).
+	 * scrolling and the visitor has not asked for reduced motion. The first
+	 * screen then rises by CSS alone from the first paint, starting at
+	 * opacity .4 (style.css, "1. Entrances"), and assets/js/reveal.js holds
+	 * back only what is below the window. Nothing waits on the script, so
+	 * the 2.5 second failsafe that used to lift a hidden first screen is
+	 * gone: nothing is hidden before the script runs. Filter
+	 * unhurried_motion to false to keep pages still (the older Reveal style
+	 * keeps working).
 	 *
 	 * @since 1.2.0
 	 * @return void
@@ -95,10 +117,134 @@ if ( ! function_exists( 'unhurried_motion_head' ) ) :
 		if ( ! apply_filters( 'unhurried_motion', true ) ) {
 			return;
 		}
-		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement;if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}h.classList.add('uh-motion');w.setTimeout(function(){if(!h.classList.contains('uh-motion-live')){h.classList.remove('uh-motion');}},2500);})(document,window);" );
+		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement;if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}h.classList.add('uh-motion');})(document,window);" );
 	}
 endif;
 add_action( 'wp_head', 'unhurried_motion_head', 1 );
+
+if ( ! function_exists( 'unhurried_theme_image_file' ) ) :
+	/**
+	 * The file behind an image address, when it is one of the pictures
+	 * bundled with the theme (assets/images/ of this theme or its child).
+	 *
+	 * @since 1.2.0
+	 * @param string $src Image address.
+	 * @return string Absolute path of the file, or '' for any other image.
+	 */
+	function unhurried_theme_image_file( $src ) {
+		static $folders = null;
+		if ( null === $folders ) {
+			$folders = array();
+			$themes  = array(
+				get_stylesheet_directory_uri() => get_stylesheet_directory(),
+				get_template_directory_uri()   => get_template_directory(),
+			);
+			foreach ( $themes as $uri => $dir ) {
+				$folders[ (string) wp_parse_url( $uri, PHP_URL_PATH ) . '/assets/images/' ] = $dir . '/assets/images/';
+			}
+		}
+		$path = wp_parse_url( (string) $src, PHP_URL_PATH );
+		if ( ! is_string( $path ) || false === strpos( $path, '/assets/images/' ) ) {
+			return '';
+		}
+		foreach ( $folders as $prefix => $dir ) {
+			if ( 0 === strpos( $path, $prefix ) ) {
+				$name = substr( $path, strlen( $prefix ) );
+				// A file name only: no folders, no "..".
+				return ( preg_match( '/^[A-Za-z0-9_-][A-Za-z0-9._-]*$/', $name ) && is_file( $dir . $name ) ) ? $dir . $name : '';
+			}
+		}
+		return '';
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_theme_image_size' ) ) :
+	/**
+	 * Gives the pictures bundled with the theme their width and height.
+	 *
+	 * Patterns show images from the theme's assets/images/ folder. Those are
+	 * not in the Media Library, so WordPress cannot add their size, and it
+	 * never lazy-loads an image that has none: on a long page every picture
+	 * loaded at once, in competition with the first screen. With the size
+	 * read from the file, WordPress's own loading rules
+	 * (wp_filter_content_tags()) take over; see also
+	 * unhurried_theme_image_loading(). The size also keeps the picture's
+	 * place before it arrives. It is the file's own size, so nothing changes
+	 * on screen.
+	 *
+	 * It works as a block is shown, so it reaches pages built from the
+	 * patterns before this version too (those are copies in the page and
+	 * do not change when a pattern file does). Images that already have a
+	 * width or height, and every other image, are left as they are.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered Image or Cover block.
+	 * @return string
+	 */
+	function unhurried_theme_image_size( $block_content ) {
+		if ( false === strpos( (string) $block_content, '/assets/images/' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		static $sizes = array();
+		$tags         = new WP_HTML_Tag_Processor( $block_content );
+		while ( $tags->next_tag( 'img' ) ) {
+			if ( null !== $tags->get_attribute( 'width' ) || null !== $tags->get_attribute( 'height' ) ) {
+				continue;
+			}
+			$file = unhurried_theme_image_file( (string) $tags->get_attribute( 'src' ) );
+			if ( '' === $file ) {
+				continue;
+			}
+			if ( ! array_key_exists( $file, $sizes ) ) {
+				$size           = wp_getimagesize( $file );
+				$sizes[ $file ] = ( $size && $size[0] > 0 && $size[1] > 0 ) ? array( (int) $size[0], (int) $size[1] ) : null;
+			}
+			if ( $sizes[ $file ] ) {
+				$tags->set_attribute( 'width', (string) $sizes[ $file ][0] );
+				$tags->set_attribute( 'height', (string) $sizes[ $file ][1] );
+			}
+		}
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/image', 'unhurried_theme_image_size' );
+add_filter( 'render_block_core/cover', 'unhurried_theme_image_size' );
+
+if ( ! function_exists( 'unhurried_theme_image_loading' ) ) :
+	/**
+	 * Lets only the first picture of a page's content load at once when the
+	 * pictures after it are the theme's own.
+	 *
+	 * WordPress loads the first three pictures of the content at once,
+	 * because any of them might be on the first screen. The theme's patterns
+	 * open with one picture (a hero) and the next ones are full-width
+	 * section photographs further down: on About, a 254 KB photograph near
+	 * the foot of the page loaded in competition with the hero. A bundled
+	 * picture that is not the first in the content, and not the one
+	 * WordPress gave fetchpriority="high", now waits until it nears the
+	 * window. Measured on About (Lighthouse, phone): largest paint
+	 * 5.2 s to 2.6 s. Pictures from the Media Library keep WordPress's rule.
+	 *
+	 * @since 1.2.0
+	 * @param array|false $loading_attrs Loading attributes WordPress chose.
+	 * @param string      $tag_name      Tag name.
+	 * @param array       $attr          The tag's attributes.
+	 * @return array|false
+	 */
+	function unhurried_theme_image_loading( $loading_attrs, $tag_name, $attr ) {
+		// Left alone: an image that already has its loading or priority
+		// (WordPress looks at the page a second time, as a whole), and
+		// everything before the page's priority image has been chosen.
+		if ( 'img' !== $tag_name || ! is_array( $loading_attrs ) || isset( $loading_attrs['loading'] ) || isset( $loading_attrs['fetchpriority'] ) || ! empty( $attr['loading'] ) || ! empty( $attr['fetchpriority'] ) || empty( $attr['src'] ) ) {
+			return $loading_attrs;
+		}
+		if ( ! wp_high_priority_element_flag() && wp_increase_content_media_count( 0 ) > 1 && '' !== unhurried_theme_image_file( (string) $attr['src'] ) ) {
+			$loading_attrs['loading'] = 'lazy';
+		}
+		return $loading_attrs;
+	}
+endif;
+add_filter( 'wp_get_loading_optimization_attributes', 'unhurried_theme_image_loading', 10, 3 );
 
 if ( ! function_exists( 'unhurried_block_styles' ) ) :
 	/**
@@ -626,11 +772,15 @@ add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
 
 if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
 	/**
-	 * Whether block markup is nothing but one Page List block.
+	 * Whether block markup is nothing but one Page List block, as it comes.
 	 *
 	 * That is the menu WordPress makes by itself when a site has none: it
 	 * prints every published page. A menu with anything else in it, a Page
-	 * List among other links included, is one somebody made.
+	 * List among other links included, is one somebody made. So is a lone
+	 * Page List with a setting of its own (a parent page, say): WordPress
+	 * never saves one like that. A lone Page List without settings is
+	 * exactly what WordPress saves, so the two cannot be told apart and it
+	 * counts as the automatic menu.
 	 *
 	 * @since 1.2.0
 	 * @param string $content Block markup, e.g. the content of a menu.
@@ -643,7 +793,7 @@ if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
 				$blocks[] = $block;
 			}
 		}
-		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'];
+		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'] && empty( $blocks[0]['attrs'] );
 	}
 endif;
 
@@ -663,7 +813,7 @@ if ( ! function_exists( 'unhurried_navigation_is_automatic' ) ) :
 	 */
 	function unhurried_navigation_is_automatic( $parsed_block ) {
 		if ( ! empty( $parsed_block['innerBlocks'] ) ) {
-			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'];
+			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'] && empty( $parsed_block['innerBlocks'][0]['attrs'] );
 		}
 		if ( ! empty( $parsed_block['attrs']['ref'] ) ) {
 			$menu = get_post( (int) $parsed_block['attrs']['ref'] );
