@@ -395,7 +395,7 @@
 				},
 				":focus": {
 					"outline": {
-						"color": "var(--wp--preset--color--accent)",
+						"color": "var(--uh-focus, var(--wp--preset--color--accent))",
 						"offset": "3px",
 						"style": "solid",
 						"width": "2px"
@@ -434,7 +434,7 @@
 				},
 				":focus": {
 					"outline": {
-						"color": "var(--wp--preset--color--accent)",
+						"color": "var(--uh-focus, var(--wp--preset--color--accent))",
 						"offset": "3px",
 						"style": "solid",
 						"width": "2px"

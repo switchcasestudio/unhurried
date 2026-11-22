@@ -22,7 +22,7 @@
 $unhurried_has_tagline = '' !== trim( (string) get_bloginfo( 'description' ) );
 // Journal columns only once there is something to list.
 $unhurried_post_count = (int) wp_count_posts( 'post' )->publish;
-$unhurried_search     = wp_json_encode(
+$unhurried_search     = serialize_block_attributes(
 	array(
 		'label'          => __( 'Search', 'unhurried' ),
 		'showLabel'      => false,
@@ -62,7 +62,7 @@ $unhurried_social = array(
 			<?php if ( $unhurried_has_tagline ) : ?>
 			<!-- wp:site-tagline {"className":"unhurried-footer-lead","fontSize":"x-large","fontFamily":"display","style":{"typography":{"fontWeight":"500","lineHeight":"1.05","letterSpacing":"-0.03em"}}} /-->
 			<?php endif; ?>
-			<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() of fixed keys and translated strings. ?> /-->
+			<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 			<!-- wp:group {"className":"unhurried-footer-newsletter","style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"default"}} -->
 			<div class="wp-block-group unhurried-footer-newsletter">
 				<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
@@ -90,7 +90,7 @@ $unhurried_social = array(
 			<!-- wp:social-links {"className":"is-style-logos-only unhurried-footer-social","style":{"spacing":{"blockGap":{"left":"0.5rem","top":"0.5rem"}}}} -->
 			<ul class="wp-block-social-links is-style-logos-only unhurried-footer-social">
 			<?php foreach ( $unhurried_social as $unhurried_service => $unhurried_label ) : ?>
-				<!-- wp:social-link <?php echo wp_json_encode( array( 'url' => '#', 'service' => $unhurried_service, 'label' => $unhurried_label ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() of fixed keys and translated labels. ?> /-->
+				<!-- wp:social-link <?php echo serialize_block_attributes( array( 'url' => '#', 'service' => $unhurried_service, 'label' => $unhurried_label ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 			<?php endforeach; ?>
 			</ul>
 			<!-- /wp:social-links -->

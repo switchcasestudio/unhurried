@@ -14,6 +14,10 @@
  * @since 1.2.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 if ( ! function_exists( 'unhurried_starter_pages' ) ) :
 	/**
 	 * Pages the checklist can open ready-made: slug => title, pattern, template.
@@ -80,7 +84,7 @@ if ( ! function_exists( 'unhurried_prefill_page' ) ) :
 	 * @return string
 	 */
 	function unhurried_prefill_page( $content, $post ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only choice from a fixed list; the user still publishes.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce: the key only picks one entry of a fixed list, for the auto-draft WordPress has just made for this user (who can edit pages). It sets that draft's template, parent and page key; nothing is published.
 		$slug  = isset( $_GET['unhurried_page'] ) ? sanitize_key( wp_unslash( $_GET['unhurried_page'] ) ) : '';
 		$pages = unhurried_starter_pages();
 		if ( '' === $slug || ! isset( $pages[ $slug ] ) || ! $post instanceof WP_Post || 'page' !== $post->post_type || ! current_user_can( 'edit_pages' ) ) {
@@ -89,6 +93,13 @@ if ( ! function_exists( 'unhurried_prefill_page' ) ) :
 		$page = $pages[ $slug ];
 		if ( '' !== $page['template'] ) {
 			update_post_meta( $post->ID, '_wp_page_template', $page['template'] );
+		}
+		// Remember which of the theme's pages this is. On a translated site its
+		// title, and so its address, is in the site's language, and the user may
+		// rename it; unhurried_find_page() finds it by this mark when the slug
+		// does not. Service pages are many, so they carry none.
+		if ( '' !== $page['title'] ) {
+			update_post_meta( $post->ID, '_unhurried_page', $slug );
 		}
 		// A service group starts nested under Services; a service is placed
 		// under its group by the user (Page settings, Parent).
@@ -111,17 +122,22 @@ if ( ! function_exists( 'unhurried_prefill_title' ) ) :
 	 * Gives a page opened from the checklist its title.
 	 *
 	 * @since 1.2.0
-	 * @param string $title Default title.
+	 * @param string       $title Default title.
+	 * @param WP_Post|null $post  The new auto-draft, as default_title passes it.
 	 * @return string
 	 */
-	function unhurried_prefill_title( $title ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only choice from a fixed list.
+	function unhurried_prefill_title( $title, $post = null ) {
+		// Only a new page, and only for someone who may edit pages.
+		if ( $post instanceof WP_Post && ( 'page' !== $post->post_type || ! current_user_can( 'edit_pages' ) ) ) {
+			return $title;
+		}
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No nonce: the key only picks a title from a fixed list for a draft that is not saved yet.
 		$slug  = isset( $_GET['unhurried_page'] ) ? sanitize_key( wp_unslash( $_GET['unhurried_page'] ) ) : '';
 		$pages = unhurried_starter_pages();
 		return ( '' !== $slug && isset( $pages[ $slug ] ) && '' !== $pages[ $slug ]['title'] ) ? $pages[ $slug ]['title'] : $title;
 	}
 endif;
-add_filter( 'default_title', 'unhurried_prefill_title' );
+add_filter( 'default_title', 'unhurried_prefill_title', 10, 2 );
 
 if ( ! function_exists( 'unhurried_site_editor_url' ) ) :
 	/**
@@ -159,15 +175,45 @@ endif;
 
 if ( ! function_exists( 'unhurried_page_exists' ) ) :
 	/**
-	 * Whether a published or draft page has this slug.
+	 * Whether the site has this page, published or still a draft: the page
+	 * with this slug or, failing that, the one the checklist made for it
+	 * (see unhurried_find_page()).
 	 *
 	 * @since 1.2.0
-	 * @param string $slug Page slug.
+	 * @param string $slug Page slug, e.g. 'contact'.
 	 * @return WP_Post|null
 	 */
 	function unhurried_page_exists( $slug ) {
-		$page = get_page_by_path( $slug );
-		return ( $page && in_array( $page->post_status, array( 'publish', 'draft', 'future', 'private' ), true ) ) ? $page : null;
+		return unhurried_find_page( $slug, array( 'publish', 'draft', 'future', 'private' ) );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_has_menu' ) ) :
+	/**
+	 * Whether the site has a menu someone made.
+	 *
+	 * Until there is one, WordPress makes a menu by itself the first time a
+	 * page is shown: a single Page List block that prints every published
+	 * page. That is not a menu the owner has set, so it does not count
+	 * (see unhurried_is_page_list_only()).
+	 *
+	 * @since 1.2.0
+	 * @return bool
+	 */
+	function unhurried_has_menu() {
+		$menus = get_posts(
+			array(
+				'post_type'   => 'wp_navigation',
+				'post_status' => 'publish',
+				'numberposts' => 20,
+			)
+		);
+		foreach ( $menus as $menu ) {
+			if ( '' !== trim( (string) $menu->post_content ) && ! unhurried_is_page_list_only( $menu->post_content ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 endif;
 
@@ -204,7 +250,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 				'state'   => $state,
 				'actions' => $action['url'] ? array(
 					array(
-						'label'   => sprintf( '%1$s %2$s', $action['label'], $label ),
+						'label'   => unhurried_plugin_action_label( $state, $label ),
 						'url'     => $action['url'],
 						'primary' => true,
 					),
@@ -212,14 +258,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 			);
 		};
 
-		$nav = get_posts(
-			array(
-				'post_type'   => 'wp_navigation',
-				'post_status' => 'publish',
-				'numberposts' => 1,
-				'fields'      => 'ids',
-			)
-		);
+		$has_menu = unhurried_has_menu();
 
 		$pages_done = unhurried_page_exists( 'about' ) && unhurried_page_exists( 'services' ) && unhurried_page_exists( 'contact' );
 		$page_links = array();
@@ -322,7 +361,7 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 				'id'      => 'menu',
 				'title'   => __( 'Set your menu', 'unhurried' ),
 				'text'    => __( 'Choose which pages appear in the header and the footer, and drag them into order. Keep it to the pages people look for; a dropdown only where pages truly belong together, such as Services and its groups.', 'unhurried' ),
-				'done'    => (bool) $nav,
+				'done'    => $has_menu,
 				'actions' => array(
 					array(
 						'label'   => __( 'Open menus', 'unhurried' ),

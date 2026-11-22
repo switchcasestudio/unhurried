@@ -30,7 +30,7 @@ $unhurried_has_related = get_posts(
 if ( ! $unhurried_has_related ) {
 	return;
 }
-$unhurried_query = wp_json_encode(
+$unhurried_query = serialize_block_attributes(
 	array(
 		'queryId' => 7,
 		'query'   => array(
@@ -54,7 +54,7 @@ $unhurried_query = wp_json_encode(
 	<!-- wp:heading {"fontSize":"x-large"} -->
 	<h2 class="wp-block-heading has-x-large-font-size"><?php echo wp_kses( __( 'Keep <em>reading</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 	<!-- /wp:heading -->
-	<!-- wp:query <?php echo $unhurried_query; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() of integers and fixed keys. ?> -->
+	<!-- wp:query <?php echo $unhurried_query; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> -->
 	<div class="wp-block-query unhurried-related">
 		<!-- wp:post-template {"style":{"spacing":{"blockGap":"var:preset|spacing|60"}},"layout":{"type":"grid","columnCount":3}} -->
 			<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|40"}},"layout":{"type":"default"}} -->

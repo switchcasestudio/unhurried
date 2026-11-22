@@ -14,7 +14,7 @@
  * @since 1.2.0
  */
 
-$unhurried_search = wp_json_encode(
+$unhurried_search = serialize_block_attributes(
 	array(
 		'label'          => __( 'Search the journal', 'unhurried' ),
 		'showLabel'      => false,
@@ -41,7 +41,7 @@ $unhurried_search = wp_json_encode(
 		<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
 		<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, ut enim ad minim veniam.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
-		<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() of fixed keys and translated strings. ?> /-->
+		<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 	</div>
 	<!-- /wp:group -->
 	<!-- wp:group {"style":{"spacing":{"blockGap":"var:preset|spacing|60"}},"layout":{"type":"default"}} -->

@@ -1,0 +1,23 @@
+/**
+ * Unhurried and WooCommerce: legibility, nothing more. Every look.
+ *
+ * Loaded only while WooCommerce is active and Unhurried Pro is not
+ * (inc/woocommerce.php). The shop's layout and design are Unhurried Pro's
+ * work. This file keeps WooCommerce's own cart readable: 4.5:1 for text,
+ * 3:1 for the edge of a field. Colors come from the text around each field
+ * (currentColor) and from the palette, so every look is covered at once.
+ *
+ * @package Unhurried
+ */
+
+/* The cart's quantity stepper. WooCommerce draws its edge at 30% of the
+   text color, under 2:1 on any paper, and its minus and plus at 60%, a
+   shade under 4.5:1 in most looks. */
+.wc-block-components-quantity-selector { border-color: color-mix(in srgb, currentColor 60%, transparent); }
+.wc-block-components-quantity-selector .wc-block-components-quantity-selector__button { opacity: .75; }
+
+/* The older cart ([woocommerce_cart]): the quantity and coupon fields had a
+   hairline edge, and the coupon's placeholder the browser's gray. */
+.woocommerce-cart-form .quantity .qty,
+.woocommerce-cart table.cart td.actions .coupon .input-text { border-color: color-mix(in srgb, currentColor 60%, transparent); }
+.woocommerce-cart-form .coupon .input-text::placeholder { color: var(--wp--preset--color--contrast-2); opacity: 1; }

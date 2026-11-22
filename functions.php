@@ -9,9 +9,14 @@
  * @since 1.0.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Not a page: this file only runs inside WordPress.
+}
+
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/recommended.php';
 require_once get_template_directory() . '/inc/setup.php';
+require_once get_template_directory() . '/inc/woocommerce.php';
 
 if ( ! function_exists( 'unhurried_setup' ) ) :
 	/**
@@ -38,15 +43,25 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 	 * @return void
 	 */
 	function unhurried_enqueue_assets() {
-		$version = wp_get_theme()->get( 'Version' );
+		// These are the parent theme's files, so they carry its version: under a
+		// child theme, wp_get_theme() is the child, and a parent update would
+		// otherwise leave browsers on the old stylesheet and script.
+		$version = wp_get_theme( get_template() )->get( 'Version' );
+		// A child theme may ship its own reveal.js; that copy follows the child's version.
+		$script_version = ( is_child_theme() && file_exists( get_stylesheet_directory() . '/assets/js/reveal.js' ) ) ? wp_get_theme()->get( 'Version' ) : $version;
 
 		wp_enqueue_style( 'unhurried-style', get_template_directory_uri() . '/style.css', array(), $version );
+		// A dark look says so to the browser (color-scheme), in a few lines printed inline.
+		if ( function_exists( 'unhurried_is_dark_look' ) && unhurried_is_dark_look() ) {
+			wp_enqueue_style( 'unhurried-dark', get_template_directory_uri() . '/assets/css/dark.css', array( 'unhurried-style' ), $version );
+			wp_style_add_data( 'unhurried-dark', 'path', get_template_directory() . '/assets/css/dark.css' );
+		}
 
 		wp_enqueue_script(
 			'unhurried-reveal',
 			get_theme_file_uri( 'assets/js/reveal.js' ),
 			array(),
-			$version,
+			$script_version,
 			array(
 				'strategy'  => 'defer',
 				'in_footer' => true,
@@ -583,8 +598,7 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 	function unhurried_mark_contact_link( $block_content ) {
 		static $contact_url = null;
 		if ( null === $contact_url ) {
-			$page        = get_page_by_path( 'contact' );
-			$contact_url = ( $page && 'publish' === $page->post_status ) ? untrailingslashit( (string) get_permalink( $page ) ) : '';
+			$contact_url = untrailingslashit( (string) unhurried_page_link( 'contact', '' ) );
 		}
 		if ( '' === $contact_url || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
 			return $block_content;
@@ -609,6 +623,349 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
+
+if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
+	/**
+	 * Whether block markup is nothing but one Page List block.
+	 *
+	 * That is the menu WordPress makes by itself when a site has none: it
+	 * prints every published page. A menu with anything else in it, a Page
+	 * List among other links included, is one somebody made.
+	 *
+	 * @since 1.2.0
+	 * @param string $content Block markup, e.g. the content of a menu.
+	 * @return bool
+	 */
+	function unhurried_is_page_list_only( $content ) {
+		$blocks = array();
+		foreach ( parse_blocks( (string) $content ) as $block ) {
+			if ( null !== $block['blockName'] || '' !== trim( (string) $block['innerHTML'] ) ) {
+				$blocks[] = $block;
+			}
+		}
+		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'];
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_navigation_is_automatic' ) ) :
+	/**
+	 * Whether a Navigation block is about to show the automatic page list
+	 * and not a menu somebody made.
+	 *
+	 * The block shows, in this order: the blocks written inside it, the menu
+	 * it names, or the newest menu of the site. With no menu at all WordPress
+	 * falls back to a lone Page List (and saves it as a menu named
+	 * "Navigation").
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The Navigation block about to render.
+	 * @return bool
+	 */
+	function unhurried_navigation_is_automatic( $parsed_block ) {
+		if ( ! empty( $parsed_block['innerBlocks'] ) ) {
+			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'];
+		}
+		if ( ! empty( $parsed_block['attrs']['ref'] ) ) {
+			$menu = get_post( (int) $parsed_block['attrs']['ref'] );
+			return $menu instanceof WP_Post && 'wp_navigation' === $menu->post_type && unhurried_is_page_list_only( $menu->post_content );
+		}
+		$newest = get_posts(
+			array(
+				'post_type'   => 'wp_navigation',
+				'post_status' => 'publish',
+				'numberposts' => 1,
+				'orderby'     => 'date',
+				'order'       => 'DESC',
+			)
+		);
+		return ! $newest || unhurried_is_page_list_only( $newest[0]->post_content );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_header_part' ) ) :
+	/**
+	 * The header template part of the page being rendered, as "theme//slug".
+	 *
+	 * Noted by unhurried_page_list_scope() as the first header part starts
+	 * to render. Empty when no header part has rendered (yet).
+	 *
+	 * @since 1.2.0
+	 * @param string|null $set Template part ID to remember; the first one stays.
+	 * @return string
+	 */
+	function unhurried_page_header_part( $set = null ) {
+		static $part = '';
+		if ( null !== $set && '' === $part ) {
+			$part = (string) $set;
+		}
+		return $part;
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_list_exclude' ) ) :
+	/**
+	 * Pages kept out of the automatic page list.
+	 *
+	 * Until a site has a menu of its own, the Navigation block prints every
+	 * published page, and with WooCommerce that includes its Checkout, Cart
+	 * and My account pages. Checkout is a step, not a place to go, so it is
+	 * always left out. Cart and My account are left out only when the header
+	 * of the page being shown carries WooCommerce's cart and account icons,
+	 * which lead to the same pages. Without the icons, or when the header is
+	 * not known, the two links stay, as the only way there.
+	 *
+	 * The header is read as the site has it now (a header edited in the Site
+	 * Editor included), and it is the header part this page really uses, so
+	 * a template with another header part is judged by that part.
+	 *
+	 * @since 1.2.0
+	 * @return int[] Page IDs.
+	 */
+	function unhurried_page_list_exclude() {
+		$exclude = array();
+		if ( function_exists( 'wc_get_page_id' ) ) {
+			$part      = unhurried_page_header_part();
+			$header    = '' !== $part ? get_block_template( $part, 'wp_template_part' ) : null;
+			$markup    = $header ? (string) $header->content : '';
+			$exclude[] = (int) wc_get_page_id( 'checkout' );
+			if ( false !== strpos( $markup, 'wp:woocommerce/mini-cart' ) ) {
+				$exclude[] = (int) wc_get_page_id( 'cart' );
+			}
+			if ( false !== strpos( $markup, 'wp:woocommerce/customer-account' ) ) {
+				$exclude[] = (int) wc_get_page_id( 'myaccount' );
+			}
+		}
+		/**
+		 * Filters the pages kept out of the automatic page list.
+		 *
+		 * @since 1.2.0
+		 * @param int[] $exclude Page IDs. Return an empty array to list every page.
+		 */
+		$exclude = (array) apply_filters( 'unhurried_page_list_exclude', $exclude );
+		return array_values( array_filter( array_map( 'intval', $exclude ) ) );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_list_pages' ) ) :
+	/**
+	 * Drops the pages named by unhurried_page_list_exclude() from a list of pages.
+	 *
+	 * @since 1.2.0
+	 * @param WP_Post[] $pages Pages.
+	 * @return WP_Post[]
+	 */
+	function unhurried_page_list_pages( $pages ) {
+		$exclude = unhurried_page_list_exclude();
+		if ( ! $exclude || ! is_array( $pages ) ) {
+			return $pages;
+		}
+		$kept = array();
+		foreach ( $pages as $page ) {
+			if ( ! in_array( (int) $page->ID, $exclude, true ) ) {
+				$kept[] = $page;
+			}
+		}
+		return $kept;
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_list_scope' ) ) :
+	/**
+	 * Applies unhurried_page_list_pages() while a Navigation block renders
+	 * the automatic page list, and only then.
+	 *
+	 * A menu somebody made is never filtered, whatever it holds (see
+	 * unhurried_navigation_is_automatic()). The filter goes on as the block
+	 * starts and comes off when it has rendered (unhurried_page_list_unscope()),
+	 * so no other list of pages is touched. The Navigation block renders its
+	 * Page List itself, which is why the scope is the menu and not the list
+	 * inside it. Also notes which header part the page uses, for
+	 * unhurried_page_list_exclude().
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The block about to render.
+	 * @return array
+	 */
+	function unhurried_page_list_scope( $parsed_block ) {
+		$name  = isset( $parsed_block['blockName'] ) ? $parsed_block['blockName'] : '';
+		$attrs = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+		if ( 'core/template-part' === $name && ! empty( $attrs['slug'] ) && '' === unhurried_page_header_part() && 'header' === unhurried_template_part_area( $attrs ) ) {
+			unhurried_page_header_part( ( ! empty( $attrs['theme'] ) ? $attrs['theme'] : get_stylesheet() ) . '//' . $attrs['slug'] );
+		}
+		if ( 'core/navigation' === $name && unhurried_navigation_is_automatic( $parsed_block ) ) {
+			add_filter( 'get_pages', 'unhurried_page_list_pages' );
+		}
+		return $parsed_block;
+	}
+endif;
+add_filter( 'render_block_data', 'unhurried_page_list_scope' );
+
+if ( ! function_exists( 'unhurried_page_list_unscope' ) ) :
+	/**
+	 * Takes the page list filter off again once the Navigation block has rendered.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_page_list_unscope( $block_content ) {
+		remove_filter( 'get_pages', 'unhurried_page_list_pages' );
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/navigation', 'unhurried_page_list_unscope' );
+
+if ( ! function_exists( 'unhurried_template_part_area' ) ) :
+	/**
+	 * The area of a Template Part block: the one it states, the one its tag
+	 * implies, or, when the block says neither (as some of WooCommerce's
+	 * templates do), the area of the part it names.
+	 *
+	 * @since 1.2.0
+	 * @param array $attrs Attributes of a Template Part block.
+	 * @return string 'header', 'footer', another area, or ''.
+	 */
+	function unhurried_template_part_area( $attrs ) {
+		if ( ! empty( $attrs['area'] ) ) {
+			return (string) $attrs['area'];
+		}
+		if ( ! empty( $attrs['tagName'] ) && in_array( $attrs['tagName'], array( 'header', 'footer' ), true ) ) {
+			return (string) $attrs['tagName'];
+		}
+		if ( empty( $attrs['slug'] ) ) {
+			return '';
+		}
+		$part = get_block_template( ( ! empty( $attrs['theme'] ) ? $attrs['theme'] : get_stylesheet() ) . '//' . $attrs['slug'], 'wp_template_part' );
+		return ( $part && ! empty( $part->area ) ) ? (string) $part->area : '';
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_part_area' ) ) :
+	/**
+	 * The area ("header", "footer"…) of the template part being rendered
+	 * right now, or '' outside any part.
+	 *
+	 * @since 1.2.0
+	 * @param string|null $change 'enter' or 'leave' as a part starts or ends; null to read.
+	 * @param string      $area   The area being entered.
+	 * @return string
+	 */
+	function unhurried_part_area( $change = null, $area = '' ) {
+		static $areas = array();
+		if ( 'enter' === $change ) {
+			$areas[] = (string) $area;
+		} elseif ( 'leave' === $change ) {
+			array_pop( $areas );
+		}
+		return $areas ? (string) end( $areas ) : '';
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_enter_part' ) ) :
+	/**
+	 * Notes the area of a template part as it starts to render.
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The block about to render.
+	 * @return array
+	 */
+	function unhurried_enter_part( $parsed_block ) {
+		if ( isset( $parsed_block['blockName'] ) && 'core/template-part' === $parsed_block['blockName'] ) {
+			$attrs = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+			unhurried_part_area( 'enter', unhurried_template_part_area( $attrs ) );
+		}
+		return $parsed_block;
+	}
+endif;
+add_filter( 'render_block_data', 'unhurried_enter_part' );
+
+if ( ! function_exists( 'unhurried_leave_part' ) ) :
+	/**
+	 * Forgets the template part once it has rendered.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_leave_part( $block_content ) {
+		unhurried_part_area( 'leave' );
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/template-part', 'unhurried_leave_part' );
+
+if ( ! function_exists( 'unhurried_label_navigation' ) ) :
+	/**
+	 * Names the menus in the header and the footer for screen readers.
+	 *
+	 * A Navigation block takes its label from the menu it names. The theme's
+	 * header and footer name none, so the header's menu had no label and the
+	 * footer's was labeled " 2". They become "Main" and "Footer" (a screen
+	 * reader adds "navigation" itself). A menu that has a label keeps it.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered navigation block.
+	 * @return string
+	 */
+	function unhurried_label_navigation( $block_content ) {
+		$area = unhurried_part_area();
+		if ( ( 'header' !== $area && 'footer' !== $area ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'nav' ) ) {
+			return $block_content;
+		}
+		$label = trim( (string) $tags->get_attribute( 'aria-label' ) );
+		if ( '' !== $label && ! ctype_digit( $label ) ) {
+			return $block_content;
+		}
+		// A second unnamed menu in the same area is numbered, as WordPress numbers its own.
+		static $seen   = array();
+		$seen[ $area ] = isset( $seen[ $area ] ) ? $seen[ $area ] + 1 : 1;
+		$label         = 'header' === $area ? _x( 'Main', 'Label of the header menu for screen readers', 'unhurried' ) : _x( 'Footer', 'Label of the footer menu for screen readers', 'unhurried' );
+		$tags->set_attribute( 'aria-label', $seen[ $area ] > 1 ? $label . ' ' . $seen[ $area ] : $label );
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/navigation', 'unhurried_label_navigation' );
+
+if ( ! function_exists( 'unhurried_label_search' ) ) :
+	/**
+	 * Names each search form for screen readers.
+	 *
+	 * A Search block is a search landmark without a name of its own, so two
+	 * on a page (the journal's and the footer's) could not be told apart. The
+	 * form takes the block's own words: its placeholder when that says more
+	 * than its label ("Search the site" in the footer, whose label is
+	 * "Search"), else its label ("Search the journal"), else "Search".
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered search block.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_label_search( $block_content, $block ) {
+		if ( ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'form' ) || 'search' !== $tags->get_attribute( 'role' ) || null !== $tags->get_attribute( 'aria-label' ) || null !== $tags->get_attribute( 'aria-labelledby' ) ) {
+			return $block_content;
+		}
+		$label = isset( $block['attrs']['label'] ) ? trim( wp_strip_all_tags( (string) $block['attrs']['label'] ) ) : '';
+		$hint  = isset( $block['attrs']['placeholder'] ) ? trim( wp_strip_all_tags( (string) $block['attrs']['placeholder'] ), " \t\n\r\0\x0B.…" ) : '';
+		if ( strlen( $hint ) > strlen( $label ) ) {
+			$label = $hint;
+		}
+		if ( '' === $label ) {
+			$label = __( 'Search', 'unhurried' );
+		}
+		$tags->set_attribute( 'aria-label', $label );
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/search', 'unhurried_label_search', 10, 2 );
 
 if ( ! function_exists( 'unhurried_mark_current_term' ) ) :
 	/**
@@ -669,17 +1026,91 @@ if ( ! function_exists( 'unhurried_term_count_label' ) ) :
 endif;
 add_filter( 'render_block_core/term-count', 'unhurried_term_count_label', 10, 3 );
 
+if ( ! function_exists( 'unhurried_find_page' ) ) :
+	/**
+	 * The page the theme treats as one of its named pages (Contact, Services…).
+	 *
+	 * First the page at that slug, as always. When there is none, the page the
+	 * setup checklist opened for it: the checklist marks each of its pages
+	 * with its key (post meta _unhurried_page), because on a translated site
+	 * the page is titled, and so addressed, in the site's own language
+	 * ("Kontakt", /kontakt/) and the English slug finds nothing.
+	 *
+	 * @since 1.2.0
+	 * @param string   $slug     The page's key: its English slug, e.g. 'contact'.
+	 * @param string[] $statuses Post statuses that count. Default: published only.
+	 * @return WP_Post|null
+	 */
+	function unhurried_find_page( $slug, $statuses = array( 'publish' ) ) {
+		$slug     = (string) $slug;
+		$statuses = (array) $statuses;
+		$page     = '' !== $slug ? get_page_by_path( $slug ) : null;
+		if ( ! $page || ! in_array( $page->post_status, $statuses, true ) ) {
+			$page = null;
+			if ( '' !== $slug ) {
+				$marked = get_posts(
+					array(
+						'post_type'   => 'page',
+						'post_status' => $statuses,
+						'meta_key'    => '_unhurried_page', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Runs only when no page has the slug; a handful of rows; WP_Query caches the result.
+						'meta_value'  => $slug, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- As above.
+						'orderby'     => 'ID',
+						'order'       => 'ASC',
+						'numberposts' => 10,
+					)
+				);
+				// A published page first, then the oldest of the rest.
+				foreach ( $marked as $candidate ) {
+					if ( 'publish' === $candidate->post_status ) {
+						$page = $candidate;
+						break;
+					}
+				}
+				if ( ! $page && $marked ) {
+					$page = $marked[0];
+				}
+			}
+		}
+		/**
+		 * Filters which page the theme treats as one of its named pages.
+		 *
+		 * A multilingual plugin can return the page for the visitor's language.
+		 *
+		 * @since 1.2.0
+		 * @param int      $page_id  Page ID, or 0 when the theme found none.
+		 * @param string   $slug     The page's key: its English slug, e.g. 'contact'.
+		 * @param string[] $statuses Post statuses that count.
+		 */
+		$page_id = (int) apply_filters( 'unhurried_page_id', $page ? $page->ID : 0, $slug, $statuses );
+		if ( $page && $page_id === $page->ID ) {
+			return $page;
+		}
+		$page = $page_id ? get_post( $page_id ) : null;
+		return ( $page instanceof WP_Post && in_array( $page->post_status, $statuses, true ) ) ? $page : null;
+	}
+endif;
+
 if ( ! function_exists( 'unhurried_page_link' ) ) :
 	/**
 	 * Permalink of a published page by slug, or a fallback, for pattern buttons.
 	 *
 	 * @since 1.1.0
+	 * @since 1.2.0 Also finds the page the setup checklist made (see unhurried_find_page()); filterable.
 	 * @param string $slug     Page slug, e.g. 'contact'.
 	 * @param string $fallback Used when the page does not exist.
 	 * @return string
 	 */
 	function unhurried_page_link( $slug, $fallback = '#' ) {
-		$page = get_page_by_path( $slug );
-		return ( $page && 'publish' === $page->post_status ) ? get_permalink( $page ) : $fallback;
+		$page = unhurried_find_page( $slug );
+		$url  = $page ? get_permalink( $page ) : $fallback;
+		/**
+		 * Filters the address the theme links to for one of its named pages.
+		 *
+		 * @since 1.2.0
+		 * @param string $url      The page's permalink, or the fallback when there is no such page.
+		 * @param string $slug     The page's key: its English slug, e.g. 'contact'.
+		 * @param string $fallback The fallback the caller asked for.
+		 */
+		return apply_filters( 'unhurried_page_link', $url, $slug, $fallback );
 	}
 endif;

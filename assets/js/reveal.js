@@ -76,6 +76,7 @@
 	// someone is reading pulls their eye away from it).
 	var SKIP = [
 		'header',
+		'.unhurried-header',
 		'.wp-block-navigation',
 		'.unhurried-marquee',
 		'.unhurried-still',
@@ -114,27 +115,72 @@
 		} );
 	} );
 
-	/* Figures count up from zero to their printed value. The real value
-	   stays in the page for screen readers; the moving digits are hidden. */
+	/* Figures count up from zero to their printed value, in the author's own
+	   format ("1,200", "12,5", "1.200.000"), and end as exactly what the
+	   author wrote. While they count, the real value stays in the page for
+	   screen readers and the moving digits are hidden from them. */
 	function countUp( el ) {
 		var text = el.textContent.trim();
 		var match = text.match( /^(\D*)(\d[\d,.]*)(.*)$/ );
 		if ( ! match ) {
 			return;
 		}
-		var target = parseFloat( match[ 2 ].replace( /,/g, '' ) );
-		// A year (four digits, nothing after) counts up from a nearby year.
-		var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
+		// A full stop or comma that ends the figure is punctuation, not part of it.
+		var figure = match[ 2 ].replace( /[.,]+$/, '' );
+		var after = match[ 2 ].slice( figure.length ) + match[ 3 ];
+		// Which mark is the decimal one? With both, the last. With one kind,
+		// used once and not followed by exactly three digits ("12,5", "0.75"),
+		// that one; otherwise it groups thousands ("1,200", "1.200.000").
+		var dot = figure.lastIndexOf( '.' );
+		var comma = figure.lastIndexOf( ',' );
+		var decimalMark = '';
+		if ( dot > -1 && comma > -1 ) {
+			decimalMark = dot > comma ? '.' : ',';
+		} else if ( dot > -1 || comma > -1 ) {
+			var mark = dot > -1 ? '.' : ',';
+			var pieces = figure.split( mark );
+			if ( 2 === pieces.length && ( 3 !== pieces[ 1 ].length || '0' === pieces[ 0 ] ) ) {
+				decimalMark = mark;
+			}
+		}
+		var groupMark = '';
+		if ( '.' !== decimalMark && dot > -1 ) {
+			groupMark = '.';
+		} else if ( ',' !== decimalMark && comma > -1 ) {
+			groupMark = ',';
+		}
+		var whole = decimalMark ? figure.slice( 0, figure.lastIndexOf( decimalMark ) ) : figure;
+		var decimals = decimalMark ? figure.length - figure.lastIndexOf( decimalMark ) - 1 : 0;
+		var digits = whole.replace( /\D/g, '' );
+		var target = parseFloat( digits + ( decimals ? '.' + figure.slice( -decimals ) : '' ) );
 		if ( ! isFinite( target ) ) {
 			return;
 		}
-		var decimals = ( match[ 2 ].split( '.' )[ 1 ] || '' ).length;
+		// A year (four digits, nothing after) counts up from a nearby year.
+		var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
+		// "007" keeps its width.
+		var width = /^0\d/.test( digits ) ? digits.length : 0;
+		function format( value ) {
+			var parts = value.toFixed( decimals ).split( '.' );
+			while ( parts[ 0 ].length < width ) {
+				parts[ 0 ] = '0' + parts[ 0 ];
+			}
+			if ( groupMark ) {
+				parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, groupMark );
+			}
+			return parts[ 0 ] + ( decimals ? decimalMark + parts[ 1 ] : '' );
+		}
+		// Set the author's own nodes aside (the text, and any markup such as
+		// an accent word) and put them back when the count is over.
+		var written = document.createDocumentFragment();
+		while ( el.firstChild ) {
+			written.appendChild( el.firstChild );
+		}
 		var shown = document.createElement( 'span' );
 		shown.setAttribute( 'aria-hidden', 'true' );
 		var real = document.createElement( 'span' );
 		real.className = 'unhurried-visually-hidden';
 		real.textContent = text;
-		el.textContent = '';
 		el.appendChild( shown );
 		el.appendChild( real );
 		var start = null;
@@ -146,10 +192,13 @@
 			var t = Math.min( 1, ( now - start ) / duration );
 			var eased = 1 - Math.pow( 1 - t, 4 );
 			var value = from + ( target - from ) * eased;
-			shown.textContent = match[ 1 ] + value.toFixed( decimals ) + match[ 3 ];
 			if ( t < 1 ) {
+				shown.textContent = match[ 1 ] + format( value ) + after;
 				window.requestAnimationFrame( frame );
+				return;
 			}
+			el.textContent = '';
+			el.appendChild( written );
 		}
 		window.requestAnimationFrame( frame );
 	}
@@ -162,28 +211,48 @@
 		}, delay + long );
 	}
 
-	var observer = new IntersectionObserver(
+	var observer;
+	var tallObserver;
+
+	function enter( el, step ) {
+		var delay = Math.min( step, MAX_STEPS ) * STAGGER;
+		el.style.setProperty( '--uh-delay', delay + 'ms' );
+		el.classList.add( 'is-in' );
+		observer.unobserve( el );
+		tallObserver.unobserve( el );
+		if ( el.getAttribute( 'data-uh' ) === 'count' ) {
+			window.setTimeout( function () {
+				countUp( el );
+			}, delay );
+		}
+		finish( el, delay );
+	}
+
+	// An element enters once 15% of it is in view.
+	observer = new IntersectionObserver(
 		function ( entries ) {
 			var step = 0;
 			entries.forEach( function ( entry ) {
-				if ( ! entry.isIntersecting ) {
-					return;
+				if ( entry.isIntersecting && ! entry.target.classList.contains( 'is-in' ) ) {
+					enter( entry.target, step++ );
 				}
-				var el = entry.target;
-				var delay = Math.min( step, MAX_STEPS ) * STAGGER;
-				step++;
-				el.style.setProperty( '--uh-delay', delay + 'ms' );
-				el.classList.add( 'is-in' );
-				observer.unobserve( el );
-				if ( el.getAttribute( 'data-uh' ) === 'count' ) {
-					window.setTimeout( function () {
-						countUp( el );
-					}, delay );
-				}
-				finish( el, delay );
 			} );
 		},
 		{ rootMargin: '0px', threshold: 0.15 }
+	);
+	// Something taller than the window may never show 15% of itself (past
+	// about 6.7 screens it cannot: a long form on a phone stayed hidden), so
+	// it enters once it fills 15% of the window instead.
+	tallObserver = new IntersectionObserver(
+		function ( entries ) {
+			var step = 0;
+			entries.forEach( function ( entry ) {
+				if ( entry.isIntersecting && entry.boundingClientRect.height > window.innerHeight && ! entry.target.classList.contains( 'is-in' ) ) {
+					enter( entry.target, step++ );
+				}
+			} );
+		},
+		{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
 	);
 	// Switch from the pre-paint hold to the per-element states, and make the
 	// browser compute them now, so items already on screen animate from
@@ -192,6 +261,7 @@
 	void document.body.offsetWidth;
 	targets.forEach( function ( el ) {
 		observer.observe( el );
+		tallObserver.observe( el );
 	} );
 
 	/* ── Gift card: tilts toward the pointer, like a card in the hand ── */

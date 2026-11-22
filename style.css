@@ -7,7 +7,7 @@ Description: Unhurried is a calm, editorial block theme for studios, clinics, sp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Version: 1.1.2
+Version: 1.2.0
 Copyright: (c) 2026 Moses Atia Poston, Switch Case Studio
 License: GNU General Public License v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -28,9 +28,44 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
    sections and dark footers: the text looked unselectable.) */
 ::selection { background: rgba(212, 75, 25, .4); background: color-mix(in srgb, var(--wp--preset--color--accent) 40%, transparent); }
 
+/* Focus ring: 2px, and 3:1 or more against whatever is around it. On the
+   page it is the accent. Inside a section with a surface of its own it takes
+   a color that is sure to show there: the section's text color on Ink (the
+   accent is under 3:1 on Ink in 17 of the 20 looks), and on Ground the
+   accent leaned 20% toward the text color, as text links do on hover (plain
+   accent is 2.7:1 on Terrace's Ground). theme.json's link and button focus
+   read the same --uh-focus. */
+:root { --uh-focus: var(--wp--preset--color--accent); }
+:where(.is-style-section-ink, .unhurried-marquee, .wp-block-group.has-contrast-background-color) { --uh-focus: var(--wp--preset--color--base); }
+/* Over a photograph the ring follows the text, as WordPress colors it on a
+   Cover (white, or black on a light one). No single color is safe on a
+   picture, though: it can be dark here and light there, and a Cover washed
+   with the Contrast color turns light in a dark look. So on a Cover the ring
+   is two-tone: a band of the opposite color fills the gap inside it, and one
+   of the two shows on any surface. Glass text is always Bone
+   (styles/sections/glass.json), whatever the look. */
+:where(.wp-block-cover) { --uh-focus: white; --uh-focus-in: black; }
+:where(.wp-block-cover.is-light) { --uh-focus: black; --uh-focus-in: white; }
+:where(.is-style-glass) { --uh-focus: rgb(246, 244, 239); }
+@supports (color: color-mix(in srgb, red, blue)) {
+	:where(.is-style-section-ground, .has-ground-background-color) { --uh-focus: color-mix(in srgb, var(--wp--preset--color--accent) 80%, var(--wp--preset--color--contrast)); }
+}
 :where(a, button, input, select, textarea, summary):focus-visible {
-	outline: 2px solid var(--wp--preset--color--accent);
+	outline: 2px solid var(--uh-focus);
 	outline-offset: 3px;
+}
+.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); }
+/* A ring is drawn outside its link, so a block that hides its overflow cuts
+   it off: the site title in the capsule (kept to one line) and a post's
+   picture (rounded corners) showed no ring at all, the footer wordmark
+   only its top and bottom. There the block draws the ring itself. */
+@supports selector(:has(a)) {
+	.unhurried-capsule .wp-block-site-title:has(a:focus-visible),
+	.unhurried-wordmark:has(a:focus-visible),
+	.wp-block-post-featured-image:has(> a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
+	.unhurried-capsule .wp-block-site-title a:focus-visible,
+	.unhurried-wordmark a:focus-visible,
+	.wp-block-post-featured-image > a:focus-visible { outline: none; }
 }
 
 img { height: auto; }
@@ -106,6 +141,11 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .45);
 	transition: box-shadow .3s ease;
 }
+/* Right to left: the capsule's uneven padding (roomy before the title, tight
+   after the button) is written as left and right in the block's own style,
+   so the two sides trade places. Only a capsule that still has that padding
+   is touched, and !important is there only because the values are inline. */
+[dir="rtl"] .unhurried-capsule[style*="padding-right:0.5rem"][style*="padding-left:clamp("] { padding-left: .5rem !important; padding-right: clamp(1rem, 2vw, 1.75rem) !important; }
 .unhurried-capsule .wp-block-site-logo img { max-height: 36px; width: auto; }
 /* Dropdowns (navigation submenus): a small rounded card under the item. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
@@ -454,6 +494,17 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 .wp-block-search__input:focus,
 .comment-form input:focus,
 .comment-form textarea:focus { border-color: var(--wp--preset--color--contrast); outline: none; }
+/* With the keyboard (and whenever a text field has focus) the field shows the
+   same 2px ring as every other control. The border change above and the soft
+   glow further down are under 3:1 on their own. */
+.wp-block-search__input:focus-visible,
+.comment-form input:focus-visible,
+.comment-form textarea:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: 2px; }
+/* The pill searches (footer, journal) draw the ring around the pill, not around the bare field inside it. */
+@supports selector(:has(a)) {
+	:is(.unhurried-footer-search, .unhurried-journal-search) .wp-block-search__input:focus-visible { outline: none; }
+	:is(.unhurried-footer-search, .unhurried-journal-search) .wp-block-search__inside-wrapper:has(.wp-block-search__input:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 2px; }
+}
 .wp-block-search__button { margin-inline-start: .5rem; }
 
 /* ─── Reveal on scroll, the opt-in kind from 1.0 (class "unhurried-reveal" or the Reveal block style).
@@ -496,8 +547,11 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 /* 1. Entrances */
 /* Before the script has marked anything, keep main content back for a
    moment so the first screen can enter instead of blinking. The failsafe in
-   unhurried_motion_head() lifts this after 2.5 s if the script never runs. */
-.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form) { opacity: 0; }
+   unhurried_motion_head() lifts this after 2.5 s if the script never runs.
+   Anything marked "unhurried-still" (a block, a section, or the whole page
+   through the body class) is never held back: the script leaves it alone,
+   so it must be readable at first paint, script or no script. */
+.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form):not(.unhurried-still, .unhurried-still *) { opacity: 0; }
 .uh-motion [data-uh]:not(.is-in) { opacity: 0; }
 .uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-rise); }
 .uh-motion :is([data-uh="card"], [data-uh="image"]):not(.is-in) { translate: 0 calc(var(--uh-rise) * 1.5); }
@@ -875,10 +929,12 @@ a:where(:not(.wp-element-button)) {
 .unhurried-footer .unhurried-footer-list li { margin: 0; }
 .unhurried-footer .unhurried-footer-list a { text-decoration: none; }
 .unhurried-footer .unhurried-footer-list a:hover { text-decoration: underline; text-underline-offset: .2em; }
-.unhurried-footer .wp-block-categories { font-size: var(--wp--preset--font-size--small); color: color-mix(in srgb, currentColor 60%, transparent); }
+/* Counts, dates and placeholders: 70% of the footer's text color. At 60% (55% for
+   placeholders) they fell to 4:1 and under on the light footer of the dark looks. */
+.unhurried-footer .wp-block-categories { font-size: var(--wp--preset--font-size--small); color: color-mix(in srgb, currentColor 70%, transparent); }
 .unhurried-footer .wp-block-categories a { color: var(--wp--preset--color--base); }
 .unhurried-footer .wp-block-latest-posts { font-size: var(--wp--preset--font-size--small); gap: .9rem; }
-.unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .6; }
+.unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .7; }
 .unhurried-footer-search { max-width: 26rem; }
 .unhurried-footer-search .wp-block-search__inside-wrapper {
 	border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent);
@@ -887,7 +943,7 @@ a:where(:not(.wp-element-button)) {
 	background: transparent;
 }
 .unhurried-footer-search .wp-block-search__input { background: transparent; border: 0; color: inherit; padding: .4rem 0; }
-.unhurried-footer-search .wp-block-search__input::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent); }
+.unhurried-footer-search .wp-block-search__input::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 70%, transparent); }
 .unhurried-footer-search .wp-block-search__button { margin: 0; border-radius: 999px; background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); padding: .5rem .7rem; }
 .unhurried-footer-search .wp-block-search__button svg { fill: currentColor; }
 /* Newsletter row under the search (a plugin's form, or the RSS fallback). */
@@ -922,7 +978,7 @@ a:where(:not(.wp-element-button)) {
 	font: inherit;
 	font-size: var(--wp--preset--font-size--medium);
 }
-:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-email::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent); }
+:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-email::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 70%, transparent); }
 :is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit {
 	width: auto !important;
 	margin: 0 !important;
@@ -964,9 +1020,15 @@ a:where(:not(.wp-element-button)) {
 	font: inherit;
 	transition: border-color .2s ease;
 }
+/* WooCommerce gives a variation dropdown a fixed height (3em) with .9em of
+   padding above and below, and its table a 2em line height. Through
+   "font: inherit" above, that line is taller than the room left inside, and
+   the chosen option showed only its top half. The height stays; the text
+   gets its own line height and the whole box to sit in. */
+.woocommerce .variations_form table.variations select { line-height: normal; padding-block: 0; }
 :where(.wp-site-blocks) :where(textarea) { min-height: 9rem; resize: vertical; }
 :where(.wp-site-blocks) :where(input, textarea, select):hover { border-color: var(--wp--preset--color--contrast-2); }
-:where(.wp-site-blocks) :where(input, textarea, select, button):focus-visible { outline: 2px solid var(--wp--preset--color--accent); outline-offset: 2px; }
+:where(.wp-site-blocks) :where(input, textarea, select, button):focus-visible { outline: 2px solid var(--uh-focus); outline-offset: 2px; }
 :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]):where(:not(.wp-element-button, .wp-block-search__button)) {
 	padding: .85rem 1.5rem;
 	border: 0;
@@ -988,6 +1050,13 @@ a:where(:not(.wp-element-button)) {
 
 /* Anchor links glide, and stop below the sticky header. */
 html { scroll-padding-top: 96px; }
+/* Firefox does not use that padding when Shift+Tab moves focus to a control
+   above, and left the control under the sticky header. A scroll margin on
+   the control itself it does honor. Firefox only, so other browsers, which
+   already clear the header, do not add the two together. */
+@supports (-moz-appearance: none) {
+	:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) { scroll-margin-top: 96px; }
+}
 @media (prefers-reduced-motion: no-preference) {
 	html { scroll-behavior: smooth; }
 }
