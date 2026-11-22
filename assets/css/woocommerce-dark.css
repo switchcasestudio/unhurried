@@ -12,14 +12,23 @@
  * @package Unhurried
  */
 
+/* WooCommerce's own red and green, read where WooCommerce defines them (the
+   root), so that this file holds no color of its own and follows
+   WooCommerce if it changes them. A property cannot refer to itself, hence
+   the two helper names. */
+:root {
+	--uh-wc-red: var(--wc-red);
+	--uh-wc-green: var(--wc-green);
+}
+
 body {
-	/* WooCommerce's red (#a00: required marks, field errors, the remove
-	   cross) is made for a white page and drops to about 2:1 on a dark one.
-	   Mixed halfway to the look's text color it reads on the page (4.7:1 or
-	   more) and still carries the white cross on hover (3:1). Its green
-	   (#007518: the edge of a field that passed its check) gets the same. */
-	--wc-red: color-mix(in srgb, #a00 50%, var(--wp--preset--color--contrast));
-	--wc-green: color-mix(in srgb, #007518 50%, var(--wp--preset--color--contrast));
+	/* WooCommerce's red (required marks, field errors, the remove cross) is
+	   made for a white page and drops to about 2:1 on a dark one. Mixed
+	   halfway to the look's text color it reads on the page (4.7:1 or more)
+	   and still carries the white cross on hover (3:1). Its green (the edge
+	   of a field that passed its check) gets the same. */
+	--wc-red: color-mix(in srgb, var(--uh-wc-red) 50%, var(--wp--preset--color--contrast));
+	--wc-green: color-mix(in srgb, var(--uh-wc-green) 50%, var(--wp--preset--color--contrast));
 	/* The edge of a white field, against the dark page around it. */
 	--wc-form-border-color: var(--wp--preset--color--contrast-2);
 }
