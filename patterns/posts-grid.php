@@ -11,6 +11,14 @@
  * @since 1.0.0
  */
 
+// The search offered when there are no posts: named, so it can be told from the other search forms on the page.
+$unhurried_search = serialize_block_attributes(
+	array(
+		'label'      => __( 'Search again', 'unhurried' ),
+		'showLabel'  => false,
+		'buttonText' => __( 'Search', 'unhurried' ),
+	)
+);
 ?>
 <!-- wp:query {"queryId":1,"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"align":"wide","layout":{"type":"default"}} -->
 <div class="wp-block-query alignwide">
@@ -35,7 +43,7 @@
 		<!-- wp:paragraph {"fontSize":"large"} -->
 		<p class="has-large-font-size"><?php esc_html_e( 'Nothing here yet. Try a search instead.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
-		<!-- wp:search {"label":"","showLabel":false,"buttonText":"Search"} /-->
+		<!-- wp:search <?php echo $unhurried_search; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 		<!-- wp:terms-query {"termQuery":{"perPage":12,"taxonomy":"category","order":"desc","orderBy":"count","include":[],"hideEmpty":true,"showNested":false,"inherit":false},"className":"unhurried-chip-terms"} -->
 		<div class="wp-block-terms-query unhurried-chip-terms"><!-- wp:term-template -->
 		<!-- wp:term-name {"isLink":true} /-->

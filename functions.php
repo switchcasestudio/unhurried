@@ -784,7 +784,7 @@ if ( ! function_exists( 'unhurried_page_list_scope' ) ) :
 	function unhurried_page_list_scope( $parsed_block ) {
 		$name  = isset( $parsed_block['blockName'] ) ? $parsed_block['blockName'] : '';
 		$attrs = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
-		if ( 'core/template-part' === $name && ! empty( $attrs['slug'] ) && ( ( isset( $attrs['area'] ) && 'header' === $attrs['area'] ) || ( isset( $attrs['tagName'] ) && 'header' === $attrs['tagName'] ) ) ) {
+		if ( 'core/template-part' === $name && ! empty( $attrs['slug'] ) && '' === unhurried_page_header_part() && 'header' === unhurried_template_part_area( $attrs ) ) {
 			unhurried_page_header_part( ( ! empty( $attrs['theme'] ) ? $attrs['theme'] : get_stylesheet() ) . '//' . $attrs['slug'] );
 		}
 		if ( 'core/navigation' === $name && unhurried_navigation_is_automatic( $parsed_block ) ) {
@@ -809,6 +809,158 @@ if ( ! function_exists( 'unhurried_page_list_unscope' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/navigation', 'unhurried_page_list_unscope' );
+
+if ( ! function_exists( 'unhurried_template_part_area' ) ) :
+	/**
+	 * The area of a Template Part block: the one it states, the one its tag
+	 * implies, or, when the block says neither (as some of WooCommerce's
+	 * templates do), the area of the part it names.
+	 *
+	 * @since 1.2.0
+	 * @param array $attrs Attributes of a Template Part block.
+	 * @return string 'header', 'footer', another area, or ''.
+	 */
+	function unhurried_template_part_area( $attrs ) {
+		if ( ! empty( $attrs['area'] ) ) {
+			return (string) $attrs['area'];
+		}
+		if ( ! empty( $attrs['tagName'] ) && in_array( $attrs['tagName'], array( 'header', 'footer' ), true ) ) {
+			return (string) $attrs['tagName'];
+		}
+		if ( empty( $attrs['slug'] ) ) {
+			return '';
+		}
+		$part = get_block_template( ( ! empty( $attrs['theme'] ) ? $attrs['theme'] : get_stylesheet() ) . '//' . $attrs['slug'], 'wp_template_part' );
+		return ( $part && ! empty( $part->area ) ) ? (string) $part->area : '';
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_part_area' ) ) :
+	/**
+	 * The area ("header", "footer"…) of the template part being rendered
+	 * right now, or '' outside any part.
+	 *
+	 * @since 1.2.0
+	 * @param string|null $change 'enter' or 'leave' as a part starts or ends; null to read.
+	 * @param string      $area   The area being entered.
+	 * @return string
+	 */
+	function unhurried_part_area( $change = null, $area = '' ) {
+		static $areas = array();
+		if ( 'enter' === $change ) {
+			$areas[] = (string) $area;
+		} elseif ( 'leave' === $change ) {
+			array_pop( $areas );
+		}
+		return $areas ? (string) end( $areas ) : '';
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_enter_part' ) ) :
+	/**
+	 * Notes the area of a template part as it starts to render.
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The block about to render.
+	 * @return array
+	 */
+	function unhurried_enter_part( $parsed_block ) {
+		if ( isset( $parsed_block['blockName'] ) && 'core/template-part' === $parsed_block['blockName'] ) {
+			$attrs = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+			unhurried_part_area( 'enter', unhurried_template_part_area( $attrs ) );
+		}
+		return $parsed_block;
+	}
+endif;
+add_filter( 'render_block_data', 'unhurried_enter_part' );
+
+if ( ! function_exists( 'unhurried_leave_part' ) ) :
+	/**
+	 * Forgets the template part once it has rendered.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @return string
+	 */
+	function unhurried_leave_part( $block_content ) {
+		unhurried_part_area( 'leave' );
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/template-part', 'unhurried_leave_part' );
+
+if ( ! function_exists( 'unhurried_label_navigation' ) ) :
+	/**
+	 * Names the menus in the header and the footer for screen readers.
+	 *
+	 * A Navigation block takes its label from the menu it names. The theme's
+	 * header and footer name none, so the header's menu had no label and the
+	 * footer's was labeled " 2". They become "Main" and "Footer" (a screen
+	 * reader adds "navigation" itself). A menu that has a label keeps it.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered navigation block.
+	 * @return string
+	 */
+	function unhurried_label_navigation( $block_content ) {
+		$area = unhurried_part_area();
+		if ( ( 'header' !== $area && 'footer' !== $area ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'nav' ) ) {
+			return $block_content;
+		}
+		$label = trim( (string) $tags->get_attribute( 'aria-label' ) );
+		if ( '' !== $label && ! ctype_digit( $label ) ) {
+			return $block_content;
+		}
+		// A second unnamed menu in the same area is numbered, as WordPress numbers its own.
+		static $seen   = array();
+		$seen[ $area ] = isset( $seen[ $area ] ) ? $seen[ $area ] + 1 : 1;
+		$label         = 'header' === $area ? _x( 'Main', 'Label of the header menu for screen readers', 'unhurried' ) : _x( 'Footer', 'Label of the footer menu for screen readers', 'unhurried' );
+		$tags->set_attribute( 'aria-label', $seen[ $area ] > 1 ? $label . ' ' . $seen[ $area ] : $label );
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/navigation', 'unhurried_label_navigation' );
+
+if ( ! function_exists( 'unhurried_label_search' ) ) :
+	/**
+	 * Names each search form for screen readers.
+	 *
+	 * A Search block is a search landmark without a name of its own, so two
+	 * on a page (the journal's and the footer's) could not be told apart. The
+	 * form takes the block's own words: its placeholder when that says more
+	 * than its label ("Search the site" in the footer, whose label is
+	 * "Search"), else its label ("Search the journal"), else "Search".
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered search block.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_label_search( $block_content, $block ) {
+		if ( ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'form' ) || 'search' !== $tags->get_attribute( 'role' ) || null !== $tags->get_attribute( 'aria-label' ) || null !== $tags->get_attribute( 'aria-labelledby' ) ) {
+			return $block_content;
+		}
+		$label = isset( $block['attrs']['label'] ) ? trim( wp_strip_all_tags( (string) $block['attrs']['label'] ) ) : '';
+		$hint  = isset( $block['attrs']['placeholder'] ) ? trim( wp_strip_all_tags( (string) $block['attrs']['placeholder'] ), " \t\n\r\0\x0B.…" ) : '';
+		if ( strlen( $hint ) > strlen( $label ) ) {
+			$label = $hint;
+		}
+		if ( '' === $label ) {
+			$label = __( 'Search', 'unhurried' );
+		}
+		$tags->set_attribute( 'aria-label', $label );
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/search', 'unhurried_label_search', 10, 2 );
 
 if ( ! function_exists( 'unhurried_mark_current_term' ) ) :
 	/**
