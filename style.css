@@ -38,10 +38,14 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 :root { --uh-focus: var(--wp--preset--color--accent); }
 :where(.is-style-section-ink, .unhurried-marquee, .wp-block-group.has-contrast-background-color) { --uh-focus: var(--wp--preset--color--base); }
 /* Over a photograph the ring follows the text, as WordPress colors it on a
-   Cover (white, or black on a light one). Glass text is always Bone
+   Cover (white, or black on a light one). No single color is safe on a
+   picture, though: it can be dark here and light there, and a Cover washed
+   with the Contrast color turns light in a dark look. So on a Cover the ring
+   is two-tone: a band of the opposite color fills the gap inside it, and one
+   of the two shows on any surface. Glass text is always Bone
    (styles/sections/glass.json), whatever the look. */
-:where(.wp-block-cover) { --uh-focus: white; }
-:where(.wp-block-cover.is-light) { --uh-focus: black; }
+:where(.wp-block-cover) { --uh-focus: white; --uh-focus-in: black; }
+:where(.wp-block-cover.is-light) { --uh-focus: black; --uh-focus-in: white; }
 :where(.is-style-glass) { --uh-focus: rgb(246, 244, 239); }
 @supports (color: color-mix(in srgb, red, blue)) {
 	:where(.is-style-section-ground, .has-ground-background-color) { --uh-focus: color-mix(in srgb, var(--wp--preset--color--accent) 80%, var(--wp--preset--color--contrast)); }
@@ -50,6 +54,7 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 	outline: 2px solid var(--uh-focus);
 	outline-offset: 3px;
 }
+.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); }
 
 img { height: auto; }
 
