@@ -76,6 +76,7 @@
 	// someone is reading pulls their eye away from it).
 	var SKIP = [
 		'header',
+		'.unhurried-header',
 		'.wp-block-navigation',
 		'.unhurried-marquee',
 		'.unhurried-still',
