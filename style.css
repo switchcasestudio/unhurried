@@ -940,6 +940,14 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-hero-spiral__stage::before { animation: unhurried-light 20s ease-in-out infinite alternate; }
 	.unhurried-hero-spiral__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
 }
+/* From 782px the giant word is placed against the stage. A heading with a
+   translate in effect (the first screen's rise, filled to the end) becomes the
+   containing block of what is positioned inside it, which put the word over the
+   title; so here the heading enters by opacity alone. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 782px) {
+	.uh-motion .unhurried-hero-spiral__title { --uh-arrive: uh-arrive-fade; }
+}
+@keyframes uh-arrive-fade { from { opacity: .4; } }
 @keyframes unhurried-emerge {
 	from { opacity: .4; filter: brightness(.15) blur(8px); transform: scale(1.06); }
 	to { opacity: 1; filter: none; transform: none; }

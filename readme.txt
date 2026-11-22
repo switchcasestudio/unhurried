@@ -100,6 +100,7 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
 * Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them.
 * The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
+* Hero, spiral: on wide screens the large italic word sits at the foot of the stage again; it had moved over the headline.
 * Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash.
 * Small text over photographs is easier to read in every look: the label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
