@@ -194,7 +194,8 @@ if ( ! function_exists( 'unhurried_has_menu' ) ) :
 	 *
 	 * Until there is one, WordPress makes a menu by itself the first time a
 	 * page is shown: a single Page List block that prints every published
-	 * page. That is not a menu the owner has set, so it does not count.
+	 * page. That is not a menu the owner has set, so it does not count
+	 * (see unhurried_is_page_list_only()).
 	 *
 	 * @since 1.2.0
 	 * @return bool
@@ -208,7 +209,7 @@ if ( ! function_exists( 'unhurried_has_menu' ) ) :
 			)
 		);
 		foreach ( $menus as $menu ) {
-			if ( '' !== trim( str_replace( '<!-- wp:page-list /-->', '', (string) $menu->post_content ) ) ) {
+			if ( '' !== trim( (string) $menu->post_content ) && ! unhurried_is_page_list_only( $menu->post_content ) ) {
 				return true;
 			}
 		}

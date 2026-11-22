@@ -619,6 +619,84 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 endif;
 add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
 
+if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
+	/**
+	 * Whether block markup is nothing but one Page List block.
+	 *
+	 * That is the menu WordPress makes by itself when a site has none: it
+	 * prints every published page. A menu with anything else in it, a Page
+	 * List among other links included, is one somebody made.
+	 *
+	 * @since 1.2.0
+	 * @param string $content Block markup, e.g. the content of a menu.
+	 * @return bool
+	 */
+	function unhurried_is_page_list_only( $content ) {
+		$blocks = array();
+		foreach ( parse_blocks( (string) $content ) as $block ) {
+			if ( null !== $block['blockName'] || '' !== trim( (string) $block['innerHTML'] ) ) {
+				$blocks[] = $block;
+			}
+		}
+		return 1 === count( $blocks ) && 'core/page-list' === $blocks[0]['blockName'];
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_navigation_is_automatic' ) ) :
+	/**
+	 * Whether a Navigation block is about to show the automatic page list
+	 * and not a menu somebody made.
+	 *
+	 * The block shows, in this order: the blocks written inside it, the menu
+	 * it names, or the newest menu of the site. With no menu at all WordPress
+	 * falls back to a lone Page List (and saves it as a menu named
+	 * "Navigation").
+	 *
+	 * @since 1.2.0
+	 * @param array $parsed_block The Navigation block about to render.
+	 * @return bool
+	 */
+	function unhurried_navigation_is_automatic( $parsed_block ) {
+		if ( ! empty( $parsed_block['innerBlocks'] ) ) {
+			return 1 === count( $parsed_block['innerBlocks'] ) && 'core/page-list' === $parsed_block['innerBlocks'][0]['blockName'];
+		}
+		if ( ! empty( $parsed_block['attrs']['ref'] ) ) {
+			$menu = get_post( (int) $parsed_block['attrs']['ref'] );
+			return $menu instanceof WP_Post && 'wp_navigation' === $menu->post_type && unhurried_is_page_list_only( $menu->post_content );
+		}
+		$newest = get_posts(
+			array(
+				'post_type'   => 'wp_navigation',
+				'post_status' => 'publish',
+				'numberposts' => 1,
+				'orderby'     => 'date',
+				'order'       => 'DESC',
+			)
+		);
+		return ! $newest || unhurried_is_page_list_only( $newest[0]->post_content );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_page_header_part' ) ) :
+	/**
+	 * The header template part of the page being rendered, as "theme//slug".
+	 *
+	 * Noted by unhurried_page_list_scope() as the first header part starts
+	 * to render. Empty when no header part has rendered (yet).
+	 *
+	 * @since 1.2.0
+	 * @param string|null $set Template part ID to remember; the first one stays.
+	 * @return string
+	 */
+	function unhurried_page_header_part( $set = null ) {
+		static $part = '';
+		if ( null !== $set && '' === $part ) {
+			$part = (string) $set;
+		}
+		return $part;
+	}
+endif;
+
 if ( ! function_exists( 'unhurried_page_list_exclude' ) ) :
 	/**
 	 * Pages kept out of the automatic page list.
@@ -626,9 +704,14 @@ if ( ! function_exists( 'unhurried_page_list_exclude' ) ) :
 	 * Until a site has a menu of its own, the Navigation block prints every
 	 * published page, and with WooCommerce that includes its Checkout, Cart
 	 * and My account pages. Checkout is a step, not a place to go, so it is
-	 * always left out. Cart and My account are left out when the header
-	 * already carries WooCommerce's cart and account icons, which lead to the
-	 * same pages; without the icons the two links stay, as the only way there.
+	 * always left out. Cart and My account are left out only when the header
+	 * of the page being shown carries WooCommerce's cart and account icons,
+	 * which lead to the same pages. Without the icons, or when the header is
+	 * not known, the two links stay, as the only way there.
+	 *
+	 * The header is read as the site has it now (a header edited in the Site
+	 * Editor included), and it is the header part this page really uses, so
+	 * a template with another header part is judged by that part.
 	 *
 	 * @since 1.2.0
 	 * @return int[] Page IDs.
@@ -636,7 +719,8 @@ if ( ! function_exists( 'unhurried_page_list_exclude' ) ) :
 	function unhurried_page_list_exclude() {
 		$exclude = array();
 		if ( function_exists( 'wc_get_page_id' ) ) {
-			$header    = get_block_template( get_stylesheet() . '//header', 'wp_template_part' );
+			$part      = unhurried_page_header_part();
+			$header    = '' !== $part ? get_block_template( $part, 'wp_template_part' ) : null;
 			$markup    = $header ? (string) $header->content : '';
 			$exclude[] = (int) wc_get_page_id( 'checkout' );
 			if ( false !== strpos( $markup, 'wp:woocommerce/mini-cart' ) ) {
@@ -682,18 +766,28 @@ endif;
 
 if ( ! function_exists( 'unhurried_page_list_scope' ) ) :
 	/**
-	 * Applies unhurried_page_list_pages() while a Navigation block renders,
-	 * and only then: the filter goes on as the block starts and comes off
-	 * when it has rendered (unhurried_page_list_unscope()), so no other list
-	 * of pages is touched. The Navigation block renders its Page List itself,
-	 * which is why the scope is the menu and not the list inside it.
+	 * Applies unhurried_page_list_pages() while a Navigation block renders
+	 * the automatic page list, and only then.
+	 *
+	 * A menu somebody made is never filtered, whatever it holds (see
+	 * unhurried_navigation_is_automatic()). The filter goes on as the block
+	 * starts and comes off when it has rendered (unhurried_page_list_unscope()),
+	 * so no other list of pages is touched. The Navigation block renders its
+	 * Page List itself, which is why the scope is the menu and not the list
+	 * inside it. Also notes which header part the page uses, for
+	 * unhurried_page_list_exclude().
 	 *
 	 * @since 1.2.0
 	 * @param array $parsed_block The block about to render.
 	 * @return array
 	 */
 	function unhurried_page_list_scope( $parsed_block ) {
-		if ( isset( $parsed_block['blockName'] ) && 'core/navigation' === $parsed_block['blockName'] ) {
+		$name  = isset( $parsed_block['blockName'] ) ? $parsed_block['blockName'] : '';
+		$attrs = isset( $parsed_block['attrs'] ) && is_array( $parsed_block['attrs'] ) ? $parsed_block['attrs'] : array();
+		if ( 'core/template-part' === $name && ! empty( $attrs['slug'] ) && ( ( isset( $attrs['area'] ) && 'header' === $attrs['area'] ) || ( isset( $attrs['tagName'] ) && 'header' === $attrs['tagName'] ) ) ) {
+			unhurried_page_header_part( ( ! empty( $attrs['theme'] ) ? $attrs['theme'] : get_stylesheet() ) . '//' . $attrs['slug'] );
+		}
+		if ( 'core/navigation' === $name && unhurried_navigation_is_automatic( $parsed_block ) ) {
 			add_filter( 'get_pages', 'unhurried_page_list_pages' );
 		}
 		return $parsed_block;
