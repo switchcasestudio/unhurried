@@ -92,6 +92,7 @@ Select the image and choose the Keep color style, or remove the `unhurried-mono`
 * Dark looks get the browser's dark scrollbars, dropdown lists and checkboxes.
 * Right-to-left languages: the header's inner spacing mirrors.
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
+* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
 
 = 1.1.2 =

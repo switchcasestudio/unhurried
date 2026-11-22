@@ -525,10 +525,12 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
    theme.json (settings.custom.motion). Four layers:
    1. Entrances: assets/js/reveal.js marks each element with data-uh and its
       kind, and adds .is-in as it scrolls into view; items entering together
-      are staggered by --uh-delay. The hidden "before" states exist only while
-      <html> has .uh-motion, which unhurried_motion_head() adds before the
-      first paint and removes again if the script never starts. No script,
-      reduced motion, the editor: everything is simply visible.
+      are staggered by --uh-delay. What is on the first screen rises with the
+      page, by CSS alone, from opacity .4; the hidden "before" states exist
+      only for what the script has marked below the window. Both need
+      <html> to have .uh-motion, which unhurried_motion_head() adds before
+      the first paint. No script, reduced motion, the editor, print:
+      everything is visible.
    2. Feedback: every control answers a hover or a press within the 400 ms
       Doherty window. Only interactive things react to the pointer.
    3. Depth: scroll-linked drift on photographs (where supported).
@@ -545,13 +547,31 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 }
 
 /* 1. Entrances */
-/* Before the script has marked anything, keep main content back for a
-   moment so the first screen can enter instead of blinking. The failsafe in
-   unhurried_motion_head() lifts this after 2.5 s if the script never runs.
-   Anything marked "unhurried-still" (a block, a section, or the whole page
-   through the body class) is never held back: the script leaves it alone,
-   so it must be readable at first paint, script or no script. */
-.uh-motion:not(.uh-motion-live) :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, form):not(.unhurried-still, .unhurried-still *) { opacity: 0; }
+/* The first screen enters with the page itself. Every block in main and
+   the footer rises from opacity .4 and a little below its place, as an
+   animation that starts at the first paint (DESIGN-GUIDE section 6: it
+   never looks missing). The script is not waited for, so the first screen
+   rises even when the script is late, blocked or broken, and the browser
+   counts the headline and the hero image as painted from the first frame.
+   When the script starts it leaves whatever is already on screen (or above
+   it) to finish this animation, and holds back only what is still below the
+   window, for its scroll-in entrance (data-uh). Only the outermost block
+   moves, so a card rises as one piece. Never moved: anything marked
+   "unhurried-still" (a block, a section, or the whole page through the body
+   class), the parts the script skips, and the body of an article. */
+@media (prefers-reduced-motion: no-preference) {
+	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
+		animation: var(--uh-arrive, uh-arrive) var(--uh-reveal) var(--uh-ease) both;
+	}
+	/* The same three kinds as the script's entrance: text rises, a picture
+	   and a card come from a little further, a card a touch smaller. */
+	.uh-motion :is(figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure) { --uh-arrive: uh-arrive-far; }
+	.uh-motion :is(.wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel) { --uh-arrive: uh-arrive-card; }
+}
+@keyframes uh-arrive { from { opacity: .4; translate: 0 var(--uh-rise); } }
+@keyframes uh-arrive-far { from { opacity: .4; translate: 0 calc(var(--uh-rise) * 1.5); } }
+@keyframes uh-arrive-card { from { opacity: .4; translate: 0 calc(var(--uh-rise) * 1.5); scale: .985; } }
+/* Below the window, the script's own states take over. */
 .uh-motion [data-uh]:not(.is-in) { opacity: 0; }
 .uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-rise); }
 .uh-motion :is([data-uh="card"], [data-uh="image"]):not(.is-in) { translate: 0 calc(var(--uh-rise) * 1.5); }
@@ -579,7 +599,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	.uh-motion [data-uh],
 	.uh-motion [data-uh] img,
 	.uh-motion .unhurried-wordmark__letters > span,
-	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer) * { opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; }
+	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) * { opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; animation: none !important; }
 }
 
 /* 2. Feedback */

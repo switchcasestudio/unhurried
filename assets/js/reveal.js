@@ -7,7 +7,10 @@
  * (capped, so nothing waits long) so the eye takes in one thing at a time.
  *
  * The <head> adds the class "uh-motion" before first paint (see
- * unhurried_motion_head() in functions.php); without it, or without this
+ * unhurried_motion_head() in functions.php). With it, the first screen
+ * rises by CSS alone as the page paints (style.css, "1. Entrances"), and
+ * this script then holds back only what is still below the window, so it
+ * can enter as it scrolls into view. Without the class, without this
  * script, or for visitors who prefer reduced motion, every element is
  * simply visible. A block, or a whole section, opts out with the class
  * "unhurried-still". Older content that uses "unhurried-reveal" or the
@@ -95,6 +98,7 @@
 		return k[ 1 ];
 	} ).join( ',' );
 	var targets = [];
+	var fold = window.innerHeight;
 
 	scopes.forEach( function ( scope ) {
 		scope.querySelectorAll( selector ).forEach( function ( el ) {
@@ -107,6 +111,12 @@
 			}
 			for ( var i = 0; i < KINDS.length; i++ ) {
 				if ( el.matches( KINDS[ i ][ 1 ] ) ) {
+					// On screen already, or scrolled past: it entered with the
+					// page (style.css) and is left to finish. A divider and the
+					// wordmark were not part of that, so they still draw in.
+					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && el.getBoundingClientRect().top < fold ) {
+						break;
+					}
 					el.setAttribute( 'data-uh', KINDS[ i ][ 0 ] );
 					targets.push( el );
 					break;
@@ -254,9 +264,9 @@
 		},
 		{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
 	);
-	// Switch from the pre-paint hold to the per-element states, and make the
-	// browser compute them now, so items already on screen animate from
-	// their hidden state rather than jumping straight to visible.
+	// Switch to the per-element states, and make the browser compute them
+	// now, so a divider or wordmark already on screen draws in from its
+	// starting state rather than jumping straight to its end.
 	html.classList.add( 'uh-motion-live' );
 	void document.body.offsetWidth;
 	targets.forEach( function ( el ) {
