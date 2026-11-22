@@ -13,7 +13,14 @@
 
 :root { color-scheme: dark; }
 
-/* In a dark look the Ink sections (the footer) and the marquee are the light
-   ones, so what the browser draws inside them stays light. */
-.is-style-section-ink,
-.unhurried-marquee { color-scheme: light; }
+/* In a dark look the Ink sections (the footer), the marquee and groups in
+   the Contrast color are the light ones, so what the browser draws inside
+   them stays light. */
+:where(.is-style-section-ink, .unhurried-marquee, .wp-block-group.has-contrast-background-color) { color-scheme: light; }
+
+/* An embedded page keeps the see-through canvas it had. A browser paints a
+   solid white canvas under an embedded page whose scheme differs from its
+   frame's, which would put a white box behind every transparent embed (a
+   card field, a sign-up widget, a captcha badge). Frames stay "light", the
+   scheme they had before this file existed. */
+:where(iframe, embed, object) { color-scheme: light; }
