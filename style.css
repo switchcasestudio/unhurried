@@ -55,6 +55,18 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 	outline-offset: 3px;
 }
 .wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); }
+/* A ring is drawn outside its link, so a block that hides its overflow cuts
+   it off: the site title in the capsule (kept to one line) and a post's
+   picture (rounded corners) showed no ring at all, the footer wordmark
+   only its top and bottom. There the block draws the ring itself. */
+@supports selector(:has(a)) {
+	.unhurried-capsule .wp-block-site-title:has(a:focus-visible),
+	.unhurried-wordmark:has(a:focus-visible),
+	.wp-block-post-featured-image:has(> a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
+	.unhurried-capsule .wp-block-site-title a:focus-visible,
+	.unhurried-wordmark a:focus-visible,
+	.wp-block-post-featured-image > a:focus-visible { outline: none; }
+}
 
 img { height: auto; }
 
