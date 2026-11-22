@@ -86,7 +86,7 @@ Select the image and choose the Keep color style, or remove the `unhurried-mono`
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
 * Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page, and its Cart and My account pages when the header shows the cart and account icons. A menu you made is shown exactly as you saved it.
 * The setup checklist works on sites in other languages: a page it opens is recognized whatever its title and address, so the Contact button turns on and buttons lead to the right pages. "Set your menu" is done only when you have made a menu.
-* Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields), and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
+* Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields) and on the site title and post pictures, where it was cut off; and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
 * Screen readers: one header landmark instead of two, the header and footer menus are named "Main" and "Footer", and each search form has a name.
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
 * Dark looks get the browser's dark scrollbars, dropdown lists and checkboxes.
