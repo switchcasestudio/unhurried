@@ -268,6 +268,16 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.wp-block-cover__background.has-scrim-right-gradient-background { background: rgba(22, 20, 15, .66) !important; opacity: 1 !important; }
 }
 
+/* Small text over a photograph (F-24). The eyebrow's usual 78% strength was
+   2.7 to 3.3:1 on the Services Cover's drape, and 4.3:1 on the statue hero
+   at phone width: over a Cover it is at full strength. A Cover with the
+   default 50% contrast shade that carries an eyebrow (the Services pattern,
+   and pages built from it) gets a 65% shade, the least that brings small
+   text there to 4.5:1 in every look. Covers with another shade, and the
+   statue hero (its own gradient), are unchanged. */
+.wp-block-cover__inner-container .is-style-eyebrow { opacity: 1; }
+.wp-block-cover:not(.unhurried-hero-statue__stage):has(> .wp-block-cover__inner-container .is-style-eyebrow) > .wp-block-cover__background.has-contrast-background-color.has-background-dim:not([class*="has-background-dim-"]) { opacity: .65; }
+
 /* Small floating note card */
 .unhurried-note { max-width: min(100%, 26rem); margin-inline-start: 0 !important; }
 
