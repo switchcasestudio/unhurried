@@ -878,10 +878,12 @@ a:where(:not(.wp-element-button)) {
 .unhurried-footer .unhurried-footer-list li { margin: 0; }
 .unhurried-footer .unhurried-footer-list a { text-decoration: none; }
 .unhurried-footer .unhurried-footer-list a:hover { text-decoration: underline; text-underline-offset: .2em; }
-.unhurried-footer .wp-block-categories { font-size: var(--wp--preset--font-size--small); color: color-mix(in srgb, currentColor 60%, transparent); }
+/* Counts, dates and placeholders: 70% of the footer's text color. At 60% (55% for
+   placeholders) they fell to 4:1 and under on the light footer of the dark looks. */
+.unhurried-footer .wp-block-categories { font-size: var(--wp--preset--font-size--small); color: color-mix(in srgb, currentColor 70%, transparent); }
 .unhurried-footer .wp-block-categories a { color: var(--wp--preset--color--base); }
 .unhurried-footer .wp-block-latest-posts { font-size: var(--wp--preset--font-size--small); gap: .9rem; }
-.unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .6; }
+.unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .7; }
 .unhurried-footer-search { max-width: 26rem; }
 .unhurried-footer-search .wp-block-search__inside-wrapper {
 	border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent);
@@ -890,7 +892,7 @@ a:where(:not(.wp-element-button)) {
 	background: transparent;
 }
 .unhurried-footer-search .wp-block-search__input { background: transparent; border: 0; color: inherit; padding: .4rem 0; }
-.unhurried-footer-search .wp-block-search__input::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent); }
+.unhurried-footer-search .wp-block-search__input::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 70%, transparent); }
 .unhurried-footer-search .wp-block-search__button { margin: 0; border-radius: 999px; background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); padding: .5rem .7rem; }
 .unhurried-footer-search .wp-block-search__button svg { fill: currentColor; }
 /* Newsletter row under the search (a plugin's form, or the RSS fallback). */
@@ -925,7 +927,7 @@ a:where(:not(.wp-element-button)) {
 	font: inherit;
 	font-size: var(--wp--preset--font-size--medium);
 }
-:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-email::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent); }
+:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-email::placeholder { color: color-mix(in srgb, var(--wp--preset--color--base) 70%, transparent); }
 :is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit {
 	width: auto !important;
 	margin: 0 !important;
