@@ -429,14 +429,17 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 	 * (Hanken Grotesk 500, letter-spacing -0.06em).
 	 *
 	 * Widths for printable ASCII were measured from the bundled font. Accented
-	 * Latin letters count as their base letter. Other letters are drawn in the
-	 * visitor's own fonts, so they are counted on the wide side of what
-	 * Chromium, WebKit and Firefox draw (1.2.0): Hebrew and Arabic as 0.56em,
-	 * other two-byte scripts (Greek, Cyrillic) as 0.8em, emoji and pictographs
-	 * as 1.25em, other three- and four-byte characters (Chinese, Japanese,
-	 * Korean and others) as 1.06em. Overestimating only makes the wordmark a
-	 * little smaller, never clipped, and assets/js/wordmark.js then sets such
-	 * a title to its measured width.
+	 * Latin letters count as their base letter; Æ, Œ, Þ and © as measured in
+	 * the font, 3% wide (1.2.0); the other characters of the Latin-1 and Latin
+	 * Extended-A blocks as 0.62em, and three-byte characters below U+3000
+	 * (’, –, €, ™, Thai, Devanagari and others) as 1em, as in 1.1.2. Letters
+	 * of other scripts are drawn in the visitor's own fonts, so they are
+	 * counted on the wide side of what Chromium, WebKit and Firefox draw
+	 * (1.2.0): Hebrew and Arabic as 0.56em, other two-byte scripts (Greek,
+	 * Cyrillic) as 0.8em, emoji and pictographs as 1.25em, Chinese, Japanese,
+	 * Korean and the rest from U+3000 as 1.06em. Overestimating only makes the
+	 * wordmark a little smaller, never clipped, and assets/js/wordmark.js then
+	 * sets a title in another script to its measured width.
 	 *
 	 * @since 1.1.2
 	 * @param string $text Plain text.
@@ -451,6 +454,14 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 				explode( ',', '26,24,35,70,56,74,69,18,24,24,40,56,24,33,24,42,56,56,56,56,56,56,56,56,56,56,24,24,56,56,56,52,87,65,60,71,68,58,56,73,68,25,55,64,50,84,68,75,56,78,60,57,59,66,66,96,65,61,59,27,45,27,58,43,30,54,58,52,58,54,34,52,55,23,23,54,27,83,55,58,58,58,41,47,35,55,53,75,53,53,47,25,26,25,56' )
 			);
 		}
+		// Letters remove_accents() spells with two (Æ to AE, Œ to OE, Þ to TH), and ©: em, from the font, plus 3 percent.
+		static $known = array(
+			"\xC3\x86" => 0.94,
+			"\xC5\x92" => 1.04,
+			"\xC3\x9E" => 0.65,
+			"\xC2\xA9" => 0.85,
+		);
+
 		$width = 0.0;
 		$count = 0;
 		foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $char ) {
@@ -465,14 +476,22 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 				$code   = ord( $char );
 				$width += ( $code >= 32 && $code <= 126 ) ? $ascii[ $code - 32 ] / 100 : 0.56;
 			} elseif ( 2 === $bytes ) {
-				// Hebrew and Arabic (lead bytes 0xD6 to 0xDB) join or run narrow in the fallback faces.
-				$lead   = ord( $char[0] );
-				$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.56 : 0.8;
+				$lead = ord( $char[0] );
+				if ( isset( $known[ $char ] ) ) {
+					$width += $known[ $char ];
+				} elseif ( $lead <= 0xC5 ) {
+					// Other characters of the Latin-1 and Latin Extended-A blocks, in the theme's font.
+					$width += 0.62;
+				} else {
+					// Hebrew and Arabic (lead bytes 0xD6 to 0xDB) join or run narrow in the fallback faces.
+					$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.56 : 0.8;
+				}
 			} elseif ( 4 === $bytes || ( "\xE2\x98\x80" <= $char && $char <= "\xE2\x9E\xBF" ) ) {
 				// Emoji, and the symbols and dingbats (U+2600 to U+27BF) that browsers draw as emoji.
 				$width += 1.25;
 			} else {
-				$width += 1.06;
+				// Chinese, Japanese, Korean and the rest from U+3000; punctuation and signs below it as before.
+				$width += ( "\xE3\x80\x80" <= $char ) ? 1.06 : 1.0;
 			}
 		}
 		return max( 0.0, $width - 0.06 * $count );

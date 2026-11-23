@@ -30,10 +30,12 @@
 		return;
 	}
 
-	// A title with letters from another script than Latin, or an emoji, was estimated.
+	// A title with letters from another script than Latin, or an emoji, was
+	// estimated. ©, ® and ™ count as emoji in Unicode but are signs of a Latin
+	// title, drawn in the theme's own font.
 	var estimated = null;
 	try {
-		estimated = new RegExp( '[^\\p{Script=Latin}\\p{Script=Common}\\p{Script=Inherited}]|\\p{Extended_Pictographic}', 'u' );
+		estimated = new RegExp( '[^\\p{Script=Latin}\\p{Script=Common}\\p{Script=Inherited}]|(?![\\u00A9\\u00AE\\u2122])\\p{Extended_Pictographic}', 'u' );
 	} catch ( e ) {
 		estimated = null;
 	}
@@ -107,6 +109,29 @@
 		}
 	}
 
+	// Fit on the next frame, not inside a ResizeObserver callback: setting the
+	// size there changes the box it reports, which the browser flags as a
+	// "ResizeObserver loop" error.
+	var queue = [];
+	var queued = false;
+	function later( el ) {
+		if ( queue.indexOf( el ) < 0 ) {
+			queue.push( el );
+		}
+		if ( queued ) {
+			return;
+		}
+		queued = true;
+		window.requestAnimationFrame( function () {
+			var list = queue;
+			queue = [];
+			queued = false;
+			for ( var q = 0; q < list.length; q++ ) {
+				fit( list[ q ] );
+			}
+		} );
+	}
+
 	fitAll();
 	var resized = null;
 	if ( 'ResizeObserver' in window ) {
@@ -116,7 +141,7 @@
 			for ( var e = 0; e < entries.length; e++ ) {
 				var mark = entries[ e ].target.closest( '.unhurried-wordmark' );
 				if ( mark ) {
-					fit( mark );
+					later( mark );
 				}
 			}
 		} );
