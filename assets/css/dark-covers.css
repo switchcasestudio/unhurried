@@ -16,12 +16,13 @@
  * when no color is chosen (WordPress paints it black); a color of the
  * owner's own at 60% or more on a Cover the editor judged dark; the right
  * Ink scrim at 90% or more with the content placed center right, under it;
- * and the theme's Statement section, also as a copy in a page: one of the
- * theme's own photographs (class unhurried-theme-photo, added as the Cover
- * is shown by unhurried_mark_theme_photo_cover() in functions.php), the
- * right scrim at 70% or more and its text in a group set to the right,
- * under the scrim. The class unhurried-mono says nothing here: owners add
- * it to any block.
+ * and the theme's Statement section: one of the theme's own photographs
+ * (class unhurried-theme-photo, added as the Cover is shown by
+ * unhurried_mark_theme_photo_cover() in functions.php), the right scrim at
+ * 70% or more, its text in a group set to the right, and either the
+ * pattern's class unhurried-statement (1.2.0) or the pattern's full-width,
+ * 820px layout (copies made before 1.2.0). The class unhurried-mono says
+ * nothing here: owners add it to any block.
  * A custom color is the same in every look, and WordPress marks a Cover whose
  * shade and photograph together are light with the class "is-light" (worked
  * out in the editor from the photograph's average color), so a pale custom
@@ -69,9 +70,12 @@
 }
 
 /* The theme's Statement section: its own photograph, the right scrim at 70%
-   or more, the text in a group set to the right. A Cover whose photograph
-   the owner replaced, or whose text moved, keeps 1.1.1's colors. */
-.wp-block-cover.unhurried-theme-photo:not(.is-light) > .wp-block-cover__background.has-scrim-right-gradient-background:is(.has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100) ~ .wp-block-cover__inner-container .is-content-justification-right .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+   or more, the text in a group set to the right, and either the class the
+   1.2.0 pattern carries (unhurried-statement) or the full-width, 820px tall
+   layout every copy of the pattern made before it has. Any other Cover, a
+   look-alike built by hand among them, and a copy whose photograph, scrim,
+   text, width or height the owner changed, keeps 1.1.1's colors. */
+.wp-block-cover.unhurried-theme-photo:is(.unhurried-statement, .alignfull[style*="min-height:820px"]):not(.is-light) > .wp-block-cover__background.has-scrim-right-gradient-background:is(.has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100) ~ .wp-block-cover__inner-container .is-content-justification-right .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
 	color: var(--wp--preset--color--contrast) !important;
 }
 
