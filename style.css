@@ -228,23 +228,29 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .unhurried-header .wp-block-button__link { padding: .6rem 1.3rem; white-space: nowrap; }
 .unhurried-capsule > .wp-block-group { flex-shrink: 1; min-width: 0; }
 .unhurried-capsule .wp-block-site-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-/* Only the title gives way (DESIGN-GUIDE section 5: "Site title truncates,
-   button never wraps"). What holds the site title shrinks and the title ends
-   in an ellipsis; the rest never gets narrower than what it holds, so the
-   logo, the menu button, the shop icons and the header button keep their
-   size inside the capsule (a long row of menu links can still wrap). Both
-   groups shrank alike before, so on a 320px phone a title of about ten
-   letters pushed the Contact button past the screen and the page scrolled
-   sideways. */
-.unhurried-capsule > :not(:has(.wp-block-site-title)) { min-width: auto; }
-.unhurried-capsule .wp-block-site-logo { flex-shrink: 0; }
 /* Centered capsule (Header, centered title pattern): the outer children share
-   the spare width so the title sits in the exact middle; they never get
-   narrower than what they hold, and the title in between gives way. */
+   the spare width so the title sits in the exact middle */
 .unhurried-capsule.is-centered > :first-child,
-.unhurried-capsule.is-centered > :last-child { flex: 1 1 0; min-width: max-content; }
+.unhurried-capsule.is-centered > :last-child { flex: 1 1 0; min-width: 0; }
 .unhurried-capsule.is-centered > .wp-block-navigation { padding-inline-start: clamp(.5rem, 1.5vw, 1.25rem); }
-.unhurried-capsule.is-centered > .wp-block-group:nth-child(2) { flex: 0 1 auto; min-width: 0; }
+.unhurried-capsule.is-centered > .wp-block-group:nth-child(2) { flex: 0 0 auto; }
+/* Below 1024px only the title gives way (DESIGN-GUIDE section 5: "Site title
+   truncates, button never wraps"). What holds the site title shrinks and the
+   title ends in an ellipsis; the rest never gets narrower than what it holds,
+   so the logo, the menu button, the shop icons and the header button keep
+   their size inside the capsule. A row of menu links can still wrap: in the
+   centered header the children on either side of the title get no narrower
+   than their narrowest form (min-content). Both groups shrank alike before,
+   so on a 320px phone a title of about ten letters pushed the Contact button
+   past the screen and the page scrolled sideways. From 1024px the capsule is
+   as it was, pixel for pixel. */
+@media (max-width: 1023px) {
+	.unhurried-capsule > :not(:has(.wp-block-site-title)) { min-width: auto; }
+	.unhurried-capsule .wp-block-site-logo { flex-shrink: 0; }
+	.unhurried-capsule.is-centered > :first-child,
+	.unhurried-capsule.is-centered > :last-child { min-width: min-content; }
+	.unhurried-capsule.is-centered > .wp-block-group:nth-child(2) { flex: 0 1 auto; min-width: 0; }
+}
 /* A long menu, or no menu at all (the Navigation block then lists every
    published page), wraps the capsule onto two rows. From eight top-level links
    the capsule keeps the menu button at every width. */
