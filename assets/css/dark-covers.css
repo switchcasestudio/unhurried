@@ -11,23 +11,32 @@
  * look's page color, its darkest, and the text its text color. Light looks
  * never load this file.
  *
- * The text turns light only over shades that are dark in a dark look: the
- * "contrast" color, which this file darkens, the theme's two Ink scrims, the
- * default shade a Cover has when no color is chosen (WordPress paints it
- * black), and a color or gradient of the owner's own on a Cover the editor
- * judged dark. A custom color is the same in every look, and WordPress
- * marks a Cover whose shade and photograph together are light with the
- * class "is-light" (worked out in the editor from the photograph's average
- * color), so a pale custom shade keeps its dark text. A Cover with another
- * palette color (the accent, Ink Muted) keeps the text color it was given:
- * the accent, for one, is pale in a dark look, and light text on it would be
- * unreadable.
+ * The text turns light only over shades that carry it in a dark look: the
+ * "contrast" color, which this file darkens; the default shade a Cover has
+ * when no color is chosen (WordPress paints it black); a color of the
+ * owner's own at 60% or more on a Cover the editor judged dark; the theme's
+ * Ink scrims on the theme's own Covers (class unhurried-mono); and the right
+ * Ink scrim at 90% or more with the content placed center right, under it.
+ * A custom color is the same in every look, and WordPress marks a Cover whose
+ * shade and photograph together are light with the class "is-light" (worked
+ * out in the editor from the photograph's average color), so a pale custom
+ * shade keeps its dark text. A Cover with another palette color (the accent,
+ * Ink Muted) keeps the text color it was given: the accent, for one, is pale
+ * in a dark look, and light text on it would be unreadable.
  *
- * Where the shade cannot carry the text, the Cover keeps the colors it had
- * in 1.1.1: a shade under half strength (dimRatio 0 to 44, classes
- * has-background-dim-0 to -40), where the photograph decides what reads,
- * and the bottom scrim when the text is not placed at the bottom, where the
- * scrim is.
+ * Everywhere else an owner's Cover keeps the colors it had in 1.1.1, where
+ * the photograph decides what reads (1.1.1 drew this text in the look's
+ * "base" color, dark in a dark look, over every shade): a shade under half
+ * strength (dimRatio 0 to 44, classes has-background-dim-0 to -40); a custom
+ * color at 50% (WordPress gives a photograph with no shade chosen its own
+ * average color, at 50%); a gradient of the owner's own; and the Ink scrims
+ * on an owner's Cover, which the editor saves as dark whatever the
+ * photograph, and which fade to clear where the text often sits. Measured
+ * over a pale, a mid-tone and a dark photograph (1.2.0), light text there
+ * read worse than 1.1.1's dark text in places on the pale one.
+ *
+ * On screens up to 781px the right scrim is an even 66% Ink veil
+ * (style.css), so the text on it turns light on every Cover.
  *
  * It works on the page as it is shown, so Covers already placed in pages
  * from the patterns are mended too. A Cover set to a light shade in the
@@ -46,9 +55,16 @@
 
 /* Text in the "base" color on the photograph, under one of those shades (the
    shade comes before the content in a Cover's markup; the default shade has
-   no color class, no gradient and no color in its style; a custom color or
-   gradient sits in its style). A block with a fill of its own inside the
-   Cover (a card, a filled button) keeps its colors. */
-.wp-block-cover:not(.is-light) > .wp-block-cover__background:not(.has-background-dim-0, .has-background-dim-10, .has-background-dim-20, .has-background-dim-30, .has-background-dim-40):is(.has-contrast-background-color, .has-scrim-right-gradient-background, [class*="is-position-bottom-"] > .has-scrim-bottom-gradient-background, .has-background-dim:not([class*="-background-color"], .has-background-gradient, [style*="background"]), [style*="background"]) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+   no color class, no gradient and no color in its style; a custom color
+   sits in its style, as does a custom gradient, which also has the class
+   has-background-gradient). A block with a fill of its own inside the Cover
+   (a card, a filled button) keeps its colors. */
+.wp-block-cover:not(.is-light) > .wp-block-cover__background:not(.has-background-dim-0, .has-background-dim-10, .has-background-dim-20, .has-background-dim-30, .has-background-dim-40):is(.has-contrast-background-color, .has-background-dim:not([class*="-background-color"], .has-background-gradient, [style*="background"]), :is(.has-background-dim-60, .has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100)[style*="background"]:not(.has-background-gradient), .unhurried-mono > .has-background-gradient, .is-position-center-right > :is(.has-background-dim-90, .has-background-dim-100).has-scrim-right-gradient-background) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
 	color: var(--wp--preset--color--contrast) !important;
+}
+
+@media (max-width: 781px) {
+	.wp-block-cover > .wp-block-cover__background.has-scrim-right-gradient-background ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+		color: var(--wp--preset--color--contrast) !important;
+	}
 }
