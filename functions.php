@@ -246,6 +246,56 @@ endif;
 add_filter( 'render_block_core/image', 'unhurried_theme_image_size' );
 add_filter( 'render_block_core/cover', 'unhurried_theme_image_size' );
 
+if ( ! function_exists( 'unhurried_mark_theme_photo_cover' ) ) :
+	/**
+	 * Marks a Cover whose photograph is one of the pictures bundled with the
+	 * theme with the class `unhurried-theme-photo`.
+	 *
+	 * In a dark look assets/css/dark-covers.css keeps the Statement section's
+	 * text light over its Ink scrim, and it has to tell that Cover from an
+	 * owner's: the class `unhurried-mono` cannot, since the readme invites
+	 * owners to add it to any block. Only the theme's patterns show these
+	 * photographs (unhurried_theme_image_file() checks the address against
+	 * this theme's and its child's assets/images/ folders, read as the page
+	 * is shown, and this site's hosts). The class is added as the block is
+	 * shown, so copies of the patterns already in pages carry it too; a Cover
+	 * whose photograph the owner replaced does not.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered Cover block.
+	 * @return string
+	 */
+	function unhurried_mark_theme_photo_cover( $block_content ) {
+		if ( false === strpos( (string) $block_content, '/assets/images/' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag() || ! $tags->has_class( 'wp-block-cover' ) ) {
+			return $block_content;
+		}
+		$tags->set_bookmark( 'unhurried-cover' );
+		// The Cover's own photograph comes first, before or after its shade; a
+		// picture further in belongs to the Cover's content.
+		$seen = 0;
+		while ( $seen < 2 && $tags->next_tag() ) {
+			++$seen;
+			if ( 'IMG' === $tags->get_tag() && $tags->has_class( 'wp-block-cover__image-background' ) ) {
+				if ( '' === unhurried_theme_image_file( (string) $tags->get_attribute( 'src' ) ) ) {
+					return $block_content;
+				}
+				$tags->seek( 'unhurried-cover' );
+				$tags->add_class( 'unhurried-theme-photo' );
+				return $tags->get_updated_html();
+			}
+			if ( ! $tags->has_class( 'wp-block-cover__background' ) ) {
+				break;
+			}
+		}
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/cover', 'unhurried_mark_theme_photo_cover' );
+
 if ( ! function_exists( 'unhurried_theme_image_loading' ) ) :
 	/**
 	 * Lets only the first picture of a page's content load at once when the
@@ -291,7 +341,8 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	 * screen's height, and on a phone held sideways (or in a short window)
 	 * about as wide as the screen: sizes asks for the larger of the two.
 	 * Where the theme ships smaller copies beside a picture
-	 * (assets/images/david-800.webp and david-1200.webp beside david.webp),
+	 * (assets/images/david-800.webp and david-1200.webp beside david.webp,
+	 * each named after that picture and its own width, in its proportions),
 	 * the Cover's picture gets a srcset of the copies and the original, with
 	 * sizes that send every screen 782px and wider to the original: desktops
 	 * load exactly the file they loaded before, and a phone takes the
@@ -326,13 +377,21 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 			$size          = wp_getimagesize( $file );
 			$info          = pathinfo( $file );
 			$copies        = array();
-			if ( $size && isset( $info['extension'] ) ) {
+			if ( $size && isset( $info['extension'] ) && (int) $size[0] > 0 && (int) $size[1] > 0 ) {
+				$ratio = (int) $size[0] / (int) $size[1];
 				foreach ( (array) glob( $info['dirname'] . '/' . $info['filename'] . '-*.' . $info['extension'] ) as $copy ) {
-					if ( ! preg_match( '/-[0-9]+\.' . preg_quote( $info['extension'], '/' ) . '$/', (string) $copy ) ) {
+					// A copy is named after the picture it was cut from and its own
+					// width (david-800.webp is 800 pixels wide), is narrower and keeps
+					// the picture's proportions. Another picture whose name begins the
+					// same way is not one of its copies.
+					if ( ! preg_match( '/^' . preg_quote( $info['filename'], '/' ) . '-([0-9]+)\.' . preg_quote( $info['extension'], '/' ) . '$/', basename( (string) $copy ), $match ) ) {
 						continue;
 					}
 					$copy_size = wp_getimagesize( $copy );
-					if ( $copy_size && (int) $copy_size[0] > 0 && (int) $copy_size[0] < (int) $size[0] ) {
+					if ( ! $copy_size || (int) $copy_size[0] !== (int) $match[1] || (int) $copy_size[0] >= (int) $size[0] || (int) $copy_size[1] <= 0 ) {
+						continue;
+					}
+					if ( abs( (int) $copy_size[0] / (int) $copy_size[1] - $ratio ) <= 0.01 * $ratio ) {
 						$copies[ basename( $copy ) ] = (int) $copy_size[0];
 					}
 				}
@@ -429,10 +488,17 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 	 * (Hanken Grotesk 500, letter-spacing -0.06em).
 	 *
 	 * Widths for printable ASCII were measured from the bundled font. Accented
-	 * Latin letters count as their base letter; Hebrew and Arabic as 0.45em;
-	 * other two-byte scripts (Greek, Cyrillic) as 0.62em; three- and four-byte characters (CJK
-	 * and others) as a full 1em. Overestimating only makes the wordmark a
-	 * little smaller, never clipped.
+	 * Latin letters count as their base letter; Æ, Œ, Þ and © as measured in
+	 * the font, 3% wide (1.2.0); the other characters of the Latin-1 and Latin
+	 * Extended-A blocks as 0.62em, and three-byte characters below U+3000
+	 * (’, –, €, ™, Thai, Devanagari and others) as 1em, as in 1.1.2. Letters
+	 * of other scripts are drawn in the visitor's own fonts, so they are
+	 * counted on the wide side of what Chromium, WebKit and Firefox draw
+	 * (1.2.0): Hebrew and Arabic as 0.56em, other two-byte scripts (Greek,
+	 * Cyrillic) as 0.8em, emoji and pictographs as 1.25em, Chinese, Japanese,
+	 * Korean and the rest from U+3000 as 1.06em. Overestimating only makes the
+	 * wordmark a little smaller, never clipped, and assets/js/wordmark.js then
+	 * sets a title in another script to its measured width.
 	 *
 	 * @since 1.1.2
 	 * @param string $text Plain text.
@@ -447,6 +513,14 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 				explode( ',', '26,24,35,70,56,74,69,18,24,24,40,56,24,33,24,42,56,56,56,56,56,56,56,56,56,56,24,24,56,56,56,52,87,65,60,71,68,58,56,73,68,25,55,64,50,84,68,75,56,78,60,57,59,66,66,96,65,61,59,27,45,27,58,43,30,54,58,52,58,54,34,52,55,23,23,54,27,83,55,58,58,58,41,47,35,55,53,75,53,53,47,25,26,25,56' )
 			);
 		}
+		// Letters remove_accents() spells with two (Æ to AE, Œ to OE, Þ to TH), and ©: em, from the font, plus 3 percent.
+		static $known = array(
+			"\xC3\x86" => 0.94,
+			"\xC5\x92" => 1.04,
+			"\xC3\x9E" => 0.65,
+			"\xC2\xA9" => 0.85,
+		);
+
 		$width = 0.0;
 		$count = 0;
 		foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $char ) {
@@ -461,11 +535,22 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 				$code   = ord( $char );
 				$width += ( $code >= 32 && $code <= 126 ) ? $ascii[ $code - 32 ] / 100 : 0.56;
 			} elseif ( 2 === $bytes ) {
-				// Hebrew and Arabic (lead bytes 0xD6 to 0xDB) join or run narrow in the fallback faces.
-				$lead   = ord( $char[0] );
-				$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.45 : 0.62;
+				$lead = ord( $char[0] );
+				if ( isset( $known[ $char ] ) ) {
+					$width += $known[ $char ];
+				} elseif ( $lead <= 0xC5 ) {
+					// Other characters of the Latin-1 and Latin Extended-A blocks, in the theme's font.
+					$width += 0.62;
+				} else {
+					// Hebrew and Arabic (lead bytes 0xD6 to 0xDB) join or run narrow in the fallback faces.
+					$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.56 : 0.8;
+				}
+			} elseif ( 4 === $bytes || ( "\xE2\x98\x80" <= $char && $char <= "\xE2\x9E\xBF" ) ) {
+				// Emoji, and the symbols and dingbats (U+2600 to U+27BF) that browsers draw as emoji.
+				$width += 1.25;
 			} else {
-				$width += 1.0;
+				// Chinese, Japanese, Korean and the rest from U+3000; punctuation and signs below it as before.
+				$width += ( "\xE3\x80\x80" <= $char ) ? 1.06 : 1.0;
 			}
 		}
 		return max( 0.0, $width - 0.06 * $count );
@@ -480,6 +565,9 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 	 * small margin) to the wordmark's style attribute; style.css caps the font
 	 * size at the column width divided by it. Before 1.1.2 the size was fixed
 	 * at 15vw, so a title longer than about twelve characters was cut off.
+	 * Since 1.2.0 it also loads assets/js/wordmark.js, which measures the
+	 * title as the browser draws it: a title wider than its column is set
+	 * smaller, and a title in another script than Latin is set to fill it.
 	 *
 	 * @since 1.1.2
 	 * @param string $block_content Rendered block HTML.
@@ -506,7 +594,21 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 		if ( '' !== $style && ';' !== substr( $style, -1 ) ) {
 			$style .= ';';
 		}
-		$processor->set_attribute( 'style', $style . '--unhurried-wordmark-em:' . number_format( $em, 3, '.', '' ) . ';' );
+		// A title in another script than Latin, or with an emoji, starts .1em in from its column, as wordmark.js sets
+		// it, so a first letter whose ink reaches past its box is not cut before (or without) the script.
+		$indent = preg_match( '/[^\p{Latin}\p{Common}\p{Inherited}]|[\x{2600}-\x{27BF}\x{1F000}-\x{1FAFF}]/u', $text ) ? 'text-indent:.1em;' : '';
+		$processor->set_attribute( 'style', $style . '--unhurried-wordmark-em:' . number_format( $em, 3, '.', '' ) . ';' . $indent );
+		// The title as drawn: keeps it whole in any script (the block renders before the page's scripts print).
+		wp_enqueue_script(
+			'unhurried-wordmark',
+			get_template_directory_uri() . '/assets/js/wordmark.js',
+			array(),
+			wp_get_theme( get_template() )->get( 'Version' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		return $processor->get_updated_html();
 	}
 endif;
@@ -524,6 +626,11 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 * line up from the right (a Latin title read backwards), and letters that
 	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
 	 * accent typed apart, an emoji sequence) would come apart.
+	 *
+	 * A title with a letter outside plain ASCII (an accented capital, the
+	 * Cyrillic Д, Greek, Chinese, Japanese, an emoji) gets the modifier class
+	 * unhurried-wordmark__letters--tall: its letters reach above or below a
+	 * capital, so style.css gives them a taller window and a longer roll.
 	 *
 	 * @since 1.2.0
 	 * @param string $block_content Rendered block HTML.
@@ -545,7 +652,9 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 			foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $i => $char ) {
 				$letters .= '<span style="--i:' . (int) $i . '">' . ( ' ' === $char ? '&nbsp;' : esc_html( $char ) ) . '</span>';
 			}
-			return '<span class="unhurried-wordmark__letters" aria-hidden="true">' . $letters . '</span><span class="unhurried-visually-hidden">' . esc_html( $text ) . '</span>';
+			// Accents, descenders and other scripts reach past a capital's height.
+			$classes = preg_match( '/[^\x20-\x7E]/', $text ) ? 'unhurried-wordmark__letters unhurried-wordmark__letters--tall' : 'unhurried-wordmark__letters';
+			return '<span class="' . $classes . '" aria-hidden="true">' . $letters . '</span><span class="unhurried-visually-hidden">' . esc_html( $text ) . '</span>';
 		};
 		// Linked title: split the link text. Unlinked: split the element's text.
 		$out = preg_replace_callback(

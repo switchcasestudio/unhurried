@@ -71,45 +71,47 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 
 = 1.2.0 =
 * Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
-* Motion throughout: every section enters gently as it scrolls into view (headings and text rise, photographs settle, cards and list items follow one another, figures count up, the footer wordmark rises letter by letter). Buttons lift and press, menu underlines glide, accordions open smoothly, cover photographs drift with the scroll, and pages cross-fade while the header stays put. Nothing moves for visitors who ask for reduced motion, printing shows everything, and the class unhurried-still keeps any block still.
-* A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip, pause under the pointer, and stand still for visitors who ask for reduced motion. It scrolls away; the header stays.
+* Motion throughout. Every section enters gently as it scrolls into view. Headings and text rise, photographs settle, and cards and list items follow one another. Figures count up, and the footer wordmark rises letter by letter. Buttons lift and press, menu underlines glide and accordions open smoothly. Cover photographs drift with the scroll, and pages cross-fade while the header stays put. Nothing moves for visitors who ask for reduced motion, and printing shows everything. The class unhurried-still keeps any block still.
+* A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip. It pauses under the pointer and stands still for visitors who ask for reduced motion. It scrolls away; the header stays.
 * Three more page patterns: Work (with a new Numbers section), Pricing and Visit.
-* Nested services: nest pages under Services for addresses like /services/design/identity/. Service group and Service page patterns read each page's own title and excerpt, add breadcrumbs, and list the pages under them as cards. The setup checklist has buttons for both.
-* Footer: a newsletter row under the search (the free Newsletter plugin's form, or Jetpack's Subscribe block, when active; otherwise the RSS feed), social icons for Google Business Profile, Instagram, Facebook, X, Pinterest, TikTok, YouTube, LinkedIn and Yelp (an icon stays hidden from visitors until it has an address), and the wordmark in capitals, sized to fill the width, rolling letter by letter on hover.
-* A setup checklist on Appearance > About Unhurried, with live progress: every page opens ready-made with its layout and template (you review and publish it), and each step links straight to the right screen: settings, menus, footer, styles, plugins. A dashboard notice points to it until the site is set up.
+* Nested services: nest pages under Services for addresses like /services/design/identity/. The Service group and Service page patterns read each page's own title and excerpt and add breadcrumbs. They list the pages under them as cards. The setup checklist has buttons for both.
+* Footer: a newsletter row under the search, with the free Newsletter plugin's form or Jetpack's Subscribe block when active. Otherwise it offers the RSS feed. Social icons for Google Business Profile, Instagram, Facebook, X, Pinterest, TikTok, YouTube, LinkedIn and Yelp. An icon stays hidden from visitors until it has an address. The wordmark is in capitals, sized to fill the width, and rolls letter by letter on hover. A title in any alphabet shows whole, accents and emoji included. Your visitor's browser measures it as drawn.
+* A setup checklist on Appearance > About Unhurried, with live progress. Every page opens ready-made with its layout and template; you review and publish it. Each step links straight to the right screen: settings, menus, footer, styles, plugins. A dashboard notice points to it until the site is set up.
 * Contact Form 7 and WPForms: the first form appears in the Contact card by itself. Form fields from any plugin match the theme.
 * Links to a spot on the page glide there and stop below the sticky header.
 * Menu dropdowns are small rounded cards.
-* Buttons and links that lead to a page say where they go (Contact us, Our services, Read the journal, Get directions) instead of placeholder text.
-* New homepage hero, Hero, statue: a full-screen photograph of Michelangelo's David in an inset, rounded frame, with the headline, buttons and a caption over a soft shade.
-* New hero, Hero, spiral: a round image that turns very slowly inside a ring of ticks, with the headline's last word set huge beside it. Motion stops when the visitor asks for reduced motion.
-* Journal: breadcrumbs, topic chips with post counts (the current topic highlighted), a search box that looks only through posts, a results count, reading time on every card and post, an author box, related posts from the same topic, and a reading progress bar on posts.
+* Buttons and links that lead to a page name it: Contact us, Our services, Read the journal, Get directions. They held placeholder text.
+* New homepage hero, Hero, statue: a full-screen photograph of Michelangelo's David in an inset, rounded frame. The headline, buttons and a caption sit over a soft shade.
+* New hero, Hero, spiral: a round image that turns very slowly inside a ring of ticks. The headline's last word is set huge beside it. Motion stops when the visitor asks for reduced motion.
+* Journal: breadcrumbs, topic chips with post counts (the current topic highlighted) and a search box for posts only. A results count, reading time on every card and post, and an author box. Related posts from the same topic, and a reading progress bar on posts.
 * New Topics directory page pattern: every category as a card with its description and count, then every tag.
 * New Essay pattern: long-form text with a drop cap, two columns and a pull quote. The Homepage pattern includes it.
 * Footer: a search box, your topics and latest posts, the year and site name, and a back-to-top link. Columns that would be empty are left out.
 * The header now stays at the top while you scroll. It was meant to since 1.0.0 but scrolled away.
 * The header menu no longer shows Contact next to the Contact button; the open mobile menu still lists it.
 * New sample images (CC0, from WordPress.org Photos).
-* WooCommerce without Unhurried Pro: the cart, checkout and account pages can be read in the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk). The cart and checkout use WooCommerce's own dark fields there, so labels no longer vanish, and required marks and error messages are light enough to read. In every look the cart's quantity control has a clearer edge. The shop's layout stays Unhurried Pro's.
+* WooCommerce without Unhurried Pro: the cart, checkout and account pages read well in the dark looks. Those are Nocturne, Moss, Harbor, Plum, Lagoon and Dusk. The cart and checkout use WooCommerce's own dark fields there, so labels no longer vanish. Required marks and error messages are light enough to read. In every look the cart's quantity control has a clearer edge. The shop's layout stays Unhurried Pro's.
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
-* Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page, and its Cart and My account pages when the header shows the cart and account icons. A menu you made is shown exactly as you saved it. A menu that holds nothing but an untouched Page List block counts as the automatic one, because that is exactly what WordPress saves by itself; choose a parent page for it, or add any link, and it is yours.
-* The setup checklist works on sites in other languages: a page it opens is recognized whatever its title and address, so the Contact button turns on and buttons lead to the right pages. "Set your menu" is done only when you have made a menu.
-* Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields, without the soft glow the two round search fields had inside it) and on the site title and post pictures, where it was cut off; and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
-* Screen readers: one header landmark instead of two, the header and footer menus are named "Main" and "Footer", and each search form has a name.
+* Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page. It also leaves out Cart and My account when the header shows their icons. A menu you made is shown exactly as you saved it. A menu holding only an untouched Page List block counts as the automatic one. WordPress saves exactly that by itself. Choose a parent page for it, or add any link, and it is yours.
+* The setup checklist works on sites in other languages. A page it opens is recognized whatever its title and address. So the Contact button turns on, and buttons lead to the right pages. "Set your menu" is done only when you have made a menu.
+* Keyboard: the focus ring shows on every surface: the footer, glass cards, photographs and search fields. The two round search fields lost the soft glow inside their ring. The ring also shows on the site title and post pictures, where it was cut off. In Firefox, Shift+Tab no longer scrolls a control under the header. With a reader's own wider letter spacing, the footer wordmark gets smaller to fit.
+* Screen readers: one header landmark instead of two. The header and footer menus are named "Main" and "Footer", and each search form has a name.
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
 * Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
 * WPForms Lite in the dark looks: its labels, notes and required marks take the look's text colors. They were near-black on the dark page.
-* Right-to-left languages: the header's inner spacing mirrors, and the footer wordmark reads in the right order. It stays whole, without the hover roll, on right-to-left sites and for titles whose letters join or carry marks (Arabic, Hebrew, Hindi and the like).
-* Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), blocks marked unhurried-still are readable at once, and a header pattern placed inside a page stays still.
-* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.
-* The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
-* Hero, spiral: on wide screens the large italic word sits at the foot of the stage again; it had moved over the headline.
-* Phones whose screen does not need the full homepage photograph load a smaller copy of it, so it appears sooner; desktops and tablets load the same photograph as before, and so does a phone held sideways, so the photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive, and arrows and letters of other alphabets keep the system's font.
-* Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash. A Cover you made with another shade, such as the accent color, keeps its own text color.
-* Small text over photographs is easier to read in every look: the label above a heading is at full strength, and the Services section's shade is a little deeper.
+* Right-to-left languages: the header's inner spacing mirrors, and the footer wordmark reads in the right order. It stays whole, without the hover roll, on right-to-left sites. So do titles whose letters join or carry marks, such as Arabic, Hebrew and Hindi. Such a title underlines on hover, like the footer's other links.
+* Motion: a form taller than the screen now appears, and numbers that count up end exactly as written ("1,200", "12,5"). Blocks marked unhurried-still are readable at once, and a header pattern placed inside a page stays still.
+* Pages show sooner on phones. The first screen rises as soon as the page appears, without waiting for the motion script. Sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.
+* The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment. They settle into place with the rest of the screen, instead of fading in from nothing.
+* Hero, spiral: on wide screens the large italic word sits at the foot of the stage again. It had moved over the headline.
+* Narrow phones: a long site title now shortens with an ellipsis, so the header button stays on screen. The page no longer scrolls sideways.
+* Phones that do not need the full homepage photograph load a smaller copy, so it appears sooner. Desktops and tablets load the same photograph as before, and so does a phone held sideways. The photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive. Arrows and letters of other alphabets keep the system's font.
+* Dark looks: text over photographs is light on a dark shade, as in the light looks. In the Statement and Services sections it had turned dark on dark, with a white button on a pale wash. Your own Covers follow the shade you gave them. On a dark color of your own at 60% or more, the text turns light. On the accent, another palette color or a light shade, it keeps its color. With an Ink scrim, a gradient of your own or a weak shade, your Covers look as in 1.1.1. On phones the right scrim becomes an even veil, and text on it turns light. So does text placed center right under a right scrim of 90% or more.
+* Pages made with 1.1.1 keep their pictures. The 1.2.0 patterns use new pictures under new names.
+* Small text over photographs is easier to read in every look. The label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
-* About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages (a header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it), state no price, and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
-* Under the hood: the theme's PHP files do nothing when opened directly, block settings printed from PHP stay intact whatever a translation holds, the About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
+* About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages. They list a header band, 4:5 product photos and a summary that follows the page. They also list a checkout with nothing else on it. They state no price and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
+* Under the hood: the theme's PHP files do nothing when opened directly. Block settings printed from PHP stay intact whatever a translation holds. The About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
 
 = 1.1.2 =
 * Nine fixes found by visiting the live sites that use Unhurried. A site whose header and footer were never edited now shows nothing fake.
@@ -184,13 +186,17 @@ License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 assets/images/david.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
 assets/images/david-1200.webp and assets/images/david-800.webp: smaller copies of david.webp, made from the same photograph for phones. Same source and license (CC0).
 assets/images/spiral.webp: Bango Renders, https://stocksnap.io/photo/abstract-shapes-AGYUJILSQ2
-assets/images/arch.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
-assets/images/pedestal.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/
-assets/images/branch-shadow.webp: creativemz, https://wordpress.org/photos/photo/38665f56ad/
-assets/images/drape.webp: Samuel Scrimshaw, https://stocksnap.io/photo/nature-desert-UV4PIZ1DEK
-assets/images/light-window.webp: Bob Richards, https://stocksnap.io/photo/tree-branch-D74M8ZEETS
-assets/images/orb.webp: Altered Reality, https://stocksnap.io/photo/autumn-minimalist-U9FDQVP6HZ
-assets/images/vessel.webp: Chimene Gaspar, https://stocksnap.io/photo/vase-wall-JGTJS8KF6Q
+assets/images/flower-vase.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
+assets/images/vase-niche.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/
+assets/images/vine-wall.webp: creativemz, https://wordpress.org/photos/photo/38665f56ad/
+assets/images/desert-dune.webp: Samuel Scrimshaw, https://stocksnap.io/photo/nature-desert-UV4PIZ1DEK
+assets/images/maple-leaves.webp: Bob Richards, https://stocksnap.io/photo/tree-branch-D74M8ZEETS
+assets/images/autumn-still-life.webp: Altered Reality, https://stocksnap.io/photo/autumn-minimalist-U9FDQVP6HZ
+assets/images/pink-vase.webp: Chimene Gaspar, https://stocksnap.io/photo/vase-wall-JGTJS8KF6Q
+
+assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp: the pictures of Unhurried 1.1.1, kept for pages made with it.
+Created for this theme by the theme author, generated from original code.
+License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
 Screenshot
 screenshot.png is composed from the theme's own patterns and images above.
