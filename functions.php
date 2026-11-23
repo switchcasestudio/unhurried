@@ -519,6 +519,12 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 * The letters are hidden from assistive technology and the whole title is
 	 * repeated in a visually hidden span, so screen readers still hear one word.
 	 *
+	 * Each letter becomes a box of its own, so the title is left whole, as in
+	 * 1.1.1, where boxes would misread it: on a right-to-left site the boxes
+	 * line up from the right (a Latin title read backwards), and letters that
+	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
+	 * accent typed apart, an emoji sequence) would come apart.
+	 *
 	 * @since 1.2.0
 	 * @param string $block_content Rendered block HTML.
 	 * @param array  $block         Parsed block.
@@ -526,12 +532,13 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 */
 	function unhurried_wordmark_letters( $block_content, $block ) {
 		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
-		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) ) {
+		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) || is_rtl() ) {
 			return $block_content;
 		}
 		$split = static function ( $inner ) {
 			$text = trim( html_entity_decode( wp_strip_all_tags( $inner ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
-			if ( '' === $text ) {
+			// Marks, joiners, right-to-left scripts and emoji skin tones stay whole.
+			if ( '' === $text || preg_match( '/[\p{M}\x{200C}\x{200D}\x{0590}-\x{08FF}\x{FB1D}-\x{FDFF}\x{FE70}-\x{FEFF}\x{10800}-\x{10FFF}\x{1E800}-\x{1EFFF}\x{1F3FB}-\x{1F3FF}]/u', $text ) ) {
 				return $inner;
 			}
 			$letters = '';

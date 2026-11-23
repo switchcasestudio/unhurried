@@ -99,7 +99,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
 * Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
 * WPForms Lite in the dark looks: its labels, notes and required marks take the look's text colors. They were near-black on the dark page.
-* Right-to-left languages: the header's inner spacing mirrors.
+* Right-to-left languages: the header's inner spacing mirrors, and the footer wordmark reads in the right order. It stays whole, without the hover roll, on right-to-left sites and for titles whose letters join or carry marks (Arabic, Hebrew, Hindi and the like).
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), blocks marked unhurried-still are readable at once, and a header pattern placed inside a page stays still.
 * Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.
 * The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
