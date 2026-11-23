@@ -185,9 +185,8 @@ Images
 Black-and-white photographs of ceramics and sculpture: one from the Rijksmuseum and fifteen from the Cleveland Museum of Art's Open Access collection, cropped and converted to neutral grayscale for this theme.
 License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
-assets/images/david.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
-assets/images/david-1200.webp and assets/images/david-800.webp: smaller copies of david.webp, made from the same photograph for phones. Same source and license (CC0).
-assets/images/david-mono.webp, assets/images/david-mono-1200.webp and assets/images/david-mono-800.webp: the same photograph in neutral grayscale (the print's sepia taken out), processed like the rest of the set, with two smaller copies for phones. Same source and license (CC0).
+assets/images/david-mono.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
+assets/images/david-mono-1200.webp and assets/images/david-mono-800.webp: smaller copies of david-mono.webp for phones. The print's sepia is taken out, processed like the rest of the set. Same source and license (CC0).
 assets/images/lotus-dish.webp: Dish with Ducks in Lotus Pond, Ding ware (China, Jin dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1989.275
 assets/images/white-vase.webp: Vase (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1917.2
 assets/images/marble-head.webp: Head of a Woman (Greece, Hellenistic period, 300-200 BCE), Cleveland Museum of Art, https://clevelandart.org/art/1916.831
