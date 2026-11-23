@@ -328,6 +328,31 @@ endif;
 add_action( 'after_switch_theme', 'unhurried_mark_activated' );
 add_action( 'admin_init', 'unhurried_mark_activated' );
 
+if ( ! function_exists( 'unhurried_mark_first_version' ) ) :
+	/**
+	 * Remembers whether this site started on 1.2.0 or later, or updated from an
+	 * earlier Unhurried, in the option `unhurried_first_version`.
+	 *
+	 * A fresh activation runs after_switch_theme before any screen of the
+	 * dashboard is built; an update (the theme replaced in place) never fires
+	 * it, so a site that reaches admin_init first was already running an
+	 * earlier version. Read by the welcome notice. One small autoloaded option,
+	 * so the check costs no query after the first visit.
+	 *
+	 * @since 1.2.0
+	 * @return void
+	 */
+	function unhurried_mark_first_version() {
+		if ( false !== get_option( 'unhurried_first_version', false ) ) {
+			return;
+		}
+		$version = ( 'after_switch_theme' === current_action() ) ? (string) wp_get_theme( get_template() )->get( 'Version' ) : 'earlier';
+		add_option( 'unhurried_first_version', $version );
+	}
+endif;
+add_action( 'after_switch_theme', 'unhurried_mark_first_version', 5 );
+add_action( 'admin_init', 'unhurried_mark_first_version', 5 );
+
 if ( ! function_exists( 'unhurried_dismiss_url' ) ) :
 	/**
 	 * Nonce-protected URL that dismisses a notice for the current user.
@@ -389,8 +414,11 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 		$user = get_current_user_id();
 
 		// Welcome: until the setup checklist is finished or the notice is dismissed (since 1.2.0).
+		// A site that updated from an earlier Unhurried counts only the steps it
+		// could finish there (name, homepage, posts page, pages, menu): the plugin
+		// and social steps are new, and stay on the checklist on the About screen.
 		if ( 'appearance_page_unhurried-about' !== $screen->id && function_exists( 'unhurried_setup_progress' ) && ! get_user_meta( $user, 'unhurried_dismissed_welcome', true ) ) {
-			$progress = unhurried_setup_progress();
+			$progress = unhurried_setup_progress( 'earlier' === get_option( 'unhurried_first_version' ) ? array( 'identity', 'home', 'journal', 'pages', 'menu' ) : array() );
 			if ( $progress['done'] < $progress['total'] ) {
 				?>
 				<div class="notice notice-info">

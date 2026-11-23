@@ -1,6 +1,6 @@
 === Unhurried ===
 Contributors: switchcasestudio
-Requires at least: 6.6
+Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 1.2.0
@@ -26,7 +26,6 @@ The theme includes:
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
-
 * Two header patterns: centered title, and quiet (no navigation).
 * A journal with breadcrumbs, topic chips, a posts-only search, reading time, related posts, an author box and a reading progress bar, plus a Topics directory page pattern and a long-form Essay pattern.
 * An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, a quiet footer, and a footer with visit details for your address and email.
@@ -70,6 +69,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 == Changelog ==
 
 = 1.2.0 =
+* Requires WordPress 7.0. The journal's breadcrumbs, topic lists, results count and reading time need blocks first shipped together in 7.0. On an older WordPress, the site keeps the version it has.
 * Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
 * Motion throughout. Every section enters gently as it scrolls into view. Headings and text rise, photographs settle, and cards and list items follow one another. Figures count up, and the footer wordmark rises letter by letter. Buttons lift and press, menu underlines glide and accordions open smoothly. Cover photographs drift with the scroll, and pages cross-fade while the header stays put. Nothing moves for visitors who ask for reduced motion, and printing shows everything. The class unhurried-still keeps any block still.
 * A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip. It pauses under the pointer and stands still for visitors who ask for reduced motion. It scrolls away; the header stays.
@@ -88,8 +88,8 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * New Essay pattern: long-form text with a drop cap, two columns and a pull quote. The Homepage pattern includes it.
 * Footer: a search box, your topics and latest posts, the year and site name, and a back-to-top link. Columns that would be empty are left out.
 * The header now stays at the top while you scroll. It was meant to since 1.0.0 but scrolled away.
-* The header menu no longer shows Contact next to the Contact button; the open mobile menu still lists it.
-* New sample images (CC0, from WordPress.org Photos).
+* The header menu no longer shows Contact beside a header button that links to Contact. A button that goes elsewhere keeps your whole menu. The open mobile menu still lists Contact.
+* New sample photographs, all CC0: six from StockSnap and two from the WordPress.org Photo Directory. The Rijksmuseum's David comes with two smaller copies.
 * WooCommerce without Unhurried Pro: the cart, checkout and account pages read well in the dark looks. Those are Nocturne, Moss, Harbor, Plum, Lagoon and Dusk. The cart and checkout use WooCommerce's own dark fields there, so labels no longer vanish. Required marks and error messages are light enough to read. In every look the cart's quantity control has a clearer edge. The shop's layout stays Unhurried Pro's.
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
 * Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page. It also leaves out Cart and My account when the header shows their icons. A menu you made is shown exactly as you saved it. A menu holding only an untouched Page List block counts as the automatic one. WordPress saves exactly that by itself. Choose a parent page for it, or add any link, and it is yours.
@@ -106,12 +106,14 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * Hero, spiral: on wide screens the large italic word sits at the foot of the stage again. It had moved over the headline.
 * Narrow phones: a long site title now shortens with an ellipsis, so the header button stays on screen. The page no longer scrolls sideways.
 * Phones that do not need the full homepage photograph load a smaller copy, so it appears sooner. Desktops and tablets load the same photograph as before, and so does a phone held sideways. The photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive. Arrows and letters of other alphabets keep the system's font.
+* Dark looks: the home hero's Contact us button shows as a light pill on the dark photograph.
 * Dark looks: text over photographs is light on a dark shade, as in the light looks. In the Statement and Services sections it had turned dark on dark, with a white button on a pale wash. Your own Covers follow the shade you gave them. On a dark color of your own at 60% or more, the text turns light. On the accent, another palette color or a light shade, it keeps its color. With an Ink scrim, a gradient of your own or a weak shade, your Covers look as in 1.1.1. On phones the right scrim becomes an even veil, and text on it turns light. So does text placed center right under a right scrim of 90% or more.
 * Pages made with 1.1.1 keep their pictures. The 1.2.0 patterns use new pictures under new names.
 * Small text over photographs is easier to read in every look. The label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
+* A site set up on an earlier version gets no new setup notice after the update. The checklist stays in Appearance, About Unhurried.
 * About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages. They list a header band, 4:5 product photos and a summary that follows the page. They also list a checkout with nothing else on it. They state no price and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
-* Under the hood: the theme's PHP files do nothing when opened directly. Block settings printed from PHP stay intact whatever a translation holds. The About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
+* Under the hood: functions.php and the files in inc/ do nothing when opened directly. Block settings printed from PHP stay intact whatever a translation holds. The About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
 
 = 1.1.2 =
 * Nine fixes found by visiting the live sites that use Unhurried. A site whose header and footer were never edited now shows nothing fake.

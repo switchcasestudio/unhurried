@@ -84,3 +84,13 @@
 		color: var(--wp--preset--color--contrast) !important;
 	}
 }
+
+/* The statue hero's filled button takes the look's page color in style.css,
+   which in a dark look is as dark as the shaded photograph around it (1.02 to
+   1.16:1, so the pill vanished and only its words showed). Here it takes the
+   look's text color as its fill and the page color for its words, as filled
+   buttons do everywhere else. */
+.unhurried-hero-statue__stage .wp-block-button:not(.is-style-text-link) > .wp-block-button__link {
+	background-color: var(--wp--preset--color--contrast);
+	color: var(--wp--preset--color--base);
+}

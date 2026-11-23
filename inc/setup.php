@@ -427,13 +427,14 @@ if ( ! function_exists( 'unhurried_setup_progress' ) ) :
 	 * Done and total counts of the required (non-optional) steps.
 	 *
 	 * @since 1.2.0
+	 * @param string[] $only Step ids to count; empty for all of them.
 	 * @return array{done:int, total:int}
 	 */
-	function unhurried_setup_progress() {
+	function unhurried_setup_progress( $only = array() ) {
 		$done  = 0;
 		$total = 0;
 		foreach ( unhurried_setup_steps() as $step ) {
-			if ( null === $step['done'] ) {
+			if ( null === $step['done'] || ( $only && ! in_array( $step['id'], (array) $only, true ) ) ) {
 				continue;
 			}
 			++$total;
