@@ -12,6 +12,11 @@
  * @since 1.1.0
  */
 
+// Tags the translated heading may hold.
+$unhurried_heading_tags = array(
+	'em' => array(),
+	'br' => array(),
+);
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Gift card', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ground" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
@@ -23,7 +28,7 @@
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem dolor', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem laborum<br>eu <em>aute</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem laborum<br>eu <em>aute</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"},"layout":{"selfStretch":"fixed","flexSize":"min(100%, 36ch)"}}} -->
 			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem tempor esse $60, sint vel ac sunt, anim id nunc ut do magna est eget dui.', 'unhurried' ); ?></p>

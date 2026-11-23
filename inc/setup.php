@@ -279,8 +279,8 @@ if ( ! function_exists( 'unhurried_setup_steps' ) ) :
 
 		$newsletter = $plugin_cb( 'newsletter', 'Newsletter' );
 		// Contact Form 7 needs PHP 8.3; on older hosts WPForms Lite does the same job.
-		$forms      = version_compare( PHP_VERSION, '8.3', '>=' ) ? $plugin_cb( 'contact-form-7', 'Contact Form 7' ) : $plugin_cb( 'wpforms-lite', 'WPForms Lite' );
-		$has_form   = 'active' === unhurried_plugin_state( 'contact-form-7' ) || 'active' === unhurried_plugin_state( 'wpforms-lite' ) || 'active' === unhurried_plugin_state( 'wpforms' );
+		$forms    = version_compare( PHP_VERSION, '8.3', '>=' ) ? $plugin_cb( 'contact-form-7', 'Contact Form 7' ) : $plugin_cb( 'wpforms-lite', 'WPForms Lite' );
+		$has_form = 'active' === unhurried_plugin_state( 'contact-form-7' ) || 'active' === unhurried_plugin_state( 'wpforms-lite' ) || 'active' === unhurried_plugin_state( 'wpforms' );
 
 		$steps = array(
 			array(

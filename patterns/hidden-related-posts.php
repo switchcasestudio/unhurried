@@ -32,8 +32,8 @@ if ( ! $unhurried_has_related ) {
 }
 $unhurried_query = serialize_block_attributes(
 	array(
-		'queryId' => 7,
-		'query'   => array(
+		'queryId'   => 7,
+		'query'     => array(
 			'perPage'  => 3,
 			'pages'    => 1,
 			'offset'   => 0,

@@ -13,6 +13,12 @@
  */
 
 $unhurried_img = get_theme_file_uri( 'assets/images/david.webp' );
+
+// Tags the translated heading may hold.
+$unhurried_heading_tags = array(
+	'em' => array(),
+	'br' => array(),
+);
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Hero', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"unhurried-hero-statue","style":{"spacing":{"margin":{"top":"0","bottom":"0"},"padding":{"top":"10px","right":"clamp(10px, 2vw, 28px)","bottom":"0","left":"clamp(10px, 2vw, 28px)"}}},"layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull unhurried-hero-statue" style="margin-top:0;margin-bottom:0;padding-top:10px;padding-right:clamp(10px, 2vw, 28px);padding-bottom:0;padding-left:clamp(10px, 2vw, 28px)">
@@ -22,7 +28,7 @@ $unhurried_img = get_theme_file_uri( 'assets/images/david.webp' );
 		<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:heading {"level":1,"className":"unhurried-hero-statue__title","style":{"typography":{"lineHeight":"0.88","letterSpacing":"-0.045em"}},"fontSize":"huge"} -->
-		<h1 class="wp-block-heading unhurried-hero-statue__title has-huge-font-size" style="letter-spacing:-0.045em;line-height:0.88"><?php echo wp_kses( __( 'Lorem ipsum<br>dolor <em>sit amet.</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h1>
+		<h1 class="wp-block-heading unhurried-hero-statue__title has-huge-font-size" style="letter-spacing:-0.045em;line-height:0.88"><?php echo wp_kses( __( 'Lorem ipsum<br>dolor <em>sit amet.</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h1>
 		<!-- /wp:heading -->
 		<!-- wp:group {"className":"unhurried-hero-statue__foot","style":{"spacing":{"blockGap":"var:preset|spacing|60"}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"space-between","verticalAlignment":"bottom"}} -->
 		<div class="wp-block-group unhurried-hero-statue__foot">

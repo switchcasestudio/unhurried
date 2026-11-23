@@ -62,7 +62,7 @@ $unhurried_form = unhurried_contact_form();
 			<p class="has-contrast-2-color has-text-color"><?php esc_html_e( 'Voluptate, enim magna ex ea minim nostrud. In dolore irure quis excepteur. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<?php if ( '' !== $unhurried_form ) : ?>
-			<?php echo $unhurried_form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_contact_form(), parsed and rendered by WordPress. ?>
+				<?php echo $unhurried_form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_contact_form(), parsed and rendered by WordPress. ?>
 			<?php else : ?>
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">

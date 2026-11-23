@@ -12,6 +12,11 @@
  * @since 1.0.0
  */
 
+// Tags the translated heading may hold.
+$unhurried_heading_tags = array(
+	'em' => array(),
+	'br' => array(),
+);
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Hero', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"calc(clamp(80px, 11vw, 160px) + 2.5rem)"},"margin":{"top":"0","bottom":"0"},"blockGap":"0"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ground" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:calc(clamp(80px, 11vw, 160px) + 2.5rem)">
@@ -19,7 +24,7 @@
 	<p class="is-style-eyebrow unhurried-indent unhurried-reveal" style="margin-bottom:clamp(2rem, 8vh, 6rem)"><?php esc_html_e( 'Lorem mauris non nunc qui turpis', 'unhurried' ); ?></p>
 	<!-- /wp:paragraph -->
 	<!-- wp:heading {"level":1,"className":"unhurried-first-indent unhurried-reveal","style":{"typography":{"lineHeight":"0.9","letterSpacing":"-0.04em"}},"fontSize":"huge"} -->
-	<h1 class="wp-block-heading unhurried-first-indent unhurried-reveal has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Lorem diam<br>justo est <em>nunc</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h1>
+	<h1 class="wp-block-heading unhurried-first-indent unhurried-reveal has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Lorem diam<br>justo est <em>nunc</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h1>
 	<!-- /wp:heading -->
 	<!-- wp:paragraph {"align":"right","className":"unhurried-reveal","style":{"typography":{"lineHeight":"0.95","letterSpacing":"-0.02em"},"spacing":{"margin":{"top":"0.75rem"}}},"fontFamily":"display","fontSize":"huge"} -->
 	<p class="has-text-align-right unhurried-reveal has-display-font-family has-huge-font-size" style="margin-top:0.75rem;letter-spacing:-0.02em;line-height:0.95"><?php echo wp_kses( __( 'lorem <em>arcu.</em>', 'unhurried' ), array( 'em' => array() ) ); ?></p>

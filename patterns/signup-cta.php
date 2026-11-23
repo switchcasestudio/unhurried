@@ -14,6 +14,12 @@
 
 // A plugin's signup form (see unhurried_newsletter_form()), or the RSS feed.
 $unhurried_newsletter = unhurried_newsletter_form();
+
+// Tags the translated heading may hold.
+$unhurried_heading_tags = array(
+	'em' => array(),
+	'br' => array(),
+);
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Newsletter', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ink","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ink" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
@@ -25,7 +31,7 @@ $unhurried_newsletter = unhurried_newsletter_form();
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem turpis', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem odio diam in,<br><em>dui sem amet</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem odio diam in,<br><em>dui sem amet</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"className":"unhurried-dim","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
 			<p class="unhurried-dim has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem morbi mattis id ornare: nisl ut sit eu sed netus, eu tempor, ac ullamco amet. Laboris elit.', 'unhurried' ); ?></p>
@@ -35,7 +41,7 @@ $unhurried_newsletter = unhurried_newsletter_form();
 		<!-- wp:column {"verticalAlignment":"bottom","width":"40%","className":"unhurried-signup"} -->
 		<div class="wp-block-column is-vertically-aligned-bottom unhurried-signup" style="flex-basis:40%">
 			<?php if ( '' !== $unhurried_newsletter ) : ?>
-			<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
+				<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
 			<?php else : ?>
 			<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"right"}} -->
 			<div class="wp-block-buttons">

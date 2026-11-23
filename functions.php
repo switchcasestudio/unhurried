@@ -451,8 +451,8 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 			++$count;
 			$bytes = strlen( $char );
 			if ( 2 === $bytes ) {
-				$base = remove_accents( $char );
-				$char = ( 1 === strlen( $base ) ) ? $base : $char;
+				$base  = remove_accents( $char );
+				$char  = ( 1 === strlen( $base ) ) ? $base : $char;
 				$bytes = strlen( $char );
 			}
 			if ( 1 === $bytes ) {
@@ -649,7 +649,7 @@ if ( ! function_exists( 'unhurried_contact_form' ) ) :
 	 * @return string
 	 */
 	function unhurried_contact_form() {
-		$markup  = '';
+		$markup = '';
 		// Detected by plugin, not shortcode, so the editor gets the same markup.
 		$plugins = array(
 			'contact-form-7' => array( 'wpcf7_contact_form', defined( 'WPCF7_VERSION' ) ),
@@ -711,8 +711,12 @@ if ( ! function_exists( 'unhurried_render_newsletter_shortcode' ) ) :
 		$html = do_shortcode( shortcode_unautop( $block_content ) );
 		// The minimal form's email field has only a placeholder; give it a name.
 		if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
-			$form = new WP_HTML_Tag_Processor( $html );
-			while ( $form->next_tag( array( 'tag_name' => 'input', 'class_name' => 'tnp-email' ) ) ) {
+			$form  = new WP_HTML_Tag_Processor( $html );
+			$email = array(
+				'tag_name'   => 'input',
+				'class_name' => 'tnp-email',
+			);
+			while ( $form->next_tag( $email ) ) {
 				if ( null === $form->get_attribute( 'aria-label' ) ) {
 					$form->set_attribute( 'aria-label', __( 'Email address', 'unhurried' ) );
 				}
@@ -836,7 +840,16 @@ if ( ! function_exists( 'unhurried_hide_front_page_head' ) ) :
 		if ( false === strpos( $class, 'unhurried-page-head' ) ) {
 			return $block_content;
 		}
-		if ( is_front_page() && is_page() && apply_filters( 'unhurried_hide_front_page_title', true ) ) {
+		if ( ! is_front_page() || ! is_page() ) {
+			return $block_content;
+		}
+		/**
+		 * Filters whether a static front page drops the title band of the default Pages template.
+		 *
+		 * @since 1.1.2
+		 * @param bool $hide Default true. Return false to keep the band.
+		 */
+		if ( apply_filters( 'unhurried_hide_front_page_title', true ) ) {
 			return '';
 		}
 		return $block_content;
