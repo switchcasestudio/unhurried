@@ -874,9 +874,11 @@ a:where(:not(.wp-element-button)) {
 	}
 	.unhurried-hero-statue__title em { animation: unhurried-exhale 3.4s cubic-bezier(.16, .84, .24, 1) .6s both; }
 }
-/* The hero's own entrances (this photo, the spiral disc, the accent word) start
-   at opacity .4 like the rest of the first screen, never 0 (DESIGN-GUIDE
-   section 6): nothing looks missing, and the browser counts them as painted. */
+/* The hero's own entrances start at opacity .4 like the rest of the first
+   screen, never 0 (DESIGN-GUIDE section 6): nothing looks missing, and the
+   browser counts them as painted. This photo and the spiral disc fade from .4;
+   the accent word has no fade of its own, because its heading already starts
+   at .4, and keeps its exhale (unhurried-exhale, below). */
 @keyframes unhurried-unveil {
 	from { opacity: .4; filter: brightness(.3); transform: scale(1.08); }
 	to { opacity: 1; filter: none; transform: none; }
@@ -994,9 +996,12 @@ a:where(:not(.wp-element-button)) {
 	from { transform: translate(-3%, 2%) scale(1); }
 	to { transform: translate(3%, -2%) scale(1.08); }
 }
+/* The accent word breathes out: wide and soft, then set. It shows at its
+   heading's own opacity throughout; the blur follows the word's size (at most
+   12px) so a phone-sized word still reads while it settles. */
 @keyframes unhurried-exhale {
-	from { opacity: .4; letter-spacing: .08em; filter: blur(12px); }
-	to { opacity: 1; letter-spacing: -0.03em; filter: none; }
+	from { letter-spacing: .08em; filter: blur(min(12px, .08em)); }
+	to { letter-spacing: -0.03em; filter: none; }
 }
 
 
