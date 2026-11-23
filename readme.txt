@@ -69,7 +69,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 == Changelog ==
 
 = 1.2.0 =
-* Requires WordPress 7.0. The journal's breadcrumbs, topic lists, results count and reading time need blocks first shipped together in 7.0. Older sites keep 1.1.1.
+* Requires WordPress 7.0. The journal's breadcrumbs, topic lists, results count and reading time need blocks first shipped together in 7.0. On an older WordPress, the site keeps the version it has.
 * Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
 * Motion throughout. Every section enters gently as it scrolls into view. Headings and text rise, photographs settle, and cards and list items follow one another. Figures count up, and the footer wordmark rises letter by letter. Buttons lift and press, menu underlines glide and accordions open smoothly. Cover photographs drift with the scroll, and pages cross-fade while the header stays put. Nothing moves for visitors who ask for reduced motion, and printing shows everything. The class unhurried-still keeps any block still.
 * A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip. It pauses under the pointer and stands still for visitors who ask for reduced motion. It scrolls away; the header stays.
@@ -111,7 +111,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * Pages made with 1.1.1 keep their pictures. The 1.2.0 patterns use new pictures under new names.
 * Small text over photographs is easier to read in every look. The label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
-* A site set up on 1.1.1 gets no new setup notice after the update. The checklist stays in Appearance, About Unhurried.
+* A site set up on an earlier version gets no new setup notice after the update. The checklist stays in Appearance, About Unhurried.
 * About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages. They list a header band, 4:5 product photos and a summary that follows the page. They also list a checkout with nothing else on it. They state no price and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
 * Under the hood: functions.php and the files in inc/ do nothing when opened directly. Block settings printed from PHP stay intact whatever a translation holds. The About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
 
