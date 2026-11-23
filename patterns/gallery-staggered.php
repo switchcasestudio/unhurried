@@ -12,7 +12,7 @@
  * @since 1.0.0
  */
 
-$unhurried_images = array( 'vessel', 'orb', 'pedestal', 'arch' );
+$unhurried_images = array( 'pink-vase', 'autumn-still-life', 'vase-niche', 'flower-vase' );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Gallery', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|70"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull is-style-section-ground" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">

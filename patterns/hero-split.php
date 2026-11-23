@@ -33,7 +33,7 @@
 		<!-- wp:column {"verticalAlignment":"bottom","width":"42%","className":"unhurried-mono unhurried-reveal"} -->
 		<div class="wp-block-column is-vertically-aligned-bottom unhurried-mono unhurried-reveal" style="flex-basis:42%">
 			<!-- wp:image {"aspectRatio":"3/4","scale":"cover","sizeSlug":"full","linkDestination":"none","className":"is-style-arch"} -->
-			<figure class="wp-block-image size-full is-style-arch"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/arch.webp' ) ); ?>" alt="" style="aspect-ratio:3/4;object-fit:cover"/></figure>
+			<figure class="wp-block-image size-full is-style-arch"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/flower-vase.webp' ) ); ?>" alt="" style="aspect-ratio:3/4;object-fit:cover"/></figure>
 			<!-- /wp:image -->
 		</div>
 		<!-- /wp:column -->

@@ -341,7 +341,8 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	 * screen's height, and on a phone held sideways (or in a short window)
 	 * about as wide as the screen: sizes asks for the larger of the two.
 	 * Where the theme ships smaller copies beside a picture
-	 * (assets/images/david-800.webp and david-1200.webp beside david.webp),
+	 * (assets/images/david-800.webp and david-1200.webp beside david.webp,
+	 * each named after that picture and its own width, in its proportions),
 	 * the Cover's picture gets a srcset of the copies and the original, with
 	 * sizes that send every screen 782px and wider to the original: desktops
 	 * load exactly the file they loaded before, and a phone takes the
@@ -376,13 +377,21 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 			$size          = wp_getimagesize( $file );
 			$info          = pathinfo( $file );
 			$copies        = array();
-			if ( $size && isset( $info['extension'] ) ) {
+			if ( $size && isset( $info['extension'] ) && (int) $size[0] > 0 && (int) $size[1] > 0 ) {
+				$ratio = (int) $size[0] / (int) $size[1];
 				foreach ( (array) glob( $info['dirname'] . '/' . $info['filename'] . '-*.' . $info['extension'] ) as $copy ) {
-					if ( ! preg_match( '/-[0-9]+\.' . preg_quote( $info['extension'], '/' ) . '$/', (string) $copy ) ) {
+					// A copy is named after the picture it was cut from and its own
+					// width (david-800.webp is 800 pixels wide), is narrower and keeps
+					// the picture's proportions. Another picture whose name begins the
+					// same way is not one of its copies.
+					if ( ! preg_match( '/^' . preg_quote( $info['filename'], '/' ) . '-([0-9]+)\.' . preg_quote( $info['extension'], '/' ) . '$/', basename( (string) $copy ), $match ) ) {
 						continue;
 					}
 					$copy_size = wp_getimagesize( $copy );
-					if ( $copy_size && (int) $copy_size[0] > 0 && (int) $copy_size[0] < (int) $size[0] ) {
+					if ( ! $copy_size || (int) $copy_size[0] !== (int) $match[1] || (int) $copy_size[0] >= (int) $size[0] || (int) $copy_size[1] <= 0 ) {
+						continue;
+					}
+					if ( abs( (int) $copy_size[0] / (int) $copy_size[1] - $ratio ) <= 0.01 * $ratio ) {
 						$copies[ basename( $copy ) ] = (int) $copy_size[0];
 					}
 				}
