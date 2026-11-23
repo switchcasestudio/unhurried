@@ -429,10 +429,14 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 	 * (Hanken Grotesk 500, letter-spacing -0.06em).
 	 *
 	 * Widths for printable ASCII were measured from the bundled font. Accented
-	 * Latin letters count as their base letter; Hebrew and Arabic as 0.45em;
-	 * other two-byte scripts (Greek, Cyrillic) as 0.62em; three- and four-byte characters (CJK
-	 * and others) as a full 1em. Overestimating only makes the wordmark a
-	 * little smaller, never clipped.
+	 * Latin letters count as their base letter. Other letters are drawn in the
+	 * visitor's own fonts, so they are counted on the wide side of what
+	 * Chromium, WebKit and Firefox draw (1.2.0): Hebrew and Arabic as 0.56em,
+	 * other two-byte scripts (Greek, Cyrillic) as 0.8em, emoji and pictographs
+	 * as 1.25em, other three- and four-byte characters (Chinese, Japanese,
+	 * Korean and others) as 1.06em. Overestimating only makes the wordmark a
+	 * little smaller, never clipped, and assets/js/wordmark.js then sets such
+	 * a title to its measured width.
 	 *
 	 * @since 1.1.2
 	 * @param string $text Plain text.
@@ -463,9 +467,12 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 			} elseif ( 2 === $bytes ) {
 				// Hebrew and Arabic (lead bytes 0xD6 to 0xDB) join or run narrow in the fallback faces.
 				$lead   = ord( $char[0] );
-				$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.45 : 0.62;
+				$width += ( $lead >= 0xD6 && $lead <= 0xDB ) ? 0.56 : 0.8;
+			} elseif ( 4 === $bytes || ( "\xE2\x98\x80" <= $char && $char <= "\xE2\x9E\xBF" ) ) {
+				// Emoji, and the symbols and dingbats (U+2600 to U+27BF) that browsers draw as emoji.
+				$width += 1.25;
 			} else {
-				$width += 1.0;
+				$width += 1.06;
 			}
 		}
 		return max( 0.0, $width - 0.06 * $count );
@@ -480,6 +487,9 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 	 * small margin) to the wordmark's style attribute; style.css caps the font
 	 * size at the column width divided by it. Before 1.1.2 the size was fixed
 	 * at 15vw, so a title longer than about twelve characters was cut off.
+	 * Since 1.2.0 it also loads assets/js/wordmark.js, which measures the
+	 * title as the browser draws it: a title wider than its column is set
+	 * smaller, and a title in another script than Latin is set to fill it.
 	 *
 	 * @since 1.1.2
 	 * @param string $block_content Rendered block HTML.
@@ -507,6 +517,17 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 			$style .= ';';
 		}
 		$processor->set_attribute( 'style', $style . '--unhurried-wordmark-em:' . number_format( $em, 3, '.', '' ) . ';' );
+		// The title as drawn: keeps it whole in any script (the block renders before the page's scripts print).
+		wp_enqueue_script(
+			'unhurried-wordmark',
+			get_template_directory_uri() . '/assets/js/wordmark.js',
+			array(),
+			wp_get_theme( get_template() )->get( 'Version' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		return $processor->get_updated_html();
 	}
 endif;
@@ -524,6 +545,11 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 * line up from the right (a Latin title read backwards), and letters that
 	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
 	 * accent typed apart, an emoji sequence) would come apart.
+	 *
+	 * A title with a letter outside plain ASCII (an accented capital, the
+	 * Cyrillic Д, Greek, Chinese, Japanese, an emoji) gets the modifier class
+	 * unhurried-wordmark__letters--tall: its letters reach above or below a
+	 * capital, so style.css gives them a taller window and a longer roll.
 	 *
 	 * @since 1.2.0
 	 * @param string $block_content Rendered block HTML.
@@ -545,7 +571,9 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 			foreach ( preg_split( '//u', $text, -1, PREG_SPLIT_NO_EMPTY ) as $i => $char ) {
 				$letters .= '<span style="--i:' . (int) $i . '">' . ( ' ' === $char ? '&nbsp;' : esc_html( $char ) ) . '</span>';
 			}
-			return '<span class="unhurried-wordmark__letters" aria-hidden="true">' . $letters . '</span><span class="unhurried-visually-hidden">' . esc_html( $text ) . '</span>';
+			// Accents, descenders and other scripts reach past a capital's height.
+			$classes = preg_match( '/[^\x20-\x7E]/', $text ) ? 'unhurried-wordmark__letters unhurried-wordmark__letters--tall' : 'unhurried-wordmark__letters';
+			return '<span class="' . $classes . '" aria-hidden="true">' . $letters . '</span><span class="unhurried-visually-hidden">' . esc_html( $text ) . '</span>';
 		};
 		// Linked title: split the link text. Unlinked: split the element's text.
 		$out = preg_replace_callback(

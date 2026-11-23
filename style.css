@@ -407,9 +407,16 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
    overflow: hidden stays as the last resort. */
 .wp-block-group:has(> .unhurried-wordmark) { container-type: inline-size; }
 /* Since 1.2.0: capitals, sized to fill the column exactly (the em width is
-   measured in capitals, so the title runs edge to edge at any length). */
+   measured in capitals, so the title runs edge to edge at any length).
+   --unhurried-wordmark-fit comes from assets/js/wordmark.js, which measures
+   the title as drawn: smaller when it would not fit (letters in the visitor's
+   own fonts, a reader's own letter spacing), and filling the column for a
+   title in another script than Latin. position: relative keeps the title's
+   visually hidden copy inside the clip: placed after letters that ran past
+   the column, it made the whole page scroll sideways. */
 .unhurried-wordmark {
-	font-size: calc(min(100cqi, 1360px) / var(--unhurried-wordmark-em, 6)) !important;
+	position: relative;
+	font-size: calc(min(100cqi, 1360px) / var(--unhurried-wordmark-em, 6) * var(--unhurried-wordmark-fit, 1)) !important;
 	text-transform: uppercase;
 	line-height: .82 !important;
 	letter-spacing: -0.06em !important;
@@ -421,6 +428,14 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	overflow-y: visible;
 }
 .unhurried-wordmark a { text-decoration: none; }
+/* On a right-to-left site the title sits against the right edge, and the
+   tight tracking after its last letter (a Latin title's) let that letter's
+   ink run 1 to 4px past the clip. The room is on the link, not the
+   wordmark: WebKit sets this line against the wordmark's outer edge, over
+   its padding. Physical right: the line is right-aligned on these sites. */
+:where([dir="rtl"]) .unhurried-wordmark a { padding-right: .06em; }
+/* The start edge wordmark.js may leave belongs to the line, not to each letter. */
+.unhurried-wordmark * { text-indent: 0; }
 /* Hover roll: unhurried_wordmark_letters() wraps each letter; each one slides
    up in turn and its accent-colored twin (a text shadow) rises into place. */
 .unhurried-wordmark__letters { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em .12em .1em 0; margin: -.1em -.12em -.1em 0; } /* room for the last letter, which the tight tracking pushes past its box */
@@ -429,12 +444,29 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	text-shadow: 0 1.2em var(--wp--preset--color--accent);
 	transition: transform .9s cubic-bezier(.16, .84, .24, 1) calc(var(--i, 0) * 35ms);
 }
+/* Letters that reach above or below a capital (an accent, a cedilla, the
+   Cyrillic Д, Chinese and Japanese, an emoji; the class is added for any
+   letter outside plain ASCII): the window opens .4em above, .24em below and
+   .1em before the first letter (a Greek tonos), so they are not cut, and the
+   roll travels 1.5em, so the twins stay out of sight until they rise. In
+   1.2.0 before this, the window cut the top of É. */
+.unhurried-wordmark__letters--tall { padding-top: .4em; padding-bottom: .24em; padding-left: .1em; margin-top: -.4em; margin-bottom: -.24em; margin-left: -.1em; }
+.unhurried-wordmark__letters--tall > span { text-shadow: 0 1.5em var(--wp--preset--color--accent); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 	.unhurried-wordmark:is(:hover, :focus-within) .unhurried-wordmark__letters > span { transform: translateY(-1.2em); }
+	.unhurried-wordmark:is(:hover, :focus-within) .unhurried-wordmark__letters--tall > span { transform: translateY(-1.5em); }
 }
 @media (prefers-reduced-motion: reduce) {
-	.unhurried-wordmark__letters > span { text-shadow: none; transition: none; }
+	.unhurried-wordmark__letters > span,
+	.unhurried-wordmark__letters--tall > span { text-shadow: none; transition: none; }
 	.unhurried-wordmark a:is(:hover, :focus-visible) { color: var(--wp--preset--color--accent); }
+}
+/* A title left whole (right-to-left sites, joined scripts) has no roll: it
+   underlines on hover and keyboard focus, as the footer's other links do. */
+.unhurried-wordmark a:not(:has(.unhurried-wordmark__letters)):is(:hover, :focus-visible) {
+	text-decoration: underline;
+	text-decoration-thickness: .04em;
+	text-underline-offset: .1em;
 }
 .unhurried-visually-hidden {
 	position: absolute !important;
@@ -636,6 +668,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 .uh-motion [data-uh="draw"]:not(.is-in) { opacity: 1; scale: 0 1; }
 .uh-motion [data-uh="words"]:not(.is-in) { opacity: 1; }
 .uh-motion [data-uh="words"]:not(.is-in) .unhurried-wordmark__letters > span { translate: 0 110%; }
+.uh-motion [data-uh="words"]:not(.is-in) .unhurried-wordmark__letters--tall > span { translate: 0 175%; }
 .uh-motion [data-uh]:not(.is-done) {
 	transition:
 		opacity var(--uh-reveal) var(--uh-ease) var(--uh-delay, 0ms),
