@@ -336,7 +336,8 @@ if ( ! function_exists( 'unhurried_mark_first_version' ) ) :
 	 * A fresh activation runs after_switch_theme before any screen of the
 	 * dashboard is built; an update (the theme replaced in place) never fires
 	 * it, so a site that reaches admin_init first was already running an
-	 * earlier version. Read by the welcome notice. Not autoloaded.
+	 * earlier version. Read by the welcome notice. One small autoloaded option,
+	 * so the check costs no query after the first visit.
 	 *
 	 * @since 1.2.0
 	 * @return void
@@ -346,7 +347,7 @@ if ( ! function_exists( 'unhurried_mark_first_version' ) ) :
 			return;
 		}
 		$version = ( 'after_switch_theme' === current_action() ) ? (string) wp_get_theme( get_template() )->get( 'Version' ) : 'earlier';
-		add_option( 'unhurried_first_version', $version, '', false );
+		add_option( 'unhurried_first_version', $version );
 	}
 endif;
 add_action( 'after_switch_theme', 'unhurried_mark_first_version', 5 );
