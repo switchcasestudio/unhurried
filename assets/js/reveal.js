@@ -113,7 +113,11 @@
 				if ( el.matches( KINDS[ i ][ 1 ] ) ) {
 					// On screen already, or scrolled past: it entered with the
 					// page (style.css) and is left to finish. A divider and the
-					// wordmark were not part of that, so they still draw in.
+					// wordmark were not part of that, so they still draw in. A
+					// figure that counts up shows its final value here: the
+					// first screen must read at once (DESIGN-GUIDE section 6),
+					// and counting now would turn the figure already on screen
+					// back to 0. Below the window it counts up as it enters.
 					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && el.getBoundingClientRect().top < fold ) {
 						break;
 					}

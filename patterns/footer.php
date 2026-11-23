@@ -72,7 +72,7 @@ $unhurried_social = array(
 				<!-- wp:paragraph {"fontSize":"small"} -->
 				<p class="has-small-font-size"><?php esc_html_e( 'New posts by email, now and then.', 'unhurried' ); ?></p>
 				<!-- /wp:paragraph -->
-				<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
+					<?php echo $unhurried_newsletter; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_newsletter_form(), parsed and rendered by WordPress. ?>
 				<?php else : ?>
 				<!-- wp:paragraph {"fontSize":"small"} -->
 				<p class="has-small-font-size"><?php esc_html_e( 'Follow new posts in your feed reader.', 'unhurried' ); ?></p>
@@ -89,8 +89,15 @@ $unhurried_social = array(
 			<!-- /wp:group -->
 			<!-- wp:social-links {"className":"is-style-logos-only unhurried-footer-social","style":{"spacing":{"blockGap":{"left":"0.5rem","top":"0.5rem"}}}} -->
 			<ul class="wp-block-social-links is-style-logos-only unhurried-footer-social">
-			<?php foreach ( $unhurried_social as $unhurried_service => $unhurried_label ) : ?>
-				<!-- wp:social-link <?php echo serialize_block_attributes( array( 'url' => '#', 'service' => $unhurried_service, 'label' => $unhurried_label ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
+			<?php
+			foreach ( $unhurried_social as $unhurried_service => $unhurried_label ) :
+				$unhurried_link = array(
+					'url'     => '#',
+					'service' => $unhurried_service,
+					'label'   => $unhurried_label,
+				);
+				?>
+				<!-- wp:social-link <?php echo serialize_block_attributes( $unhurried_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- serialize_block_attributes() escapes it for a block comment. ?> /-->
 			<?php endforeach; ?>
 			</ul>
 			<!-- /wp:social-links -->

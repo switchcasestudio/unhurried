@@ -41,8 +41,10 @@ if ( ! $unhurried_items ) {
 	return;
 }
 // Enough copy to cross a wide screen before the loop repeats.
-while ( count( $unhurried_items ) < 4 ) {
+$unhurried_count = count( $unhurried_items );
+while ( $unhurried_count < 4 ) {
 	$unhurried_items = array_merge( $unhurried_items, $unhurried_items );
+	$unhurried_count = count( $unhurried_items );
 }
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Marquee', 'Pattern block name', 'unhurried' ); ?>"},"className":"unhurried-marquee","backgroundColor":"contrast","textColor":"base","fontSize":"x-small","layout":{"type":"default"}} -->

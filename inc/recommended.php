@@ -20,10 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ! defined( 'UNHURRIED_PRO_VARIANT' ) ) {
-	define( 'UNHURRIED_PRO_VARIANT', 'shop' ); // shop | time | proof
+	define( 'UNHURRIED_PRO_VARIANT', 'shop' ); // One of: shop, time, proof.
 }
 if ( ! defined( 'UNHURRIED_PLUGINS_VARIANT' ) ) {
-	define( 'UNHURRIED_PLUGINS_VARIANT', 'list' ); // list | tiles | compact
+	define( 'UNHURRIED_PLUGINS_VARIANT', 'list' ); // One of: list, tiles, compact.
 }
 if ( ! defined( 'UNHURRIED_SHOW_REVIEWSCRIBE' ) ) {
 	define( 'UNHURRIED_SHOW_REVIEWSCRIBE', true );
@@ -70,6 +70,12 @@ if ( ! function_exists( 'unhurried_recommended_plugins' ) ) :
 				'line' => __( 'Collect and show customer reviews, with or without a shop.', 'unhurried' ),
 			);
 		}
+		/**
+		 * Filters the plugins the About screen recommends.
+		 *
+		 * @since 1.1.0
+		 * @param array[] $plugins Each with 'slug' (WordPress.org slug), 'name' and 'line' (one sentence).
+		 */
 		return apply_filters( 'unhurried_recommended_plugins', $plugins );
 	}
 endif;
@@ -182,8 +188,8 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 	 * @return array{eyebrow:string,heading:string,body:string,button:string}
 	 */
 	function unhurried_pro_card() {
-		$woo  = class_exists( 'WooCommerce' );
-		$copy = array(
+		$woo     = class_exists( 'WooCommerce' );
+		$copy    = array(
 			'shop'  => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => $woo
@@ -206,6 +212,13 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 			),
 		);
 		$variant = isset( $copy[ UNHURRIED_PRO_VARIANT ] ) ? UNHURRIED_PRO_VARIANT : 'shop';
+		/**
+		 * Filters the words of the Unhurried Pro card on the About screen.
+		 *
+		 * @since 1.1.0
+		 * @param array  $card    'eyebrow', 'heading' (may hold <em>), 'body' and 'button'.
+		 * @param string $variant The copy variant in use: shop, time or proof (UNHURRIED_PRO_VARIANT).
+		 */
 		return apply_filters( 'unhurried_pro_card', $copy[ $variant ], $variant );
 	}
 endif;
@@ -405,7 +418,13 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 		}
 
 		$since = (int) get_option( 'unhurried_activated', 0 );
-		$days  = (int) apply_filters( 'unhurried_notice_days', 14 );
+		/**
+		 * Filters how many days after activation the review notice waits.
+		 *
+		 * @since 1.1.0
+		 * @param int $days Default 14.
+		 */
+		$days = (int) apply_filters( 'unhurried_notice_days', 14 );
 		if ( $since && ( time() - $since ) > $days * DAY_IN_SECONDS && ! get_user_meta( $user, 'unhurried_dismissed_review', true ) ) {
 			?>
 			<div class="notice notice-info">

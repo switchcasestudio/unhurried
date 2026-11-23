@@ -26,7 +26,7 @@ $unhurried_tiers = array(
 	<!-- wp:columns {"style":{"spacing":{"blockGap":{"top":"var:preset|spacing|40","left":"var:preset|spacing|40"}}}} -->
 	<div class="wp-block-columns">
 		<?php foreach ( $unhurried_tiers as $unhurried_tier ) : ?>
-		<?php if ( $unhurried_tier[3] ) : ?>
+			<?php if ( $unhurried_tier[3] ) : ?>
 		<!-- wp:column {"className":"is-style-section-ink unhurried-reveal","style":{"border":{"radius":"24px"},"spacing":{"padding":{"top":"clamp(1.5rem, 3vw, 3rem)","bottom":"clamp(1.5rem, 3vw, 3rem)","left":"clamp(1.5rem, 3vw, 3rem)","right":"clamp(1.5rem, 3vw, 3rem)"},"blockGap":"var:preset|spacing|50"}}} -->
 		<div class="wp-block-column is-style-section-ink unhurried-reveal" style="border-radius:24px;padding-top:clamp(1.5rem, 3vw, 3rem);padding-right:clamp(1.5rem, 3vw, 3rem);padding-bottom:clamp(1.5rem, 3vw, 3rem);padding-left:clamp(1.5rem, 3vw, 3rem)">
 		<?php else : ?>

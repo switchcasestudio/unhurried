@@ -1,0 +1,25 @@
+/**
+ * Unhurried in a dark look: WPForms labels.
+ *
+ * Loaded only in a dark look while WPForms is active, printed inline. WPForms
+ * colors its labels from variables it sets on :root for a light page: labels
+ * and choices rgba(0, 0, 0, .85), sublabels and field descriptions .55, the
+ * required mark and errors a red. On a dark page that is 1.1 to 1.4:1 for
+ * the labels and 3.2 to 3.9:1 for the red. A form's container takes the
+ * look's text colors here instead, and the red is mixed halfway toward the
+ * text color, as WooCommerce's is (woocommerce-dark.css). A form styled in
+ * the WPForms block keeps its own colors: WPForms prints them on the form's
+ * id, which outranks this. The fields keep WPForms' white fill and dark text.
+ * Light looks never load this file.
+ *
+ * @package Unhurried
+ */
+
+/* WPForms' own red, read where WPForms sets it. */
+:root { --uh-wpforms-red: var(--wpforms-label-error-color); }
+
+:where(.wpforms-container) {
+	--wpforms-label-color: var(--wp--preset--color--contrast);
+	--wpforms-label-sublabel-color: var(--wp--preset--color--contrast-2);
+	--wpforms-label-error-color: color-mix(in srgb, var(--uh-wpforms-red) 50%, var(--wp--preset--color--contrast));
+}

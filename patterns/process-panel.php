@@ -18,6 +18,12 @@ $unhurried_steps = array(
 	array( __( 'Lorem cillum', 'unhurried' ), __( 'Lorem nunc ea dui arcu aliquip proident in sem. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.', 'unhurried' ) ),
 	array( __( 'Lorem id diam', 'unhurried' ), __( 'Excepteur lacus ut amet nisl, sit eu fugiat eu amet elit. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.', 'unhurried' ) ),
 );
+
+// Tags the translated heading may hold.
+$unhurried_heading_tags = array(
+	'em' => array(),
+	'br' => array(),
+);
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Process', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","className":"is-style-section-ground","style":{"spacing":{"padding":{"top":"0","bottom":"var:preset|spacing|80","left":"clamp(12px, 2vw, 44px)","right":"clamp(12px, 2vw, 44px)"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull is-style-section-ground" style="margin-top:0;margin-bottom:0;padding-top:0;padding-right:clamp(12px, 2vw, 44px);padding-bottom:var(--wp--preset--spacing--80);padding-left:clamp(12px, 2vw, 44px)">
@@ -29,7 +35,7 @@ $unhurried_steps = array(
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem velit', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:heading {"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem ac nulla<br><em>commodo</em>', 'unhurried' ), array( 'em' => array(), 'br' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem ac nulla<br><em>commodo</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h2>
 			<!-- /wp:heading -->
 		</div>
 		<!-- /wp:group -->

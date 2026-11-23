@@ -65,6 +65,8 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 
 `add_filter( 'unhurried_dark_color_scheme', '__return_false' );`
 
+WPForms Lite sets its own label colors for a light page. In the dark looks the theme gives its labels, notes and required marks the look's text colors; a form you style in the WPForms block keeps the colors you chose.
+
 == Changelog ==
 
 = 1.2.0 =
@@ -92,19 +94,22 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
 * Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page, and its Cart and My account pages when the header shows the cart and account icons. A menu you made is shown exactly as you saved it. A menu that holds nothing but an untouched Page List block counts as the automatic one, because that is exactly what WordPress saves by itself; choose a parent page for it, or add any link, and it is yours.
 * The setup checklist works on sites in other languages: a page it opens is recognized whatever its title and address, so the Contact button turns on and buttons lead to the right pages. "Set your menu" is done only when you have made a menu.
-* Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields) and on the site title and post pictures, where it was cut off; and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
+* Keyboard: the focus ring shows on every surface (the footer, glass cards, photographs, search fields, without the soft glow the two round search fields had inside it) and on the site title and post pictures, where it was cut off; and in Firefox, tabbing backwards with Shift+Tab no longer scrolls a control under the header.
 * Screen readers: one header landmark instead of two, the header and footer menus are named "Main" and "Footer", and each search form has a name.
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
 * Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
-* Right-to-left languages: the header's inner spacing mirrors.
-* Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
-* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them.
+* WPForms Lite in the dark looks: its labels, notes and required marks take the look's text colors. They were near-black on the dark page.
+* Right-to-left languages: the header's inner spacing mirrors, and the footer wordmark reads in the right order. It stays whole, without the hover roll, on right-to-left sites and for titles whose letters join or carry marks (Arabic, Hebrew, Hindi and the like).
+* Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), blocks marked unhurried-still are readable at once, and a header pattern placed inside a page stays still.
+* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.
 * The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
 * Hero, spiral: on wide screens the large italic word sits at the foot of the stage again; it had moved over the headline.
-* Phones whose screen does not need the full homepage photograph load a smaller copy of it, so it appears sooner; desktops and tablets load the same photograph as before. Text keeps its lines when the theme's fonts arrive, and arrows and letters of other alphabets keep the system's font.
-* Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash.
+* Phones whose screen does not need the full homepage photograph load a smaller copy of it, so it appears sooner; desktops and tablets load the same photograph as before, and so does a phone held sideways, so the photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive, and arrows and letters of other alphabets keep the system's font.
+* Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash. A Cover you made with another shade, such as the accent color, keeps its own text color.
 * Small text over photographs is easier to read in every look: the label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
+* About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages (a header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it), state no price, and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
+* Under the hood: the theme's PHP files do nothing when opened directly, block settings printed from PHP stay intact whatever a translation holds, the About screen's styles load with the other admin styles, and the code passes the WordPress coding standards.
 
 = 1.1.2 =
 * Nine fixes found by visiting the live sites that use Unhurried. A site whose header and footer were never edited now shows nothing fake.
@@ -177,6 +182,7 @@ Photographs from StockSnap.io, the WordPress.org Photo Directory and the Rijksmu
 License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
 assets/images/david.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
+assets/images/david-1200.webp and assets/images/david-800.webp: smaller copies of david.webp, made from the same photograph for phones. Same source and license (CC0).
 assets/images/spiral.webp: Bango Renders, https://stocksnap.io/photo/abstract-shapes-AGYUJILSQ2
 assets/images/arch.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
 assets/images/pedestal.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/

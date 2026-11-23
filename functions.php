@@ -55,6 +55,11 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 			// Text over photographs stays light on a dark shade (printed inline).
 			wp_enqueue_style( 'unhurried-dark-covers', get_template_directory_uri() . '/assets/css/dark-covers.css', array( 'unhurried-style' ), $version );
 			wp_style_add_data( 'unhurried-dark-covers', 'path', get_template_directory() . '/assets/css/dark-covers.css' );
+			if ( defined( 'WPFORMS_VERSION' ) || function_exists( 'wpforms' ) ) {
+				// WPForms labels take the look's text color (printed inline).
+				wp_enqueue_style( 'unhurried-wpforms-dark', get_template_directory_uri() . '/assets/css/wpforms-dark.css', array( 'unhurried-style' ), $version );
+				wp_style_add_data( 'unhurried-wpforms-dark', 'path', get_template_directory() . '/assets/css/wpforms-dark.css' );
+			}
 			/**
 			 * Filters whether a dark look tells the browser it is dark.
 			 *
@@ -127,24 +132,55 @@ if ( ! function_exists( 'unhurried_theme_image_file' ) ) :
 	 * The file behind an image address, when it is one of the pictures
 	 * bundled with the theme (assets/images/ of this theme or its child).
 	 *
+	 * The address must lead to this site: a relative one, or one on the
+	 * host (and port) of the theme or of the site's home address (the
+	 * theme's address follows WordPress's own address unless a plugin
+	 * moves it, to a CDN for example). A picture at the
+	 * same path on another host (content still pointing at a staging site
+	 * or an old domain) is that host's file, not this theme's.
+	 *
 	 * @since 1.2.0
 	 * @param string $src Image address.
 	 * @return string Absolute path of the file, or '' for any other image.
 	 */
 	function unhurried_theme_image_file( $src ) {
 		static $folders = null;
+		static $hosts   = null;
+		static $host_of = null;
+		if ( null === $host_of ) {
+			// Host and port of an address, lowercased, without a default port; '' when it names no host.
+			$host_of = static function ( $url ) {
+				$parts = wp_parse_url( (string) $url );
+				if ( ! is_array( $parts ) || empty( $parts['host'] ) ) {
+					return '';
+				}
+				$port   = isset( $parts['port'] ) ? (int) $parts['port'] : 0;
+				$scheme = isset( $parts['scheme'] ) ? strtolower( (string) $parts['scheme'] ) : '';
+				if ( ( 'http' === $scheme && 80 === $port ) || ( 'https' === $scheme && 443 === $port ) ) {
+					$port = 0;
+				}
+				return strtolower( (string) $parts['host'] ) . ( $port ? ':' . $port : '' );
+			};
+		}
 		if ( null === $folders ) {
 			$folders = array();
+			$hosts   = array( $host_of( home_url() ) );
 			$themes  = array(
 				get_stylesheet_directory_uri() => get_stylesheet_directory(),
 				get_template_directory_uri()   => get_template_directory(),
 			);
 			foreach ( $themes as $uri => $dir ) {
 				$folders[ (string) wp_parse_url( $uri, PHP_URL_PATH ) . '/assets/images/' ] = $dir . '/assets/images/';
+				$hosts[] = $host_of( $uri );
 			}
+			$hosts = array_filter( array_unique( $hosts ) );
 		}
 		$path = wp_parse_url( (string) $src, PHP_URL_PATH );
 		if ( ! is_string( $path ) || false === strpos( $path, '/assets/images/' ) ) {
+			return '';
+		}
+		$host = $host_of( $src );
+		if ( '' !== $host && ! in_array( $host, $hosts, true ) ) {
 			return '';
 		}
 		foreach ( $folders as $prefix => $dir ) {
@@ -252,7 +288,9 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	 *
 	 * A Cover fills its box and crops its picture, so on a phone held upright
 	 * the statue hero's photograph is drawn about as wide as 80% of the
-	 * screen's height. Where the theme ships smaller copies beside a picture
+	 * screen's height, and on a phone held sideways (or in a short window)
+	 * about as wide as the screen: sizes asks for the larger of the two.
+	 * Where the theme ships smaller copies beside a picture
 	 * (assets/images/david-800.webp and david-1200.webp beside david.webp),
 	 * the Cover's picture gets a srcset of the copies and the original, with
 	 * sizes that send every screen 782px and wider to the original: desktops
@@ -318,7 +356,7 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 		}
 		$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
 		$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
-		$tags->set_attribute( 'sizes', '(max-width: 781px) 80vh, ' . $sets[ $file ]['width'] . 'px' );
+		$tags->set_attribute( 'sizes', '(max-width: 781px) max(100vw, 80vh), ' . $sets[ $file ]['width'] . 'px' );
 		return $tags->get_updated_html();
 	}
 endif;
@@ -415,8 +453,8 @@ if ( ! function_exists( 'unhurried_wordmark_em_width' ) ) :
 			++$count;
 			$bytes = strlen( $char );
 			if ( 2 === $bytes ) {
-				$base = remove_accents( $char );
-				$char = ( 1 === strlen( $base ) ) ? $base : $char;
+				$base  = remove_accents( $char );
+				$char  = ( 1 === strlen( $base ) ) ? $base : $char;
 				$bytes = strlen( $char );
 			}
 			if ( 1 === $bytes ) {
@@ -481,6 +519,12 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 * The letters are hidden from assistive technology and the whole title is
 	 * repeated in a visually hidden span, so screen readers still hear one word.
 	 *
+	 * Each letter becomes a box of its own, so the title is left whole, as in
+	 * 1.1.1, where boxes would misread it: on a right-to-left site the boxes
+	 * line up from the right (a Latin title read backwards), and letters that
+	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
+	 * accent typed apart, an emoji sequence) would come apart.
+	 *
 	 * @since 1.2.0
 	 * @param string $block_content Rendered block HTML.
 	 * @param array  $block         Parsed block.
@@ -488,12 +532,13 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 	 */
 	function unhurried_wordmark_letters( $block_content, $block ) {
 		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
-		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) ) {
+		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) || is_rtl() ) {
 			return $block_content;
 		}
 		$split = static function ( $inner ) {
 			$text = trim( html_entity_decode( wp_strip_all_tags( $inner ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
-			if ( '' === $text ) {
+			// Marks, joiners, right-to-left scripts and emoji skin tones stay whole.
+			if ( '' === $text || preg_match( '/[\p{M}\x{200C}\x{200D}\x{0590}-\x{08FF}\x{FB1D}-\x{FDFF}\x{FE70}-\x{FEFF}\x{10800}-\x{10FFF}\x{1E800}-\x{1EFFF}\x{1F3FB}-\x{1F3FF}]/u', $text ) ) {
 				return $inner;
 			}
 			$letters = '';
@@ -613,7 +658,7 @@ if ( ! function_exists( 'unhurried_contact_form' ) ) :
 	 * @return string
 	 */
 	function unhurried_contact_form() {
-		$markup  = '';
+		$markup = '';
 		// Detected by plugin, not shortcode, so the editor gets the same markup.
 		$plugins = array(
 			'contact-form-7' => array( 'wpcf7_contact_form', defined( 'WPCF7_VERSION' ) ),
@@ -675,8 +720,12 @@ if ( ! function_exists( 'unhurried_render_newsletter_shortcode' ) ) :
 		$html = do_shortcode( shortcode_unautop( $block_content ) );
 		// The minimal form's email field has only a placeholder; give it a name.
 		if ( class_exists( 'WP_HTML_Tag_Processor' ) ) {
-			$form = new WP_HTML_Tag_Processor( $html );
-			while ( $form->next_tag( array( 'tag_name' => 'input', 'class_name' => 'tnp-email' ) ) ) {
+			$form  = new WP_HTML_Tag_Processor( $html );
+			$email = array(
+				'tag_name'   => 'input',
+				'class_name' => 'tnp-email',
+			);
+			while ( $form->next_tag( $email ) ) {
 				if ( null === $form->get_attribute( 'aria-label' ) ) {
 					$form->set_attribute( 'aria-label', __( 'Email address', 'unhurried' ) );
 				}
@@ -800,7 +849,16 @@ if ( ! function_exists( 'unhurried_hide_front_page_head' ) ) :
 		if ( false === strpos( $class, 'unhurried-page-head' ) ) {
 			return $block_content;
 		}
-		if ( is_front_page() && is_page() && apply_filters( 'unhurried_hide_front_page_title', true ) ) {
+		if ( ! is_front_page() || ! is_page() ) {
+			return $block_content;
+		}
+		/**
+		 * Filters whether a static front page drops the title band of the default Pages template.
+		 *
+		 * @since 1.1.2
+		 * @param bool $hide Default true. Return false to keep the band.
+		 */
+		if ( apply_filters( 'unhurried_hide_front_page_title', true ) ) {
 			return '';
 		}
 		return $block_content;
