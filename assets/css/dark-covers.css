@@ -11,9 +11,10 @@
  * look's page color, its darkest, and the text its text color. Light looks
  * never load this file.
  *
- * The text turns light only over those shades: the "contrast" color, which
- * this file darkens, and the theme's two Ink scrims, which are dark in every
- * look. A Cover with any other shade (the accent, another palette color, a
+ * The text turns light only over shades that are dark in a dark look: the
+ * "contrast" color, which this file darkens, the theme's two Ink scrims, and
+ * the default shade a Cover has when no color is chosen (WordPress paints it
+ * black). A Cover with any other shade (the accent, another palette color, a
  * color or gradient of the owner's own) keeps the text color it was given:
  * the accent, for one, is pale in a dark look, and light text on it would be
  * unreadable.
@@ -32,8 +33,9 @@
 }
 
 /* Text in the "base" color on the photograph, under one of those shades (the
-   shade comes before the content in a Cover's markup). A block with a fill of
-   its own inside the Cover (a card, a filled button) keeps its colors. */
-.wp-block-cover:not(.is-light) > .wp-block-cover__background:is(.has-contrast-background-color, .has-scrim-right-gradient-background, .has-scrim-bottom-gradient-background) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+   shade comes before the content in a Cover's markup; the default shade has
+   no color class, no gradient and no color in its style). A block with a fill
+   of its own inside the Cover (a card, a filled button) keeps its colors. */
+.wp-block-cover:not(.is-light) > .wp-block-cover__background:is(.has-contrast-background-color, .has-scrim-right-gradient-background, .has-scrim-bottom-gradient-background, .has-background-dim:not([class*="-background-color"], .has-background-gradient, [style*="background"])) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
 	color: var(--wp--preset--color--contrast) !important;
 }
