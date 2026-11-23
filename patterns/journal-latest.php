@@ -25,7 +25,7 @@
 		<h2 class="wp-block-heading has-text-align-center has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem non <em>tempor</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"align":"center","textColor":"contrast-2"} -->
-		<p class="has-text-align-center has-contrast-2-color has-text-color"><?php echo wp_kses( __( 'Officia, laborum irure vel <em>velit</em> sodales eu est ac eget.', 'unhurried' ), array( 'em' => array() ) ); ?></p>
+		<p class="has-text-align-center has-contrast-2-color has-text-color"><?php echo wp_kses( __( 'Officia, laborum irure vel <em>velit</em> sodales eu est ac eget. Maecenas faucibus mollis interdum, cras justo odio dapibus ac facilisis in egestas eget quam.', 'unhurried' ), array( 'em' => array() ) ); ?></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

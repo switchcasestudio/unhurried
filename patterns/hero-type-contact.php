@@ -24,7 +24,7 @@
 		<h1 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Lorem ut <em>elit</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h1>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"layout":{"selfStretch":"fit"}}} -->
-		<p class="has-contrast-2-color has-text-color has-large-font-size"><?php esc_html_e( 'Phasellus, netus tempor eu eu labore fames. Ac dolore lacus enim tristique.', 'unhurried' ); ?></p>
+		<p class="has-contrast-2-color has-text-color has-large-font-size"><?php esc_html_e( 'Phasellus, netus tempor eu eu labore fames. Ac dolore lacus enim tristique, donec sed odio dui et cras mattis consectetur purus.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

@@ -12,7 +12,7 @@
  * @since 1.1.0
  */
 
-$unhurried_names = array( 'Linden House', 'Still & Co.', 'Marrow', 'Hearth Studio', 'Fernway' );
+$unhurried_names = array( 'Lorem Domus', 'Vitae & Ipsum', 'Mattis', 'Nulla Officina', 'Fermentum' );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Names strip', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|70"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|50"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--70)">

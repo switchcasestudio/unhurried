@@ -20,7 +20,7 @@
 		<!-- wp:column {"width":"50%","style":{"spacing":{"blockGap":"var:preset|spacing|60"}}} -->
 		<div class="wp-block-column" style="flex-basis:50%">
 			<!-- wp:heading {"level":2,"fontSize":"xx-large"} -->
-			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Take your <em>time.</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
+			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem ipsum <em>dolor.</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:site-tagline {"style":{"typography":{"lineHeight":"1.5"}}} /-->
 		</div>
@@ -39,7 +39,7 @@
 			<p class="is-style-eyebrow"><?php esc_html_e( 'Visit', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:paragraph -->
-			<p><?php echo wp_kses( __( '12 Linden Row<br>Hillsdale, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
+			<p><?php echo wp_kses( __( '12 Lorem Sit<br>Malesuada, 00000', 'unhurried' ), array( 'br' => array() ) ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:paragraph -->
 			<p><a href="mailto:hello@example.com"><?php esc_html_e( 'hello@example.com', 'unhurried' ); ?></a></p>
@@ -52,7 +52,7 @@
 	<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40"}},"border":{"top":{"color":"#f6f4ef2e","width":"1px","style":"solid"}}},"fontSize":"x-small","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
 	<div class="wp-block-group has-x-small-font-size" style="border-top-color:#f6f4ef2e;border-top-style:solid;border-top-width:1px;padding-top:var(--wp--preset--spacing--40)">
 		<!-- wp:paragraph -->
-		<p><?php esc_html_e( 'Made slowly, with care.', 'unhurried' ); ?></p>
+		<p><?php esc_html_e( 'Lorem ipsum, dolor sit.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:paragraph -->
 		<p>

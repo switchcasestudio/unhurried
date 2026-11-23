@@ -14,9 +14,9 @@
 
 $unhurried_rows = array(
 	array( 'autumn-still-life', __( 'Cupidatat officia', 'unhurried' ), __( 'Lorem qui, esse dolor, mauris laborum. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ), __( '90 lorem', 'unhurried' ), __( 'Lorem $180', 'unhurried' ) ),
-	array( 'pink-vase', __( 'Lorem magna turpis', 'unhurried' ), __( 'Lorem mattis sem anim deserunt.', 'unhurried' ), __( '45 lorem', 'unhurried' ), __( 'Lorem $140', 'unhurried' ) ),
+	array( 'pink-vase', __( 'Lorem magna turpis', 'unhurried' ), __( 'Lorem mattis sem anim deserunt. Donec ullamcorper nulla non metus auctor fringilla, vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.', 'unhurried' ), __( '45 lorem', 'unhurried' ), __( 'Lorem $140', 'unhurried' ) ),
 	array( 'vase-niche', __( 'Lorem irure', 'unhurried' ), __( 'Lorem eget velit nulla ex vel ea diam est. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ), __( '30 lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
-	array( 'flower-vase', __( 'Lorem sem sit', 'unhurried' ), __( 'Lorem sed, arcu in odio.', 'unhurried' ), __( '4 lorem', 'unhurried' ), __( 'Lorem $620', 'unhurried' ) ),
+	array( 'flower-vase', __( 'Lorem sem sit', 'unhurried' ), __( 'Lorem sed, arcu in odio. Cras mattis consectetur purus sit amet fermentum, etiam porta sem malesuada magna mollis euismod. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.', 'unhurried' ), __( '4 lorem', 'unhurried' ), __( 'Lorem $620', 'unhurried' ) ),
 );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Services index', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"},"blockGap":"var:preset|spacing|70"}},"layout":{"type":"constrained","contentSize":"1360px"}} -->

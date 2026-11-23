@@ -70,7 +70,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 
 = 1.2.0 =
 * Requires WordPress 7.0. The journal's breadcrumbs, topic lists, results count and reading time need blocks first shipped together in 7.0. On an older WordPress, the site keeps the version it has.
-* Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it. The header, footer, 404 and search screens keep real words.
+* Sample copy is Lorem Ipsum everywhere in the content patterns, so nothing reads as real until you write it, and there is enough of it in each section to show how it reads when full. The header, the default footer, 404 and search screens keep real words.
 * Motion throughout. Every section enters gently as it scrolls into view. Headings and text rise, photographs settle, and cards and list items follow one another. Figures count up, and the footer wordmark rises letter by letter. Buttons lift and press, menu underlines glide and accordions open smoothly. Cover photographs drift with the scroll, and pages cross-fade while the header stays put. Nothing moves for visitors who ask for reduced motion, and printing shows everything. The class unhurried-still keeps any block still.
 * A marquee line above the header: the tagline and the newest posts drift slowly across an Ink strip. It pauses under the pointer and stands still for visitors who ask for reduced motion. It scrolls away; the header stays.
 * Three more page patterns: Work (with a new Numbers section), Pricing and Visit.
