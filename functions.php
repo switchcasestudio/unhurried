@@ -246,6 +246,84 @@ if ( ! function_exists( 'unhurried_theme_image_loading' ) ) :
 endif;
 add_filter( 'wp_get_loading_optimization_attributes', 'unhurried_theme_image_loading', 10, 3 );
 
+if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
+	/**
+	 * Lets phones load a smaller copy of a bundled Cover photograph.
+	 *
+	 * A Cover fills its box and crops its picture, so on a phone held upright
+	 * the statue hero's photograph is drawn about as wide as 80% of the
+	 * screen's height. Where the theme ships smaller copies beside a picture
+	 * (assets/images/david-800.webp and david-1200.webp beside david.webp),
+	 * the Cover's picture gets a srcset of the copies and the original, with
+	 * sizes that send every screen 782px and wider to the original: desktops
+	 * load exactly the file they loaded before, and a phone takes the
+	 * smallest file that is still as sharp as its screen.
+	 *
+	 * It works on the tag as the page is shown, after WordPress has set its
+	 * loading and sizes (wp_content_img_tag), so pages built from the pattern
+	 * before this version get it too and nothing saved changes. Coming after
+	 * WordPress also keeps it from adding "auto" to these sizes on a lazy
+	 * picture: "auto" would measure the Cover's box, not the cropped photo.
+	 *
+	 * @since 1.2.0
+	 * @param string $image An img tag in the page.
+	 * @return string
+	 */
+	function unhurried_theme_image_srcset( $image ) {
+		if ( false === strpos( (string) $image, 'wp-block-cover__image-background' ) || false === strpos( (string) $image, '/assets/images/' ) || false !== strpos( (string) $image, ' srcset=' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $image;
+		}
+		$tags = new WP_HTML_Tag_Processor( $image );
+		if ( ! $tags->next_tag( 'img' ) || ! $tags->has_class( 'wp-block-cover__image-background' ) ) {
+			return $image;
+		}
+		$src  = (string) $tags->get_attribute( 'src' );
+		$file = unhurried_theme_image_file( $src );
+		if ( '' === $file ) {
+			return $image;
+		}
+		static $sets = array();
+		if ( ! array_key_exists( $file, $sets ) ) {
+			$sets[ $file ] = null;
+			$size          = wp_getimagesize( $file );
+			$info          = pathinfo( $file );
+			$copies        = array();
+			if ( $size && isset( $info['extension'] ) ) {
+				foreach ( (array) glob( $info['dirname'] . '/' . $info['filename'] . '-*.' . $info['extension'] ) as $copy ) {
+					if ( ! preg_match( '/-[0-9]+\.' . preg_quote( $info['extension'], '/' ) . '$/', (string) $copy ) ) {
+						continue;
+					}
+					$copy_size = wp_getimagesize( $copy );
+					if ( $copy_size && (int) $copy_size[0] > 0 && (int) $copy_size[0] < (int) $size[0] ) {
+						$copies[ basename( $copy ) ] = (int) $copy_size[0];
+					}
+				}
+			}
+			if ( $copies ) {
+				asort( $copies );
+				$sets[ $file ] = array(
+					'copies' => $copies,
+					'width'  => (int) $size[0],
+				);
+			}
+		}
+		if ( null === $sets[ $file ] ) {
+			return $image;
+		}
+		$url    = strtok( $src, '?#' );
+		$folder = substr( $url, 0, strrpos( $url, '/' ) + 1 );
+		$srcset = array();
+		foreach ( $sets[ $file ]['copies'] as $name => $width ) {
+			$srcset[] = esc_url_raw( $folder . $name ) . ' ' . $width . 'w';
+		}
+		$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
+		$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
+		$tags->set_attribute( 'sizes', '(max-width: 781px) 80vh, ' . $sets[ $file ]['width'] . 'px' );
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'wp_content_img_tag', 'unhurried_theme_image_srcset' );
+
 if ( ! function_exists( 'unhurried_block_styles' ) ) :
 	/**
 	 * Registers custom block style variations.
