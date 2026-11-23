@@ -133,7 +133,9 @@ if ( ! function_exists( 'unhurried_theme_image_file' ) ) :
 	 * bundled with the theme (assets/images/ of this theme or its child).
 	 *
 	 * The address must lead to this site: a relative one, or one on the
-	 * host (and port) of the theme or of the site itself. A picture at the
+	 * host (and port) of the theme or of the site's home address (the
+	 * theme's address follows WordPress's own address unless a plugin
+	 * moves it, to a CDN for example). A picture at the
 	 * same path on another host (content still pointing at a staging site
 	 * or an old domain) is that host's file, not this theme's.
 	 *
@@ -162,7 +164,7 @@ if ( ! function_exists( 'unhurried_theme_image_file' ) ) :
 		}
 		if ( null === $folders ) {
 			$folders = array();
-			$hosts   = array( $host_of( home_url() ), $host_of( site_url() ) );
+			$hosts   = array( $host_of( home_url() ) );
 			$themes  = array(
 				get_stylesheet_directory_uri() => get_stylesheet_directory(),
 				get_template_directory_uri()   => get_template_directory(),
