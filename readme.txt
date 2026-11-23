@@ -107,6 +107,7 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * Narrow phones: a long site title now shortens with an ellipsis, so the header button stays on screen. The page no longer scrolls sideways.
 * Phones that do not need the full homepage photograph load a smaller copy, so it appears sooner. Desktops and tablets load the same photograph as before, and so does a phone held sideways. The photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive. Arrows and letters of other alphabets keep the system's font.
 * Dark looks: text over photographs is light on a dark shade, as in the light looks. In the Statement and Services sections it had turned dark on dark, with a white button on a pale wash. Your own Covers follow the shade you gave them. On a dark color of your own at 60% or more, the text turns light. On the accent, another palette color or a light shade, it keeps its color. With an Ink scrim, a gradient of your own or a weak shade, your Covers look as in 1.1.1. On phones the right scrim becomes an even veil, and text on it turns light. So does text placed center right under a right scrim of 90% or more.
+* Pages made with 1.1.1 keep their pictures. The 1.2.0 patterns use new pictures under new names.
 * Small text over photographs is easier to read in every look. The label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
 * About Unhurried: the Unhurried Pro card and notice name what Pro adds to the shop pages. They list a header band, 4:5 product photos and a summary that follows the page. They also list a checkout with nothing else on it. They state no price and open their links in a new tab. The setup checklist's plugin buttons are whole phrases for translators.
@@ -185,13 +186,17 @@ License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 assets/images/david.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
 assets/images/david-1200.webp and assets/images/david-800.webp: smaller copies of david.webp, made from the same photograph for phones. Same source and license (CC0).
 assets/images/spiral.webp: Bango Renders, https://stocksnap.io/photo/abstract-shapes-AGYUJILSQ2
-assets/images/arch.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
-assets/images/pedestal.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/
-assets/images/branch-shadow.webp: creativemz, https://wordpress.org/photos/photo/38665f56ad/
-assets/images/drape.webp: Samuel Scrimshaw, https://stocksnap.io/photo/nature-desert-UV4PIZ1DEK
-assets/images/light-window.webp: Bob Richards, https://stocksnap.io/photo/tree-branch-D74M8ZEETS
-assets/images/orb.webp: Altered Reality, https://stocksnap.io/photo/autumn-minimalist-U9FDQVP6HZ
-assets/images/vessel.webp: Chimene Gaspar, https://stocksnap.io/photo/vase-wall-JGTJS8KF6Q
+assets/images/flower-vase.webp: Imani Clovis, https://stocksnap.io/photo/flower-vase-CTW7WOGRO6
+assets/images/vase-niche.webp: Tawhid Sadman, https://wordpress.org/photos/photo/46569db992/
+assets/images/vine-wall.webp: creativemz, https://wordpress.org/photos/photo/38665f56ad/
+assets/images/desert-dune.webp: Samuel Scrimshaw, https://stocksnap.io/photo/nature-desert-UV4PIZ1DEK
+assets/images/maple-leaves.webp: Bob Richards, https://stocksnap.io/photo/tree-branch-D74M8ZEETS
+assets/images/autumn-still-life.webp: Altered Reality, https://stocksnap.io/photo/autumn-minimalist-U9FDQVP6HZ
+assets/images/pink-vase.webp: Chimene Gaspar, https://stocksnap.io/photo/vase-wall-JGTJS8KF6Q
+
+assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp: the pictures of Unhurried 1.1.1, kept for pages made with it.
+Created for this theme by the theme author, generated from original code.
+License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
 Screenshot
 screenshot.png is composed from the theme's own patterns and images above.
