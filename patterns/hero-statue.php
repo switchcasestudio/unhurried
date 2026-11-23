@@ -12,7 +12,7 @@
  * @since 1.2.0
  */
 
-$unhurried_img = get_theme_file_uri( 'assets/images/david.webp' );
+$unhurried_img = get_theme_file_uri( 'assets/images/david-mono.webp' );
 
 // Tags the translated heading may hold.
 $unhurried_heading_tags = array(

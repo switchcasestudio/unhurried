@@ -20,7 +20,7 @@
 		<!-- wp:column {"verticalAlignment":"center","width":"40%","className":"unhurried-mono unhurried-reveal"} -->
 		<div class="wp-block-column is-vertically-aligned-center unhurried-mono unhurried-reveal" style="flex-basis:40%">
 			<!-- wp:image {"aspectRatio":"4/5","scale":"cover","sizeSlug":"full","linkDestination":"none","style":{"border":{"radius":"24px"}}} -->
-			<figure class="wp-block-image size-full has-custom-border"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/vase-niche.webp' ) ); ?>" alt="" style="border-radius:24px;aspect-ratio:4/5;object-fit:cover"/></figure>
+			<figure class="wp-block-image size-full has-custom-border"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/marble-head.webp' ) ); ?>" alt="" style="border-radius:24px;aspect-ratio:4/5;object-fit:cover"/></figure>
 			<!-- /wp:image -->
 		</div>
 		<!-- /wp:column -->
