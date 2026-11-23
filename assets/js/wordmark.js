@@ -72,7 +72,9 @@
 			var em = parseFloat( style.getPropertyValue( '--unhurried-wordmark-em' ) ) || 2.5;
 			next = Math.min( column / ( natural + ( 2 * EDGE + tail ) * base ), Math.max( 1, em / 2.5 ) );
 		} else if ( natural > column ) {
-			next = column * FILL / natural;
+			// Not while the theme's font is still loading: its fallback face is
+			// a hair wider, and a Latin title is sized for the theme's font.
+			next = ( ! document.fonts || 'loaded' === document.fonts.status ) ? column * FILL / natural : factor;
 		}
 		if ( Math.abs( next - factor ) > 0.002 ) {
 			if ( 1 === next ) {

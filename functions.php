@@ -516,7 +516,10 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 		if ( '' !== $style && ';' !== substr( $style, -1 ) ) {
 			$style .= ';';
 		}
-		$processor->set_attribute( 'style', $style . '--unhurried-wordmark-em:' . number_format( $em, 3, '.', '' ) . ';' );
+		// A title in another script than Latin, or with an emoji, starts .1em in from its column, as wordmark.js sets
+		// it, so a first letter whose ink reaches past its box is not cut before (or without) the script.
+		$indent = preg_match( '/[^\p{Latin}\p{Common}\p{Inherited}]|[\x{2600}-\x{27BF}\x{1F000}-\x{1FAFF}]/u', $text ) ? 'text-indent:.1em;' : '';
+		$processor->set_attribute( 'style', $style . '--unhurried-wordmark-em:' . number_format( $em, 3, '.', '' ) . ';' . $indent );
 		// The title as drawn: keeps it whole in any script (the block renders before the page's scripts print).
 		wp_enqueue_script(
 			'unhurried-wordmark',
