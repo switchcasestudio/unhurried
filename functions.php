@@ -979,8 +979,9 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 	/**
 	 * Tags the menu item that links to the Contact page with `unhurried-nav-contact`.
 	 *
-	 * The header button already links there, so style.css hides that item in the
-	 * header capsule while the button shows, and keeps it in the open mobile menu.
+	 * When the header's button links there too (unhurried_mark_contact_button()),
+	 * style.css hides that item in the header capsule, and keeps it in the open
+	 * mobile menu. A button that goes anywhere else leaves the menu as it is.
 	 *
 	 * @since 1.2.0
 	 * @param string $block_content Rendered navigation block.
@@ -1014,6 +1015,39 @@ if ( ! function_exists( 'unhurried_mark_contact_link' ) ) :
 	}
 endif;
 add_filter( 'render_block_core/navigation', 'unhurried_mark_contact_link' );
+
+if ( ! function_exists( 'unhurried_mark_contact_button' ) ) :
+	/**
+	 * Tags a button that links to the Contact page with `unhurried-button-contact`.
+	 *
+	 * The menu's own Contact item is hidden beside the header button (style.css)
+	 * only when that button is the one that goes to Contact. The header button
+	 * pattern points it there; an owner may point it at a booking site or any
+	 * other page instead, and then keeps every menu link they made.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered button block.
+	 * @return string
+	 */
+	function unhurried_mark_contact_button( $block_content ) {
+		static $contact_url = null;
+		if ( null === $contact_url ) {
+			$contact_url = untrailingslashit( (string) unhurried_page_link( 'contact', '' ) );
+		}
+		if ( '' === $contact_url || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		while ( $tags->next_tag( 'a' ) ) {
+			if ( $tags->has_class( 'wp-block-button__link' ) && untrailingslashit( (string) $tags->get_attribute( 'href' ) ) === $contact_url ) {
+				$tags->add_class( 'unhurried-button-contact' );
+				return $tags->get_updated_html();
+			}
+		}
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/button', 'unhurried_mark_contact_button' );
 
 if ( ! function_exists( 'unhurried_is_page_list_only' ) ) :
 	/**

@@ -4,7 +4,7 @@ Theme URI: https://switchcasestudio.com/projects/unhurried
 Author: Switch Case Studio
 Author URI: https://switchcasestudio.com
 Description: Unhurried is a calm, editorial block theme for studios, clinics, spas and makers who sell care rather than speed. Warm bone and ink surfaces, floating panels that rise over the page, oversized display type with Fraunces italic accent words, and a gallery-monochrome image treatment give every page the feel of a printed lookbook. It ships with full-page patterns for a homepage, about, services and contact page, plus heroes, visit steps, service accordions, membership tiers, FAQs and a stories layout, all editable in the Site Editor.
-Requires at least: 6.6
+Requires at least: 7.0
 Tested up to: 7.1
 Requires PHP: 7.4
 Version: 1.2.0
@@ -173,10 +173,12 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 @keyframes unhurried-marquee { to { transform: translateX(-50%); } }
 @keyframes unhurried-marquee-rtl { to { transform: translateX(50%); } }
 
-/* The header button already links to Contact, so the menu drops its own Contact
-   link beside it (unhurried_mark_contact_link() tags it). The open mobile menu keeps it. */
-.unhurried-capsule:has(.wp-block-button__link) .wp-block-navigation__container .unhurried-nav-contact { display: none; }
-.unhurried-capsule:has(.wp-block-button__link) .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container .unhurried-nav-contact { display: revert; }
+/* When the header button links to Contact, the menu drops its own Contact link
+   beside it (unhurried_mark_contact_link() and unhurried_mark_contact_button()
+   tag both). A button that goes anywhere else keeps the menu whole. The open
+   mobile menu always keeps it. */
+.unhurried-capsule:has(.unhurried-button-contact) .wp-block-navigation__container .unhurried-nav-contact { display: none; }
+.unhurried-capsule:has(.unhurried-button-contact) .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container .unhurried-nav-contact { display: revert; }
 .unhurried-capsule {
 	min-height: 60px;
 	box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .45);
