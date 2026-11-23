@@ -98,7 +98,7 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 * Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
 * Right-to-left languages: the header's inner spacing mirrors.
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
-* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them.
+* Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.
 * The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
 * Hero, spiral: on wide screens the large italic word sits at the foot of the stage again; it had moved over the headline.
 * Phones whose screen does not need the full homepage photograph load a smaller copy of it, so it appears sooner; desktops and tablets load the same photograph as before, and so does a phone held sideways, so the photograph is never shown enlarged. Text keeps its lines when the theme's fonts arrive, and arrows and letters of other alphabets keep the system's font.

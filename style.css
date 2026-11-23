@@ -607,11 +607,14 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
    When the script starts it leaves whatever is already on screen (or above
    it) to finish this animation, and holds back only what is still below the
    window, for its scroll-in entrance (data-uh). Only the outermost block
-   moves, so a card rises as one piece. Never moved: anything marked
-   "unhurried-still" (a block, a section, or the whole page through the body
-   class), the parts the script skips, and the body of an article. */
+   moves, so a card rises as one piece. The journal's results count is in
+   the list, so it rises with the grid instead of standing still beside it
+   (on the theme's pages the script's other kinds sit inside one of these).
+   Never moved: anything marked "unhurried-still" (a block, a section, or
+   the whole page through the body class), the parts the script skips, and
+   the body of an article. */
 @media (prefers-reduced-motion: no-preference) {
-	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
+	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
 		animation: var(--uh-arrive, uh-arrive) var(--uh-reveal) var(--uh-ease) both;
 	}
 	/* The same three kinds as the script's entrance: text rises, a picture
