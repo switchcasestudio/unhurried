@@ -3,12 +3,20 @@
  *
  * Loaded only in a dark look (see unhurried_is_dark_look()), printed inline.
  * A Cover in the theme's patterns takes its shade from the "contrast" color
- * and its text from the "base" color: Ink under Bone in a light look. A dark
- * look swaps those two colors, so the shade became a pale wash (under a
- * white button) and the text turned dark (on the dark scrim gradients).
- * Text over a photograph stays light in every look (DESIGN-GUIDE section 3,
- * the Glass rule): here the shade takes the look's page color, its darkest,
- * and the text its text color. Light looks never load this file.
+ * (or one of the theme's Ink scrims) and its text from the "base" color: Ink
+ * under Bone in a light look. A dark look swaps those two colors, so the
+ * shade became a pale wash (under a white button) and the text turned dark
+ * (on the dark scrim gradients). Text over a photograph stays light in every
+ * look (DESIGN-GUIDE section 3, the Glass rule): here the shade takes the
+ * look's page color, its darkest, and the text its text color. Light looks
+ * never load this file.
+ *
+ * The text turns light only over those shades: the "contrast" color, which
+ * this file darkens, and the theme's two Ink scrims, which are dark in every
+ * look. A Cover with any other shade (the accent, another palette color, a
+ * color or gradient of the owner's own) keeps the text color it was given:
+ * the accent, for one, is pale in a dark look, and light text on it would be
+ * unreadable.
  *
  * It works on the page as it is shown, so Covers already placed in pages
  * from the patterns are mended too. A Cover set to a light shade in the
@@ -23,8 +31,9 @@
 	background-color: var(--wp--preset--color--base) !important;
 }
 
-/* Text in the "base" color on the photograph. A block with a fill of its own
-   inside the Cover (a card, a filled button) keeps its colors. */
-.wp-block-cover:not(.is-light) > .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+/* Text in the "base" color on the photograph, under one of those shades (the
+   shade comes before the content in a Cover's markup). A block with a fill of
+   its own inside the Cover (a card, a filled button) keeps its colors. */
+.wp-block-cover:not(.is-light) > .wp-block-cover__background:is(.has-contrast-background-color, .has-scrim-right-gradient-background, .has-scrim-bottom-gradient-background) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
 	color: var(--wp--preset--color--contrast) !important;
 }

@@ -102,7 +102,7 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 * The heroes' italic word, the statue photograph and the spiral disc are faintly there from the first moment and settle into place with the rest of the screen, instead of fading in from nothing.
 * Hero, spiral: on wide screens the large italic word sits at the foot of the stage again; it had moved over the headline.
 * Phones whose screen does not need the full homepage photograph load a smaller copy of it, so it appears sooner; desktops and tablets load the same photograph as before. Text keeps its lines when the theme's fonts arrive, and arrows and letters of other alphabets keep the system's font.
-* Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash.
+* Dark looks: text over photographs (the Statement and Services sections) is light on a dark shade, as in the light looks. It had turned dark on dark, with a white button on a pale wash. A Cover you made with another shade, such as the accent color, keeps its own text color.
 * Small text over photographs is easier to read in every look: the label above a heading is at full strength, and the Services section's shade is a little deeper.
 * With a child theme, an update of Unhurried reaches browsers straight away (its stylesheet and script carry Unhurried's own version).
 
