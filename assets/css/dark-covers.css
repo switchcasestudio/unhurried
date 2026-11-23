@@ -14,9 +14,14 @@
  * The text turns light only over shades that carry it in a dark look: the
  * "contrast" color, which this file darkens; the default shade a Cover has
  * when no color is chosen (WordPress paints it black); a color of the
- * owner's own at 60% or more on a Cover the editor judged dark; the theme's
- * Ink scrims on the theme's own Covers (class unhurried-mono); and the right
- * Ink scrim at 90% or more with the content placed center right, under it.
+ * owner's own at 60% or more on a Cover the editor judged dark; the right
+ * Ink scrim at 90% or more with the content placed center right, under it;
+ * and the theme's Statement section, also as a copy in a page: one of the
+ * theme's own photographs (class unhurried-theme-photo, added as the Cover
+ * is shown by unhurried_mark_theme_photo_cover() in functions.php), the
+ * right scrim at 70% or more and its text in a group set to the right,
+ * under the scrim. The class unhurried-mono says nothing here: owners add
+ * it to any block.
  * A custom color is the same in every look, and WordPress marks a Cover whose
  * shade and photograph together are light with the class "is-light" (worked
  * out in the editor from the photograph's average color), so a pale custom
@@ -59,7 +64,14 @@
    sits in its style, as does a custom gradient, which also has the class
    has-background-gradient). A block with a fill of its own inside the Cover
    (a card, a filled button) keeps its colors. */
-.wp-block-cover:not(.is-light) > .wp-block-cover__background:not(.has-background-dim-0, .has-background-dim-10, .has-background-dim-20, .has-background-dim-30, .has-background-dim-40):is(.has-contrast-background-color, .has-background-dim:not([class*="-background-color"], .has-background-gradient, [style*="background"]), :is(.has-background-dim-60, .has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100)[style*="background"]:not(.has-background-gradient), .unhurried-mono > .has-background-gradient, .is-position-center-right > :is(.has-background-dim-90, .has-background-dim-100).has-scrim-right-gradient-background) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+.wp-block-cover:not(.is-light) > .wp-block-cover__background:not(.has-background-dim-0, .has-background-dim-10, .has-background-dim-20, .has-background-dim-30, .has-background-dim-40):is(.has-contrast-background-color, .has-background-dim:not([class*="-background-color"], .has-background-gradient, [style*="background"]), :is(.has-background-dim-60, .has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100)[style*="background"]:not(.has-background-gradient), .is-position-center-right > :is(.has-background-dim-90, .has-background-dim-100).has-scrim-right-gradient-background) ~ .wp-block-cover__inner-container .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
+	color: var(--wp--preset--color--contrast) !important;
+}
+
+/* The theme's Statement section: its own photograph, the right scrim at 70%
+   or more, the text in a group set to the right. A Cover whose photograph
+   the owner replaced, or whose text moved, keeps 1.1.1's colors. */
+.wp-block-cover.unhurried-theme-photo:not(.is-light) > .wp-block-cover__background.has-scrim-right-gradient-background:is(.has-background-dim-70, .has-background-dim-80, .has-background-dim-90, .has-background-dim-100) ~ .wp-block-cover__inner-container .is-content-justification-right .has-base-color:not(.has-background, .wp-block-cover__inner-container .has-background *) {
 	color: var(--wp--preset--color--contrast) !important;
 }
 

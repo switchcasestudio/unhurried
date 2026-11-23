@@ -246,6 +246,56 @@ endif;
 add_filter( 'render_block_core/image', 'unhurried_theme_image_size' );
 add_filter( 'render_block_core/cover', 'unhurried_theme_image_size' );
 
+if ( ! function_exists( 'unhurried_mark_theme_photo_cover' ) ) :
+	/**
+	 * Marks a Cover whose photograph is one of the pictures bundled with the
+	 * theme with the class `unhurried-theme-photo`.
+	 *
+	 * In a dark look assets/css/dark-covers.css keeps the Statement section's
+	 * text light over its Ink scrim, and it has to tell that Cover from an
+	 * owner's: the class `unhurried-mono` cannot, since the readme invites
+	 * owners to add it to any block. Only the theme's patterns show these
+	 * photographs (unhurried_theme_image_file() checks the address against
+	 * this theme's and its child's assets/images/ folders, read as the page
+	 * is shown, and this site's hosts). The class is added as the block is
+	 * shown, so copies of the patterns already in pages carry it too; a Cover
+	 * whose photograph the owner replaced does not.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered Cover block.
+	 * @return string
+	 */
+	function unhurried_mark_theme_photo_cover( $block_content ) {
+		if ( false === strpos( (string) $block_content, '/assets/images/' ) || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag() || ! $tags->has_class( 'wp-block-cover' ) ) {
+			return $block_content;
+		}
+		$tags->set_bookmark( 'unhurried-cover' );
+		// The Cover's own photograph comes first, before or after its shade; a
+		// picture further in belongs to the Cover's content.
+		$seen = 0;
+		while ( $seen < 2 && $tags->next_tag() ) {
+			++$seen;
+			if ( 'IMG' === $tags->get_tag() && $tags->has_class( 'wp-block-cover__image-background' ) ) {
+				if ( '' === unhurried_theme_image_file( (string) $tags->get_attribute( 'src' ) ) ) {
+					return $block_content;
+				}
+				$tags->seek( 'unhurried-cover' );
+				$tags->add_class( 'unhurried-theme-photo' );
+				return $tags->get_updated_html();
+			}
+			if ( ! $tags->has_class( 'wp-block-cover__background' ) ) {
+				break;
+			}
+		}
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/cover', 'unhurried_mark_theme_photo_cover' );
+
 if ( ! function_exists( 'unhurried_theme_image_loading' ) ) :
 	/**
 	 * Lets only the first picture of a page's content load at once when the
