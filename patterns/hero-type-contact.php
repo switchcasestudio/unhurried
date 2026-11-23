@@ -21,7 +21,7 @@
 		<p class="is-style-eyebrow"><?php esc_html_e( 'Laboris', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:heading {"level":1,"fontSize":"huge","style":{"typography":{"lineHeight":"0.9","letterSpacing":"-0.04em"}}} -->
-		<h1 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Lorem&morbi;ut <em>elit</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h1>
+		<h1 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Lorem ut <em>elit</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h1>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"layout":{"selfStretch":"fit"}}} -->
 		<p class="has-contrast-2-color has-text-color has-large-font-size"><?php esc_html_e( 'Phasellus, netus tempor eu eu labore fames. Ac dolore lacus enim tristique.', 'unhurried' ); ?></p>
