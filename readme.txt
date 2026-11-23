@@ -65,6 +65,8 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 
 `add_filter( 'unhurried_dark_color_scheme', '__return_false' );`
 
+WPForms Lite sets its own label colors for a light page. In the dark looks the theme gives its labels, notes and required marks the look's text colors; a form you style in the WPForms block keeps the colors you chose.
+
 == Changelog ==
 
 = 1.2.0 =
@@ -96,6 +98,7 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 * Screen readers: one header landmark instead of two, the header and footer menus are named "Main" and "Footer", and each search form has a name.
 * Footer counts, dates and placeholders are easier to read, most of all in the dark looks.
 * Dark looks get the browser's dark scrollbars and dropdown lists. Checkboxes and radio buttons stay white boxes, which stand out on a dark page in every browser.
+* WPForms Lite in the dark looks: its labels, notes and required marks take the look's text colors. They were near-black on the dark page.
 * Right-to-left languages: the header's inner spacing mirrors.
 * Motion: a form taller than the screen now appears, numbers that count up end exactly as written ("1,200", "12,5"), and blocks marked unhurried-still are readable at once.
 * Pages show sooner on phones: the first screen rises as soon as the page appears instead of waiting for the motion script, and the sample photographs further down a page load as you scroll toward them. A figure on the first screen shows its final number at once; figures further down still count up. The journal's results count rises with the rest of the screen.

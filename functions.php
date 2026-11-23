@@ -55,6 +55,11 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 			// Text over photographs stays light on a dark shade (printed inline).
 			wp_enqueue_style( 'unhurried-dark-covers', get_template_directory_uri() . '/assets/css/dark-covers.css', array( 'unhurried-style' ), $version );
 			wp_style_add_data( 'unhurried-dark-covers', 'path', get_template_directory() . '/assets/css/dark-covers.css' );
+			if ( defined( 'WPFORMS_VERSION' ) || function_exists( 'wpforms' ) ) {
+				// WPForms labels take the look's text color (printed inline).
+				wp_enqueue_style( 'unhurried-wpforms-dark', get_template_directory_uri() . '/assets/css/wpforms-dark.css', array( 'unhurried-style' ), $version );
+				wp_style_add_data( 'unhurried-wpforms-dark', 'path', get_template_directory() . '/assets/css/wpforms-dark.css' );
+			}
 			/**
 			 * Filters whether a dark look tells the browser it is dark.
 			 *
