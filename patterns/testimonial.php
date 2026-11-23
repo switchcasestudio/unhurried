@@ -23,7 +23,7 @@
 		<!-- wp:quote -->
 		<blockquote class="wp-block-quote">
 			<!-- wp:paragraph -->
-			<p><?php esc_html_e( 'Lorem cillum non egestas anim Ex fugiat ea, qui In nunc eget diam velit month nulla. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ); ?></p>
+			<p><?php esc_html_e( 'Lorem cillum non egestas anim ex fugiat ea, qui in nunc eget diam velit magna nulla. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<cite><?php esc_html_e( 'Lorem eiusmod, lorem est ipsum mollit', 'unhurried' ); ?></cite>
 		</blockquote>

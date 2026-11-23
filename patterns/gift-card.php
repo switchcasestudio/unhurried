@@ -31,7 +31,7 @@ $unhurried_heading_tags = array(
 			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem laborum<br>eu <em>aute</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"},"layout":{"selfStretch":"fixed","flexSize":"min(100%, 36ch)"}}} -->
-			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem tempor esse $60, sint vel ac sunt, anim id nunc ut do magna est eget dui.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem tempor esse $60, sint vel ac sunt, anim id nunc ut do magna est eget dui. Etiam porta sem malesuada magna mollis euismod.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">

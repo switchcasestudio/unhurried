@@ -24,7 +24,7 @@
 		<h1 class="wp-block-heading has-huge-font-size" style="letter-spacing:-0.04em;line-height:0.9"><?php echo wp_kses( __( 'Vestibulum id <em>velit</em>', 'unhurried' ), array( 'em' => array() ) ); ?></h1>
 		<!-- /wp:heading -->
 		<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"layout":{"selfStretch":"fit"}}} -->
-		<p class="has-contrast-2-color has-text-color has-large-font-size"><?php esc_html_e( 'Lorem aliqua, sit quis ut lorem sit nisi do ipsum.', 'unhurried' ); ?></p>
+		<p class="has-contrast-2-color has-text-color has-large-font-size"><?php esc_html_e( 'Lorem aliqua, sit quis ut lorem sit nisi do ipsum. Curabitur blandit tempus porttitor, nulla vitae elit libero a pharetra augue.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 	</div>
 	<!-- /wp:group -->

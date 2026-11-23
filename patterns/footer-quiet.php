@@ -36,7 +36,7 @@
 	<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40"}},"border":{"top":{"color":"var:preset|color|hairline","width":"1px","style":"solid"}}},"textColor":"contrast-2","fontSize":"x-small","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
 	<div class="wp-block-group has-contrast-2-color has-text-color has-x-small-font-size" style="border-top-color:var(--wp--preset--color--hairline);border-top-style:solid;border-top-width:1px;padding-top:var(--wp--preset--spacing--40)">
 		<!-- wp:paragraph -->
-		<p><?php esc_html_e( 'Made slowly, with care.', 'unhurried' ); ?></p>
+		<p><?php esc_html_e( 'Lorem ipsum, dolor sit.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
 		<!-- wp:paragraph -->
 		<p>

@@ -13,10 +13,11 @@
  */
 
 $unhurried_hours = array(
-	array( __( 'Lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
+	array( __( 'Lorem', 'unhurried' ), __( 'Nulla', 'unhurried' ) ),
 	array( __( 'Aliquip ut Fugiat', 'unhurried' ), __( '10 lorem 7', 'unhurried' ) ),
 	array( __( 'Suscipit', 'unhurried' ), __( '9 lorem 3', 'unhurried' ) ),
-	array( __( 'Lorem', 'unhurried' ), __( 'Lorem', 'unhurried' ) ),
+	array( __( 'Tempor', 'unhurried' ), __( '11 lorem 4', 'unhurried' ) ),
+	array( __( 'Magna', 'unhurried' ), __( 'Nulla', 'unhurried' ) ),
 );
 
 // Tags the translated heading may hold.
@@ -38,7 +39,7 @@ $unhurried_heading_tags = array(
 			<h2 class="wp-block-heading has-xx-large-font-size"><?php echo wp_kses( __( 'Lorem duis ex<br><em>aute</em>', 'unhurried' ), $unhurried_heading_tags ); ?></h2>
 			<!-- /wp:heading -->
 			<!-- wp:paragraph {"textColor":"contrast-2","fontSize":"large","style":{"typography":{"lineHeight":"1.45"}}} -->
-			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem ea non qui magna. Sint minim est in sunt.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-large-font-size" style="line-height:1.45"><?php esc_html_e( 'Lorem ea non qui magna. Sint minim est in sunt, nullam quis risus eget urna mollis ornare vel eu leo. Vivamus sagittis lacus vel augue laoreet rutrum.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->
@@ -57,7 +58,7 @@ $unhurried_heading_tags = array(
 			<!-- /wp:group -->
 			<?php endforeach; ?>
 			<!-- wp:paragraph {"fontSize":"x-small","textColor":"contrast-2","style":{"spacing":{"margin":{"top":"var:preset|spacing|50"}}}} -->
-			<p class="has-contrast-2-color has-text-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--50)"><?php esc_html_e( 'Lorem id mattis bibendum. Sed ornare ut eu anim sem.', 'unhurried' ); ?></p>
+			<p class="has-contrast-2-color has-text-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--50)"><?php esc_html_e( 'Lorem id mattis bibendum. Sed ornare ut eu anim sem, donec id elit non mi porta gravida at eget metus.', 'unhurried' ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

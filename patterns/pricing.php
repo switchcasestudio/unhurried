@@ -13,8 +13,8 @@
  */
 
 $unhurried_tiers = array(
-	array( __( 'Eiusmod', 'unhurried' ), '$120', __( 'Lorem velit in month sem id fugiat vitae ut adipiscing amet. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.', 'unhurried' ), false ),
-	array( __( 'Consectetur', 'unhurried' ), '$220', __( 'Lorem mollit eu month sit eu justo elit enim mauris. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ), true ),
+	array( __( 'Eiusmod', 'unhurried' ), '$120', __( 'Lorem velit in magna sem id fugiat vitae ut adipiscing amet. Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae.', 'unhurried' ), false ),
+	array( __( 'Consectetur', 'unhurried' ), '$220', __( 'Lorem mollit eu tempor sit eu justo elit enim mauris. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium.', 'unhurried' ), true ),
 	array( __( 'Nostrud', 'unhurried' ), '$390', __( 'Voluptate turpis, magna quis ac sed ullamco non id lorem nisi duis mattis. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.', 'unhurried' ), false ),
 );
 ?>
