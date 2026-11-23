@@ -25,7 +25,7 @@ $unhurried_heading_tags = array(
 		<!-- wp:column {"className":"unhurried-mono"} -->
 		<div class="wp-block-column unhurried-mono">
 			<!-- wp:image {"aspectRatio":"4/3","scale":"cover","sizeSlug":"full","linkDestination":"none","style":{"border":{"radius":{"topLeft":"24px","bottomLeft":"24px","topRight":"0px","bottomRight":"0px"}}}} -->
-			<figure class="wp-block-image size-full has-custom-border"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/maple-leaves.webp' ) ); ?>" alt="" style="border-top-left-radius:24px;border-top-right-radius:0px;border-bottom-left-radius:24px;border-bottom-right-radius:0px;aspect-ratio:4/3;object-fit:cover"/></figure>
+			<figure class="wp-block-image size-full has-custom-border"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/white-basin.webp' ) ); ?>" alt="" style="border-top-left-radius:24px;border-top-right-radius:0px;border-bottom-left-radius:24px;border-bottom-right-radius:0px;aspect-ratio:4/3;object-fit:cover"/></figure>
 			<!-- /wp:image -->
 		</div>
 		<!-- /wp:column -->

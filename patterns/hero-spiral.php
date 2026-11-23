@@ -23,7 +23,7 @@ $unhurried_heading_tags = array(
 	<!-- wp:group {"className":"is-style-section-ink unhurried-hero-spiral__stage","style":{"border":{"radius":"28px"},"spacing":{"padding":{"top":"var:preset|spacing|80","right":"clamp(1.25rem, 4vw, 4.5rem)","bottom":"var:preset|spacing|70","left":"clamp(1.25rem, 4vw, 4.5rem)"},"blockGap":"0"}},"layout":{"type":"default"}} -->
 	<div class="wp-block-group is-style-section-ink unhurried-hero-spiral__stage" style="border-radius:28px;padding-top:var(--wp--preset--spacing--80);padding-right:clamp(1.25rem, 4vw, 4.5rem);padding-bottom:var(--wp--preset--spacing--70);padding-left:clamp(1.25rem, 4vw, 4.5rem)">
 		<!-- wp:image {"aspectRatio":"1","scale":"cover","sizeSlug":"full","linkDestination":"none","className":"unhurried-hero-spiral__disc","style":{"border":{"radius":"999px"}}} -->
-		<figure class="wp-block-image size-full has-custom-border unhurried-hero-spiral__disc"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/spiral.webp' ) ); ?>" alt="" style="border-radius:999px;aspect-ratio:1;object-fit:cover"/></figure>
+		<figure class="wp-block-image size-full has-custom-border unhurried-hero-spiral__disc"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/lotus-dish.webp' ) ); ?>" alt="" style="border-radius:999px;aspect-ratio:1;object-fit:cover"/></figure>
 		<!-- /wp:image -->
 		<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
 		<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'unhurried' ); ?></p>
