@@ -889,7 +889,7 @@ a:where(:not(.wp-element-button)) {
 .unhurried-chip a,
 .unhurried-chip-links a,
 .unhurried-chip-terms .wp-block-term { transition: background-color var(--uh-dur-quick) var(--uh-ease-out), border-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out); }
-:where(.wp-site-blocks) :where(input, textarea, select) { transition: border-color var(--uh-dur-quick) var(--uh-ease-out), box-shadow var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out); }
+:where(.wp-site-blocks) :where(input:not([type="checkbox"], [type="radio"]), textarea, select) { transition: border-color var(--uh-dur-quick) var(--uh-ease-out), box-shadow var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out); }
 :where(.wp-site-blocks) :where(input:not([type="submit"]), textarea, select):focus-visible { box-shadow: 0 0 0 4px color-mix(in srgb, var(--wp--preset--color--accent) 18%, transparent); }
 .wp-block-search__inside-wrapper { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
 
