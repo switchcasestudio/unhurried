@@ -109,6 +109,16 @@
 	} ).join( ',' );
 	var targets = [];
 	var fold = window.innerHeight;
+	// Arriving at #anchor from another page: what is above the target and the
+	// target's own screen show at once, so the page never opens on (or
+	// scrolls past) sections still waiting to enter.
+	var hashTarget = null;
+	try {
+		hashTarget = window.location.hash ? document.getElementById( decodeURIComponent( window.location.hash.slice( 1 ) ) ) : null;
+	} catch ( e ) {
+		hashTarget = null;
+	}
+	var shownTo = hashTarget ? hashTarget.getBoundingClientRect().top + window.pageYOffset + fold : 0;
 
 	scopes.forEach( function ( scope ) {
 		scope.querySelectorAll( selector ).forEach( function ( el ) {
@@ -128,7 +138,7 @@
 					// first screen must read at once (DESIGN-GUIDE section 6),
 					// and counting now would turn the figure already on screen
 					// back to 0. Below the window it counts up as it enters.
-					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && el.getBoundingClientRect().top < fold ) {
+					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && ( el.getBoundingClientRect().top < fold || el.getBoundingClientRect().top + window.pageYOffset < shownTo ) ) {
 						break;
 					}
 					el.setAttribute( 'data-uh', KINDS[ i ][ 0 ] );

@@ -122,7 +122,9 @@ if ( ! function_exists( 'unhurried_motion_head' ) ) :
 		if ( ! apply_filters( 'unhurried_motion', true ) ) {
 			return;
 		}
-		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement;if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches){return;}h.classList.add('uh-motion');})(document,window);" );
+		// A reload or a return through history shows the page as it was left:
+		// nothing rises again where the reader already is (1.2.1).
+		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement,p=w.performance,n=p&&p.getEntriesByType&&p.getEntriesByType('navigation')[0];if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches||(n&&(n.type==='reload'||n.type==='back_forward'))){return;}h.classList.add('uh-motion');})(document,window);" );
 	}
 endif;
 add_action( 'wp_head', 'unhurried_motion_head', 1 );
