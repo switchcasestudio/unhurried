@@ -105,3 +105,7 @@
 	--uh-focus: var(--wp--preset--color--base);
 	--uh-focus-in: var(--wp--preset--color--contrast);
 }
+
+/* The header menu pill's label switches color at the moment that keeps it
+   at 3.33:1 or more in every frame of a dark look (style.css, Header menu). */
+:root { --uh-pill-switch-in: 22ms; --uh-pill-switch-out: 20ms; }

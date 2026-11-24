@@ -4,7 +4,8 @@
  * Every section enters gently as it scrolls into view: headings and text
  * rise, images settle, cards and list items follow one another, dividers
  * draw, and figures count up. Items entering together are staggered
- * (capped, so nothing waits long) so the eye takes in one thing at a time.
+ * (40ms apart, capped at 160ms, so nothing waits long) so the eye takes
+ * in one thing at a time.
  *
  * The <head> adds the class "uh-motion" before first paint (see
  * unhurried_motion_head() in functions.php). With it, the first screen
@@ -27,8 +28,17 @@
 		return;
 	}
 
-	var STAGGER = 70; // ms, matches --wp--custom--motion--stagger.
-	var MAX_STEPS = 8; // the ninth item in a batch waits no longer than the eighth.
+	// Timing comes from the motion tokens in style.css (--uh-stagger,
+	// --uh-stagger-cap, --uh-dur-slow), so a child theme that retunes them
+	// retunes this too. The numbers after || are the tokens' own values.
+	var rootStyle = window.getComputedStyle( html );
+	function token( name, fallback ) {
+		var value = parseFloat( rootStyle.getPropertyValue( name ) );
+		return isFinite( value ) ? value : fallback;
+	}
+	var STAGGER = token( '--uh-stagger', 40 ); // ms between items entering together.
+	var MAX_DELAY = token( '--uh-stagger-cap', 160 ); // the longest any item waits.
+	var ENTER = token( '--uh-dur-slow', 420 ); // ms an entrance takes.
 	var auto = html.classList.contains( 'uh-motion' );
 
 	/* ── Legacy opt-in reveal ─────────────────────────────────────────── */
@@ -99,6 +109,16 @@
 	} ).join( ',' );
 	var targets = [];
 	var fold = window.innerHeight;
+	// Arriving at #anchor from another page: what is above the target and the
+	// target's own screen show at once, so the page never opens on (or
+	// scrolls past) sections still waiting to enter.
+	var hashTarget = null;
+	try {
+		hashTarget = window.location.hash ? document.getElementById( decodeURIComponent( window.location.hash.slice( 1 ) ) ) : null;
+	} catch ( e ) {
+		hashTarget = null;
+	}
+	var shownTo = hashTarget ? hashTarget.getBoundingClientRect().top + window.pageYOffset + fold : 0;
 
 	scopes.forEach( function ( scope ) {
 		scope.querySelectorAll( selector ).forEach( function ( el ) {
@@ -118,7 +138,7 @@
 					// first screen must read at once (DESIGN-GUIDE section 6),
 					// and counting now would turn the figure already on screen
 					// back to 0. Below the window it counts up as it enters.
-					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && el.getBoundingClientRect().top < fold ) {
+					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && ( el.getBoundingClientRect().top < fold || el.getBoundingClientRect().top + window.pageYOffset < shownTo ) ) {
 						break;
 					}
 					el.setAttribute( 'data-uh', KINDS[ i ][ 0 ] );
@@ -198,7 +218,7 @@
 		el.appendChild( shown );
 		el.appendChild( real );
 		var start = null;
-		var duration = 1400;
+		var duration = ENTER + MAX_DELAY; // a count is over when its batch has settled.
 		function frame( now ) {
 			if ( null === start ) {
 				start = now;
@@ -218,7 +238,8 @@
 	}
 
 	function finish( el, delay ) {
-		var long = el.getAttribute( 'data-uh' ) === 'image' || el.getAttribute( 'data-uh' ) === 'words' ? 1500 : 950;
+		// The wordmark's letters set off up to MAX_DELAY after one another.
+		var long = ENTER + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
 		window.setTimeout( function () {
 			el.classList.add( 'is-done' );
 			el.style.removeProperty( '--uh-delay' );
@@ -229,7 +250,7 @@
 	var tallObserver;
 
 	function enter( el, step ) {
-		var delay = Math.min( step, MAX_STEPS ) * STAGGER;
+		var delay = Math.min( step * STAGGER, MAX_DELAY );
 		el.style.setProperty( '--uh-delay', delay + 'ms' );
 		el.classList.add( 'is-in' );
 		observer.unobserve( el );

@@ -13,8 +13,11 @@
  * - Two small stylesheets cover what the flag does not reach:
  *   assets/css/woocommerce.css in every look, assets/css/woocommerce-dark.css
  *   in a dark one.
+ * - The purchase pages (a product, the cart, the checkout, the account)
+ *   hold still: no scroll-in entrances, no page cross-fade (since 1.2.1).
  *
- * Nothing here loads without WooCommerce, or under Unhurried Pro.
+ * Nothing here runs without WooCommerce. The dark flag and the stylesheets
+ * are skipped under Unhurried Pro, which brings its own.
  *
  * @package Unhurried
  * @author  Moses Atia Poston, Switch Case Studio
@@ -140,3 +143,77 @@ if ( ! function_exists( 'unhurried_woocommerce_styles' ) ) :
 	}
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_woocommerce_styles', 11 );
+
+if ( ! function_exists( 'unhurried_woocommerce_is_purchase_page' ) ) :
+	/**
+	 * Whether this is a step of buying: a product, the cart, the checkout
+	 * (with its order received page) or the customer's account.
+	 *
+	 * These pages hold still: nothing enters as it scrolls and the pages do
+	 * not cross-fade, so nothing stands between a buyer and the next step.
+	 * Controls still answer the pointer and the keyboard as everywhere else.
+	 * Unhurried Pro holds the rest of its shop still as well.
+	 *
+	 * @since 1.2.1
+	 * @return bool
+	 */
+	function unhurried_woocommerce_is_purchase_page() {
+		if ( ! function_exists( 'is_cart' ) || ! function_exists( 'is_checkout' ) || ! function_exists( 'is_account_page' ) || ! function_exists( 'is_product' ) ) {
+			return false;
+		}
+		return is_cart() || is_checkout() || is_account_page() || is_product();
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_woocommerce_still_motion' ) ) :
+	/**
+	 * Turns the scroll-in entrances off on the purchase pages.
+	 *
+	 * @since 1.2.1
+	 * @param bool $enabled Whether pages animate as they scroll.
+	 * @return bool
+	 */
+	function unhurried_woocommerce_still_motion( $enabled ) {
+		return unhurried_woocommerce_is_purchase_page() ? false : $enabled;
+	}
+endif;
+add_filter( 'unhurried_motion', 'unhurried_woocommerce_still_motion' );
+
+if ( ! function_exists( 'unhurried_woocommerce_still_body' ) ) :
+	/**
+	 * Marks the purchase pages with the class "unhurried-still", which also
+	 * skips the page cross-fade (style.css, Motion system, Continuity).
+	 *
+	 * @since 1.2.1
+	 * @param string[] $classes Body classes.
+	 * @return string[]
+	 */
+	function unhurried_woocommerce_still_body( $classes ) {
+		if ( unhurried_woocommerce_is_purchase_page() && ! in_array( 'unhurried-still', $classes, true ) ) {
+			$classes[] = 'unhurried-still';
+		}
+		return $classes;
+	}
+endif;
+add_filter( 'body_class', 'unhurried_woocommerce_still_body' );
+
+if ( ! function_exists( 'unhurried_woocommerce_still_scripts' ) ) :
+	/**
+	 * Stops jQuery's own animations on the purchase pages.
+	 *
+	 * WooCommerce slides a variable product's price in and out (200ms, and
+	 * it ran twice, so Add to cart jumped down, up and down again under the
+	 * pointer) and the product gallery slides its height. With jQuery's
+	 * documented switch every such step lands at once: the price appears
+	 * in place, the button moves once and never bounces.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_woocommerce_still_scripts() {
+		if ( unhurried_woocommerce_is_purchase_page() && wp_script_is( 'jquery-core', 'registered' ) ) {
+			wp_add_inline_script( 'jquery-core', 'jQuery.fx.off = true;' );
+		}
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_woocommerce_still_scripts', 20 );
