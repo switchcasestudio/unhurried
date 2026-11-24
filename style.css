@@ -95,7 +95,7 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 	outline: 2px solid var(--uh-focus);
 	outline-offset: 3px;
 }
-.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); transition-property: color, background-color, border-color; } /* the ring's halo appears in one frame */
+.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); transition-property: color, background-color, border-color; }
 /* The ring is for the keyboard. A click or a tap draws none (1.2.0 and
    earlier drew it on :focus, so a clicked chip showed a ring around its link
    text only). theme.json's link and button focus apply on :focus-visible
@@ -422,7 +422,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	content: "+";
 	font-family: var(--wp--preset--font-family--accent);
 	font-style: italic;
-	/* The marker turns in step with the body (Motion system, Accordions). */
+	
 	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-out);
 }
 .wp-block-details[open] summary::after { transform: rotate(45deg); transition-duration: var(--uh-dur-panel); }
@@ -462,9 +462,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	overflow-y: visible;
 }
 .unhurried-wordmark a { text-decoration: none; }
-/* The color the letters roll into (1.2.1): the accent leaned halfway toward
-   the wordmark's own text color, 3.58:1 or more on the footer in all 20
-   looks (the plain accent was 1.26:1 in Lagoon). */
+
 .unhurried-wordmark { --uh-wordmark-twin: var(--wp--preset--color--accent); }
 @supports (color: color-mix(in srgb, red, blue)) {
 	.unhurried-wordmark { --uh-wordmark-twin: color-mix(in srgb, var(--wp--preset--color--accent) 50%, currentColor); }
@@ -483,7 +481,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .unhurried-wordmark__letters > span {
 	display: inline-block;
 	text-shadow: 0 1.2em var(--uh-wordmark-twin);
-	/* Letters 20ms apart, the ninth on together; back at the exit pace. */
+	
 	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-out) calc(min(var(--i, 0), 8) * var(--uh-stagger) / 2);
 }
 /* Letters that reach above or below a capital (an accent, a cedilla, the
@@ -669,14 +667,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	}
 }
 
-/* ─── Motion system (1.2.0; tokens 1.2.1) ────────────────────────────────
-   Calm and weighty: things decelerate into place, never bounce or loop
-   (the marquee and the spiral's turn excepted). 1 Entrances (reveal.js
-   marks data-uh; the first screen rises by CSS from .4 under .uh-motion),
-   2 Feedback, 3 Depth (scroll-linked), 4 Continuity (page cross-fade),
-   5 Reduced motion. Exits take --uh-exit of their entrance. The 1.2.0
-   names follow the new tokens; theme.json's custom.motion points at them.
-   Opt out per block or section with "unhurried-still". */
+/* ─── Motion system (tokens: CHANGELOG 1.2.1) ─── */
 :root {
 	--uh-dur-press: 100ms;
 	--uh-dur-quick: 160ms;
@@ -695,7 +686,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	--uh-press-scale: .98;
 	--uh-zoom: 1.03;
 	--uh-lift: -3px;
-	/* The 1.2.0 names, kept for anything that reads them. */
+	
 	--uh-ease: var(--uh-ease-out);
 	--uh-ease-io: var(--uh-ease-in-out);
 	--uh-press: var(--uh-dur-press);
@@ -706,14 +697,12 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 }
 
 /* 1. Entrances */
-/* The first screen rises with the page from opacity .4 (never missing,
-   counted as painted at once); the script holds back only what is below
-   the window. Only the outermost block moves. */
+
 @media (prefers-reduced-motion: no-preference) {
 	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
 		animation: var(--uh-arrive, uh-arrive) var(--uh-dur-slow) var(--uh-ease-out) both;
 	}
-	/* Text rises; pictures and cards come from further. */
+	
 	.uh-motion :is(figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure) { --uh-arrive: uh-arrive-far; }
 	.uh-motion :is(.wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel) { --uh-arrive: uh-arrive-card; }
 }
@@ -752,7 +741,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 }
 
 /* 2. Feedback */
-/* Buttons: color on hover (no lift since 1.2.1), a 1px, 98% press. */
+
 .wp-block-button__link,
 .wp-element-button {
 	transition:
@@ -768,7 +757,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	.wp-block-button.is-style-text-link > .wp-block-button__link:hover { text-underline-offset: 9px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-	/* Buttons with words sink 1px (a scale blurred the label); icons also shrink to 98%. */
+	
 	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"])):active {
 		transform: translateY(var(--uh-press-y));
 		transition-duration: var(--uh-dur-press);
@@ -777,25 +766,21 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 		transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale));
 	}
 }
-/* Buttons whose colors are fixed (the heroes' filled button, the journal
-   and footer search buttons) and buttons given their own colors answer the
-   pointer with a tint: 12% of their own text color laid over their fill, or
-   for a button with its own background, 14% of that color's opposite, which
-   only ever raises the label's contrast. No lift, no shadow. */
+
 @media (hover: hover) {
 	:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover,
 	:is(.unhurried-journal-search, .unhurried-footer-search) .wp-block-search__button:hover { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent); }
 	.wp-block-cover :is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover:focus-visible,
 	.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button:hover:focus-visible { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent), 0 0 0 3px var(--uh-focus-in); }
 	.wp-block-button:not(.is-style-text-link) > .wp-block-button__link.has-background:hover { box-shadow: inset 0 0 0 100vmax rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 14%); }
-	/* Links that rest without an underline take one under the pointer. */
+	
 	:is(.wp-block-post-terms, .wp-block-term-name, .wp-block-site-title, .wp-block-post-author-name) a:not(:is(.unhurried-capsule, .unhurried-wordmark, .unhurried-chip-terms, .unhurried-chip-links) *):hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 	.unhurried-text-link a:hover { border-bottom-color: transparent; }
 }
 .unhurried-text-link a { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
-/* A tap shows a faint wash of the control's own color, not the system blue. */
+
 :where(a, button, summary, label, [role="button"]) { -webkit-tap-highlight-color: color-mix(in srgb, currentColor 12%, transparent); }
-/* Links: color and the underline settle in the quick time. */
+
 a:where(:not(.wp-element-button)) {
 	transition: color var(--uh-dur-quick) var(--uh-ease-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
 }
@@ -808,19 +793,15 @@ a:where(:not(.wp-element-button)) {
 }
 .wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
 .wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
-/* Header menu (1.2.1): a pill in --uh-pill on hover and keyboard focus;
-   its padding is there at rest, so nothing moves. */
+
+/* Header menu pill (1.2.1): its padding is there at rest, so nothing moves. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
 	padding: .6rem .75rem;
 	margin: -.6rem -.75rem;
 	border-radius: var(--wp--custom--radius--pill, 999px);
 	line-height: 1.2;
 }
-/* The pill fades in; the label never fades with it (the two passed through
-   the same lightness, 1.07:1 at worst). It switches in one step at the
-   moment that keeps the label at 3.26:1 or more in every frame of every
-   light look, 3.33:1 in the dark ones (assets/css/dark-covers.css sets
-   their moment): 39ms into the fill, 9ms into the return. */
+/* Label switches in one step (dark looks: dark-covers.css). */
 :root { --uh-pill-switch-in: 39ms; --uh-pill-switch-out: 9ms; }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon {
@@ -835,8 +816,7 @@ a:where(:not(.wp-element-button)) {
 	color: var(--uh-pill-ink);
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):focus-visible { text-decoration-color: transparent; }
-/* Hover only where there is a pointer: on a touch screen the pill stayed
-   filled on the tapped link. */
+
 @media (hover: hover) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:hover {
 		background-color: var(--uh-pill);
@@ -846,10 +826,11 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):hover { text-decoration-color: transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
-	/* No fade at all here: a 100ms cross-fade would ghost the label. */
+	
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { transition-duration: 0s !important; }
 }
+
 /* A dropdown's item: the pill covers its arrow and stays while open. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:has(> .wp-block-navigation__submenu-icon) > .wp-block-navigation-item__content {
 	padding-inline-end: calc(.75rem + 13px);
@@ -862,10 +843,7 @@ a:where(:not(.wp-element-button)) {
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content:not([aria-current]) { text-decoration-color: transparent; }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > .wp-block-navigation__submenu-icon { color: var(--uh-pill-ink); }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; } /* the arrow stays clickable over the pill */
-/* Dropdowns come down 8px out of their item as they fade in, and leave a
-   third faster. A closed dropdown keeps its size while it fades (core
-   collapses it to nothing at once, which left an empty card fading), so
-   the card and its links go together. !important: core's own transition is. */
+/* !important: core's transition is. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { height: auto; width: auto; overflow: visible; }
 .wp-block-navigation .wp-block-navigation__submenu-icon svg { transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out); }
 .wp-block-navigation .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-icon svg,
@@ -880,28 +858,22 @@ a:where(:not(.wp-element-button)) {
 		translate: 0 0;
 		transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important;
 	}
-	/* Keyboard focus that lands inside a closed dropdown (Shift+Tab) shows at once. */
+	
 	.unhurried-capsule .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
-	/* Phone menu: core's 100ms fade, as quick as its close (core takes the
-	   menu off the page at once, with every style that places it, so it can
-	   have no exit; a 320ms entrance against that cut read as a mismatch). */
+	
 	.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
 		animation-duration: var(--uh-dur-press);
 		animation-timing-function: var(--uh-ease-out);
 	}
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content { transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out); }
-/* The menu's open and close buttons. */
+
 .wp-block-navigation__responsive-container-open,
 .wp-block-navigation__responsive-container-close { transition: color var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out), transform var(--uh-dur-quick) var(--uh-ease-out); }
 @media (prefers-reduced-motion: no-preference) {
 	:is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close):active { transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale)); transition-duration: var(--uh-dur-press); }
 }
-/* A post card (a query loop item with a linked title) is one target: its
-   title link covers the card, other links in it stay on top. Only such a
-   card reacts to the pointer: its photo leans in to 103%. Cards with
-   several actions (Card and Section card styles with buttons) no longer
-   lift: the pointer meets their buttons instead. */
+
 .wp-block-post:has(.wp-block-post-title a) { position: relative; }
 .wp-block-post .wp-block-post-title a::before { content: ""; position: absolute; inset: 0; z-index: 0; }
 .wp-block-post:has(.wp-block-post-title a) :is(a, button, input, select, label, summary):not(.wp-block-post-title a) { position: relative; z-index: 1; }
@@ -920,7 +892,7 @@ a:where(:not(.wp-element-button)) {
 :where(.wp-site-blocks) :where(input, textarea, select) { transition: border-color var(--uh-dur-quick) var(--uh-ease-out), box-shadow var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out); }
 :where(.wp-site-blocks) :where(input:not([type="submit"]), textarea, select):focus-visible { box-shadow: 0 0 0 4px color-mix(in srgb, var(--wp--preset--color--accent) 18%, transparent); }
 .wp-block-search__inside-wrapper { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
-/* Accordions open in the panel time, close faster (where auto sizes). */
+
 @supports (interpolate-size: allow-keywords) {
 	@media (prefers-reduced-motion: no-preference) {
 		:root { interpolate-size: allow-keywords; }
@@ -938,12 +910,12 @@ a:where(:not(.wp-element-button)) {
 }
 .wp-block-details summary { transition: color var(--uh-dur-quick) var(--uh-ease-out); }
 @media (hover: hover) { .wp-block-details summary:hover { color: var(--wp--preset--color--accent); color: color-mix(in srgb, var(--wp--preset--color--accent) 80%, currentColor); } }
-/* Notices fade in from .4, never from 0 (one may take focus). */
+
 @media (prefers-reduced-motion: no-preference) {
 	:where(.wc-block-components-notice-banner, .woocommerce-message, .woocommerce-info, .woocommerce-error, .wpcf7-response-output) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 }
 @keyframes uh-notice-in { from { opacity: .4; } }
-/* The gift card tilts toward the pointer (reveal.js sets the angles). */
+
 .unhurried-giftcard {
 	position: relative;
 	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
@@ -963,7 +935,7 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-giftcard:hover { transition-duration: var(--uh-dur-quick), var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); box-shadow: 0 50px 80px -40px rgba(22, 20, 15, .6); }
 	.unhurried-giftcard:hover::after { opacity: 1; transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
 }
-/* The map pin rings three times (4.8s, under 5s), then rests. */
+
 .unhurried-map::after {
 	content: "";
 	position: absolute;
@@ -979,7 +951,7 @@ a:where(:not(.wp-element-button)) {
 }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-map::after { animation: uh-ping 1.6s var(--uh-ease-out) var(--uh-dur-slow) 3; }
-	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; } /* rings once the map is seen */
+	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; }
 }
 @keyframes uh-ping {
 	0% { opacity: .55; scale: 1; }
@@ -1028,8 +1000,6 @@ a:where(:not(.wp-element-button)) {
 @keyframes uh-recede { to { opacity: .2; translate: 0 -40px; } }
 @keyframes uh-capsule-lift { to { box-shadow: 0 24px 50px -28px rgba(22, 20, 15, .55), 0 0 0 1px rgba(22, 20, 15, .05); } }
 
-/* 4. Continuity: a short cross-fade, no slide; header and marquee hold.
-   A still page (body.unhurried-still) arrives without one. */
 @media (prefers-reduced-motion: no-preference) {
 	@view-transition { navigation: auto; }
 	.unhurried-capsule { view-transition-name: uh-capsule; }
@@ -1046,8 +1016,7 @@ a:where(:not(.wp-element-button)) {
 @keyframes uh-page-out { to { opacity: 0; } }
 @keyframes uh-page-in { from { opacity: 0; } }
 
-/* 5. Reduced motion: nothing moves; color and opacity change in 100ms.
-   !important: the visitor's setting wins over any block or plugin. */
+/* 5. Reduced motion. !important: the visitor wins. */
 @media (prefers-reduced-motion: reduce) {
 	:root {
 		--uh-dur-press: 0ms;
@@ -1122,8 +1091,7 @@ a:where(:not(.wp-element-button)) {
 		}
 	}
 }
-/* The hero photo (the page's LCP) is whole from the first frame and only
-   settles from 104% (1.2.0 dimmed it for 3.2s). */
+
 @keyframes unhurried-unveil {
 	from { scale: 1.04; }
 }
@@ -1228,7 +1196,7 @@ a:where(:not(.wp-element-button)) {
 	.uh-motion .unhurried-hero-spiral__title { --uh-arrive: uh-arrive-fade; }
 }
 @keyframes uh-arrive-fade { from { opacity: .4; } }
-/* The disc settles from 104%, never dimmed; it turns from the start. */
+
 @keyframes unhurried-emerge {
 	from { scale: 1.04; }
 }
@@ -1239,7 +1207,7 @@ a:where(:not(.wp-element-button)) {
 	from { transform: translate(-3%, 2%) scale(1); }
 	to { transform: translate(3%, -2%) scale(1.08); }
 }
-/* Unused since 1.2.1 (it reflowed the headline); kept for anything naming it. */
+
 @keyframes unhurried-exhale {
 	from { letter-spacing: .08em; filter: blur(min(12px, .08em)); }
 	to { letter-spacing: -0.03em; filter: none; }
@@ -1461,7 +1429,7 @@ html { scroll-padding-top: 96px; }
 	:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) { scroll-margin-top: 96px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-	html:focus-within { scroll-behavior: smooth; } /* in-page jumps glide; arriving at #anchor from another page lands at once */
+	html:focus-within { scroll-behavior: smooth; }
 }
 
 /* ─── Journal: breadcrumbs, chips, toolbar, card meta, directory ─────────── */
@@ -1520,7 +1488,7 @@ html { scroll-padding-top: 96px; }
 /* Topics directory: category cards. */
 .unhurried-topic-cards .wp-block-term-template { list-style: none; padding: 0; margin: 0; }
 .unhurried-topic-cards .wp-block-term > .wp-block-group { position: relative; height: 100%; transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out), border-color var(--uh-dur-quick) var(--uh-ease-out); }
-/* A topic card is one target: its name's link covers it. */
+
 .unhurried-topic-cards .wp-block-term-name a::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .unhurried-topic-cards .wp-block-term > .wp-block-group:hover { transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -1542,7 +1510,7 @@ html { scroll-padding-top: 96px; }
 .unhurried-author-box .avatar { border-radius: 50%; }
 .unhurried-author-box .wp-block-post-author__name { font-weight: 600; }
 .unhurried-author-box .wp-block-post-author__bio { color: var(--wp--preset--color--contrast-2); font-size: var(--wp--preset--font-size--small); }
-/* With reduced motion there is no bar (the scroll bar says the same). */
+
 @supports (animation-timeline: scroll()) {
 	body.single-post::before {
 		content: "";
