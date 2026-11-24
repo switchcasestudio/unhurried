@@ -815,6 +815,8 @@ a:where(:not(.wp-element-button)) {
 		translate: 0 0;
 		transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important;
 	}
+	/* Keyboard focus that lands inside a closed dropdown (Shift+Tab) shows at once. */
+	.unhurried-capsule .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
 	/* Phone menu: core's fade and rise, longer. Closing is instant (core). */
 	.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
 		animation-duration: var(--uh-dur-panel);
