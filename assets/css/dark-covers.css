@@ -102,4 +102,6 @@
 .unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button {
 	background: var(--wp--preset--color--base);
 	color: var(--wp--preset--color--contrast);
+	--uh-focus: var(--wp--preset--color--base);
+	--uh-focus-in: var(--wp--preset--color--contrast);
 }

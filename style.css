@@ -1108,6 +1108,9 @@ a:where(:not(.wp-element-button)) {
 .unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__inside-wrapper { background: var(--wp--preset--color--base); border-color: transparent; }
 .unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__input { color: var(--wp--preset--color--contrast); }
 .unhurried-hero-photo__stage .wp-block-search__input::placeholder { color: color-mix(in srgb, currentColor 68%, transparent); opacity: 1; }
+/* The pill's own ring is drawn on the photograph and stays white; the search
+   button's ring is drawn on the pill, so it takes the pill's dark color. */
+.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button { --uh-focus: var(--wp--preset--color--contrast); --uh-focus-in: var(--wp--preset--color--base); }
 /* On a phone the words can run the frame's whole height (a long title, the
    Topics search), so the shade never drops below .46 Ink: white text stays
    at 4.5:1 over all but the brightest few pixels of these photographs. */
