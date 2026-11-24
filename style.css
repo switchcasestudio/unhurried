@@ -95,7 +95,7 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 	outline: 2px solid var(--uh-focus);
 	outline-offset: 3px;
 }
-.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); }
+.wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); transition-property: color, background-color, border-color; } /* the ring's halo appears in one frame */
 /* The ring is for the keyboard. A click or a tap draws none (1.2.0 and
    earlier drew it on :focus, so a clicked chip showed a ring around its link
    text only). theme.json's link and button focus apply on :focus-visible
@@ -323,7 +323,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	background: var(--wp--preset--color--accent);
 	transform: scaleY(0);
 	transform-origin: top;
-	transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in);
+	transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 	.unhurried-step:hover::before { transform: scaleY(1); transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
@@ -398,7 +398,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .unhurried-cards .wp-block-post-featured-image img { aspect-ratio: 4 / 5; object-fit: cover; }
 .unhurried-cards .wp-block-post-featured-image { overflow: hidden; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-	.unhurried-cards .wp-block-post:hover .wp-block-post-featured-image img { transform: scale(var(--uh-zoom)); }
+	.unhurried-cards .wp-block-post:has(.wp-block-post-title a):hover .wp-block-post-featured-image img { transform: scale(var(--uh-zoom)); }
 }
 .unhurried-cards.is-scatter .wp-block-post:nth-child(3n+2) { margin-top: clamp(2rem, 8vw, 7rem); }
 @media (max-width: 781px) {
@@ -422,9 +422,10 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	content: "+";
 	font-family: var(--wp--preset--font-family--accent);
 	font-style: italic;
-	transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in);
+	/* The marker turns in step with the body (Motion system, Accordions). */
+	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-out);
 }
-.wp-block-details[open] summary::after { transform: rotate(45deg); transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
+.wp-block-details[open] summary::after { transform: rotate(45deg); transition-duration: var(--uh-dur-panel); }
 .wp-block-details > :not(summary) { max-width: 60ch; }
 .is-style-glass > .wp-block-details:first-child { border-top: 0; padding-top: 0; }
 
@@ -461,6 +462,13 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	overflow-y: visible;
 }
 .unhurried-wordmark a { text-decoration: none; }
+/* The color the letters roll into (1.2.1): the accent leaned halfway toward
+   the wordmark's own text color, 3.58:1 or more on the footer in all 20
+   looks (the plain accent was 1.26:1 in Lagoon). */
+.unhurried-wordmark { --uh-wordmark-twin: var(--wp--preset--color--accent); }
+@supports (color: color-mix(in srgb, red, blue)) {
+	.unhurried-wordmark { --uh-wordmark-twin: color-mix(in srgb, var(--wp--preset--color--accent) 50%, currentColor); }
+}
 /* On a right-to-left site the title sits against the right edge, and the
    tight tracking after its last letter (a Latin title's) let that letter's
    ink run 1 to 4px past the clip. The room is on the link, not the
@@ -474,9 +482,9 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .unhurried-wordmark__letters { display: inline-block; overflow: hidden; vertical-align: top; padding: .1em .12em .1em 0; margin: -.1em -.12em -.1em 0; } /* room for the last letter, which the tight tracking pushes past its box */
 .unhurried-wordmark__letters > span {
 	display: inline-block;
-	text-shadow: 0 1.2em var(--wp--preset--color--accent);
+	text-shadow: 0 1.2em var(--uh-wordmark-twin);
 	/* Letters 20ms apart, the ninth on together; back at the exit pace. */
-	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-in) calc(min(var(--i, 0), 8) * var(--uh-stagger) / 2);
+	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-out) calc(min(var(--i, 0), 8) * var(--uh-stagger) / 2);
 }
 /* Letters that reach above or below a capital (an accent, a cedilla, the
    Cyrillic Д, Chinese and Japanese, an emoji; the class is added for any
@@ -485,7 +493,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
    roll travels 1.5em, so the twins stay out of sight until they rise. In
    1.2.0 before this, the window cut the top of É. */
 .unhurried-wordmark__letters--tall { padding-top: .4em; padding-bottom: .24em; padding-left: .1em; margin-top: -.4em; margin-bottom: -.24em; margin-left: -.1em; }
-.unhurried-wordmark__letters--tall > span { text-shadow: 0 1.5em var(--wp--preset--color--accent); }
+.unhurried-wordmark__letters--tall > span { text-shadow: 0 1.5em var(--uh-wordmark-twin); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 	.unhurried-wordmark:is(:hover, :focus-within) .unhurried-wordmark__letters > span { transform: translateY(-1.2em); transition-duration: var(--uh-dur-panel); transition-timing-function: var(--uh-ease-out); }
 	.unhurried-wordmark:is(:hover, :focus-within) .unhurried-wordmark__letters--tall > span { transform: translateY(-1.5em); }
@@ -493,7 +501,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 @media (prefers-reduced-motion: reduce) {
 	.unhurried-wordmark__letters > span,
 	.unhurried-wordmark__letters--tall > span { text-shadow: none; transition: none; }
-	.unhurried-wordmark a:is(:hover, :focus-visible) { color: var(--wp--preset--color--accent); }
+	.unhurried-wordmark a:is(:hover, :focus-visible) { color: var(--uh-wordmark-twin); }
 }
 /* A title left whole (right-to-left sites, joined scripts) has no roll: it
    underlines on hover and keyboard focus, as the footer's other links do. */
@@ -760,11 +768,33 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	.wp-block-button.is-style-text-link > .wp-block-button__link:hover { text-underline-offset: 9px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]), .unhurried-footer-social .wp-social-link):active {
-		transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale));
+	/* Buttons with words sink 1px (a scale blurred the label); icons also shrink to 98%. */
+	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"])):active {
+		transform: translateY(var(--uh-press-y));
 		transition-duration: var(--uh-dur-press);
 	}
+	:is(.wp-element-button.has-icon, .unhurried-footer-social .wp-social-link):active {
+		transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale));
+	}
 }
+/* Buttons whose colors are fixed (the heroes' filled button, the journal
+   and footer search buttons) and buttons given their own colors answer the
+   pointer with a tint: 12% of their own text color laid over their fill, or
+   for a button with its own background, 14% of that color's opposite, which
+   only ever raises the label's contrast. No lift, no shadow. */
+@media (hover: hover) {
+	:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover,
+	:is(.unhurried-journal-search, .unhurried-footer-search) .wp-block-search__button:hover { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent); }
+	.wp-block-cover :is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover:focus-visible,
+	.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button:hover:focus-visible { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent), 0 0 0 3px var(--uh-focus-in); }
+	.wp-block-button:not(.is-style-text-link) > .wp-block-button__link.has-background:hover { box-shadow: inset 0 0 0 100vmax rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 14%); }
+	/* Links that rest without an underline take one under the pointer. */
+	:is(.wp-block-post-terms, .wp-block-term-name, .wp-block-site-title, .wp-block-post-author-name) a:not(:is(.unhurried-capsule, .unhurried-wordmark, .unhurried-chip-terms, .unhurried-chip-links) *):hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+	.unhurried-text-link a:hover { border-bottom-color: transparent; }
+}
+.unhurried-text-link a { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
+/* A tap shows a faint wash of the control's own color, not the system blue. */
+:where(a, button, summary, label, [role="button"]) { -webkit-tap-highlight-color: color-mix(in srgb, currentColor 12%, transparent); }
 /* Links: color and the underline settle in the quick time. */
 a:where(:not(.wp-element-button)) {
 	transition: color var(--uh-dur-quick) var(--uh-ease-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
@@ -786,11 +816,40 @@ a:where(:not(.wp-element-button)) {
 	border-radius: var(--wp--custom--radius--pill, 999px);
 	line-height: 1.2;
 }
-.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:is(:hover, :focus-visible) {
+/* The pill fades in; the label never fades with it (the two passed through
+   the same lightness, 1.07:1 at worst). It switches in one step at the
+   moment that keeps the label at 3.26:1 or more in every frame of every
+   light look, 3.33:1 in the dark ones (assets/css/dark-covers.css sets
+   their moment): 39ms into the fill, 9ms into the return. */
+:root { --uh-pill-switch-in: 39ms; --uh-pill-switch-out: 9ms; }
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon {
+	transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color 0s linear var(--uh-pill-switch-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:focus-visible,
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > :is(.wp-block-navigation-item__content, .wp-block-navigation__submenu-icon) {
+	transition-delay: 0s, var(--uh-pill-switch-in), 0s, 0s;
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:focus-visible {
 	background-color: var(--uh-pill);
 	color: var(--uh-pill-ink);
 }
-.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):is(:hover, :focus-visible) { text-decoration-color: transparent; }
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):focus-visible { text-decoration-color: transparent; }
+/* Hover only where there is a pointer: on a touch screen the pill stayed
+   filled on the tapped link. */
+@media (hover: hover) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:hover {
+		background-color: var(--uh-pill);
+		color: var(--uh-pill-ink);
+		transition-delay: 0s, var(--uh-pill-switch-in), 0s, 0s;
+	}
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):hover { text-decoration-color: transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+	/* No fade at all here: a 100ms cross-fade would ghost the label. */
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { transition-duration: 0s !important; }
+}
 /* A dropdown's item: the pill covers its arrow and stays while open. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:has(> .wp-block-navigation__submenu-icon) > .wp-block-navigation-item__content {
 	padding-inline-end: calc(.75rem + 13px);
@@ -802,13 +861,19 @@ a:where(:not(.wp-element-button)) {
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content:not([aria-current]) { text-decoration-color: transparent; }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > .wp-block-navigation__submenu-icon { color: var(--uh-pill-ink); }
-.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; transition: color var(--uh-dur-quick) var(--uh-ease-out); } /* the arrow stays clickable over the pill */
-/* Dropdowns rise 8px in, leave a third faster. !important: core's own
-   transition is. */
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; } /* the arrow stays clickable over the pill */
+/* Dropdowns come down 8px out of their item as they fade in, and leave a
+   third faster. A closed dropdown keeps its size while it fades (core
+   collapses it to nothing at once, which left an empty card fading), so
+   the card and its links go together. !important: core's own transition is. */
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { height: auto; width: auto; overflow: visible; }
+.wp-block-navigation .wp-block-navigation__submenu-icon svg { transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out); }
+.wp-block-navigation .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-icon svg,
+.wp-block-navigation .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition-duration: var(--uh-dur-base); }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
 		transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), visibility 0s linear calc(var(--uh-dur-base) * var(--uh-exit)) !important;
-		translate: 0 var(--uh-dist-panel);
+		translate: 0 calc(-1 * var(--uh-dist-panel));
 	}
 	.unhurried-capsule .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-container,
 	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container {
@@ -817,9 +882,11 @@ a:where(:not(.wp-element-button)) {
 	}
 	/* Keyboard focus that lands inside a closed dropdown (Shift+Tab) shows at once. */
 	.unhurried-capsule .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
-	/* Phone menu: core's fade and rise, longer. Closing is instant (core). */
+	/* Phone menu: core's 100ms fade, as quick as its close (core takes the
+	   menu off the page at once, with every style that places it, so it can
+	   have no exit; a 320ms entrance against that cut read as a mismatch). */
 	.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
-		animation-duration: var(--uh-dur-panel);
+		animation-duration: var(--uh-dur-press);
 		animation-timing-function: var(--uh-ease-out);
 	}
 }
@@ -830,17 +897,18 @@ a:where(:not(.wp-element-button)) {
 @media (prefers-reduced-motion: no-preference) {
 	:is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close):active { transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale)); transition-duration: var(--uh-dur-press); }
 }
-/* Linked cards rise 3px; their photo leans in to 103%. */
-.is-style-card:has(.wp-block-button),
-.is-style-section-card:has(a) {
-	transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out), border-color var(--uh-dur-quick) var(--uh-ease-out);
-}
-.wp-block-post .wp-block-post-featured-image img { transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-in); }
+/* A post card (a query loop item with a linked title) is one target: its
+   title link covers the card, other links in it stay on top. Only such a
+   card reacts to the pointer: its photo leans in to 103%. Cards with
+   several actions (Card and Section card styles with buttons) no longer
+   lift: the pointer meets their buttons instead. */
+.wp-block-post:has(.wp-block-post-title a) { position: relative; }
+.wp-block-post .wp-block-post-title a::before { content: ""; position: absolute; inset: 0; z-index: 0; }
+.wp-block-post:has(.wp-block-post-title a) :is(a, button, input, select, label, summary):not(.wp-block-post-title a) { position: relative; z-index: 1; }
+.wp-block-post .wp-block-post-featured-image img { transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out); }
 .wp-block-post .wp-block-post-featured-image { overflow: hidden; }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-	.is-style-card:has(.wp-block-button):hover,
-	.is-style-section-card:has(a):hover { transform: translateY(var(--uh-lift)); box-shadow: 0 34px 60px -34px rgba(22, 20, 15, .45); transition-duration: var(--uh-dur-base), var(--uh-dur-base), var(--uh-dur-quick), var(--uh-dur-quick), var(--uh-dur-quick); transition-timing-function: var(--uh-ease-out); }
-	.wp-block-post:hover .wp-block-post-featured-image img { transform: scale(var(--uh-zoom)); transition-duration: var(--uh-dur-slow); transition-timing-function: var(--uh-ease-out); }
+	.wp-block-post:has(.wp-block-post-title a):hover .wp-block-post-featured-image img { transform: scale(var(--uh-zoom)); transition-duration: var(--uh-dur-slow); }
 }
 .wp-block-post-title a { text-decoration-line: underline; text-decoration-color: transparent; text-underline-offset: .3em; text-decoration-thickness: 1px; }
 .wp-block-post:hover .wp-block-post-title a,
@@ -859,7 +927,7 @@ a:where(:not(.wp-element-button)) {
 		.wp-block-details::details-content {
 			block-size: 0;
 			overflow-y: clip;
-			transition: block-size calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-in), content-visibility calc(var(--uh-dur-panel) * var(--uh-exit)) allow-discrete;
+			transition: block-size calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-out), content-visibility calc(var(--uh-dur-panel) * var(--uh-exit)) allow-discrete;
 		}
 		.wp-block-details[open]::details-content {
 			block-size: auto;
@@ -879,7 +947,7 @@ a:where(:not(.wp-element-button)) {
 .unhurried-giftcard {
 	position: relative;
 	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
-	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in);
+	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
 }
 .unhurried-giftcard::after {
 	content: "";
@@ -888,7 +956,7 @@ a:where(:not(.wp-element-button)) {
 	border-radius: inherit;
 	background: radial-gradient(circle at var(--uh-glare-x, 30%) var(--uh-glare-y, 20%), rgba(246, 244, 239, .16), transparent 55%);
 	opacity: 0;
-	transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in);
+	transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
 	pointer-events: none;
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -911,6 +979,7 @@ a:where(:not(.wp-element-button)) {
 }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-map::after { animation: uh-ping 1.6s var(--uh-ease-out) var(--uh-dur-slow) 3; }
+	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; } /* rings once the map is seen */
 }
 @keyframes uh-ping {
 	0% { opacity: .55; scale: 1; }
@@ -998,7 +1067,7 @@ a:where(:not(.wp-element-button)) {
 	*,
 	::before,
 	::after {
-		transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, opacity, box-shadow !important;
+		transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow !important;
 		transition-duration: var(--uh-dur-quick) !important;
 		transition-delay: 0s !important;
 	}
@@ -1392,7 +1461,7 @@ html { scroll-padding-top: 96px; }
 	:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])) { scroll-margin-top: 96px; }
 }
 @media (prefers-reduced-motion: no-preference) {
-	html { scroll-behavior: smooth; }
+	html:focus-within { scroll-behavior: smooth; } /* in-page jumps glide; arriving at #anchor from another page lands at once */
 }
 
 /* ─── Journal: breadcrumbs, chips, toolbar, card meta, directory ─────────── */
@@ -1450,7 +1519,9 @@ html { scroll-padding-top: 96px; }
 
 /* Topics directory: category cards. */
 .unhurried-topic-cards .wp-block-term-template { list-style: none; padding: 0; margin: 0; }
-.unhurried-topic-cards .wp-block-term > .wp-block-group { height: 100%; transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), border-color var(--uh-dur-quick) var(--uh-ease-out); }
+.unhurried-topic-cards .wp-block-term > .wp-block-group { position: relative; height: 100%; transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out), border-color var(--uh-dur-quick) var(--uh-ease-out); }
+/* A topic card is one target: its name's link covers it. */
+.unhurried-topic-cards .wp-block-term-name a::before { content: ""; position: absolute; inset: 0; border-radius: inherit; }
 .unhurried-topic-cards .wp-block-term > .wp-block-group:hover { transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 	.unhurried-topic-cards .wp-block-term > .wp-block-group:hover { transform: translateY(var(--uh-lift)); }
@@ -1459,7 +1530,9 @@ html { scroll-padding-top: 96px; }
 .unhurried-topic-cards .wp-block-term-name a::after { content: " →"; font-family: var(--wp--preset--font-family--body); font-size: .6em; opacity: .5; }
 .unhurried-term-count { margin: 0; }
 .unhurried-topic-cards .wp-block-term > .wp-block-group { border: 1px solid var(--wp--preset--color--hairline); border-radius: 22px; background: var(--wp--preset--color--base); }
-.unhurried-topic-cards .wp-block-term > .wp-block-group:hover { border-color: var(--wp--preset--color--contrast); box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .35); }
+@media (hover: hover) {
+	.unhurried-topic-cards .wp-block-term > .wp-block-group:hover { border-color: var(--wp--preset--color--contrast); box-shadow: 0 26px 60px -38px rgba(22, 20, 15, .35); }
+}
 @media (max-width: 781px) {
 	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: 1fr; }
 }
