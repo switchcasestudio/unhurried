@@ -90,6 +90,8 @@ WPForms Lite sets its own label colors for a light page. In the dark looks the t
 * The header now stays at the top while you scroll. It was meant to since 1.0.0 but scrolled away.
 * The header menu no longer shows Contact beside a header button that links to Contact. A button that goes elsewhere keeps your whole menu. The open mobile menu still lists Contact.
 * New sample photographs, all CC0 and all one series: black-and-white photographs of ceramics and sculpture, fifteen from the Cleveland Museum of Art's Open Access collection. The Rijksmuseum's David comes with two smaller copies.
+* Every hero is on a photograph now. The type heroes, the page head for services, the Topics page, the journal, archives, search results and the page-not-found screen open on a black-and-white photograph in the statue hero's rounded frame, with light words over a soft shade in every look. Phones load a smaller copy of each photograph.
+* Lighter photographs: every 1.2.0 photograph is encoded again, a third smaller in all, with no change you can see at the size it is shown.
 * WooCommerce without Unhurried Pro: the cart, checkout and account pages read well in the dark looks. Those are Nocturne, Moss, Harbor, Plum, Lagoon and Dusk. The cart and checkout use WooCommerce's own dark fields there, so labels no longer vanish. Required marks and error messages are light enough to read. In every look the cart's quantity control has a clearer edge. The shop's layout stays Unhurried Pro's.
 * Product pages: variation dropdowns show their whole text (the lower half was cut off).
 * Until you make a menu of your own, the header and footer list every page. That automatic list now leaves out WooCommerce's Checkout page. It also leaves out Cart and My account when the header shows their icons. A menu you made is shown exactly as you saved it. A menu holding only an untouched Page List block counts as the automatic one. WordPress saves exactly that by itself. Choose a parent page for it, or add any link, and it is yours.
@@ -202,6 +204,7 @@ assets/images/resting-head.webp: Head of a Woman Holding a Sistrum (Greek, Attic
 assets/images/white-basin.webp: Basin, Ding ware (China, Jin dynasty, 1100s-1200s), Cleveland Museum of Art, https://clevelandart.org/art/1956.702
 assets/images/celadon-bottle.webp: Bottle, celadon ware (Korea, Goryeo dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1918.436
 assets/images/double-gourd.webp: Double Gourd-shaped Bottle, Ding ware (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1915.361
+assets/images/moon-jar-wide.webp, resting-head-wide.webp, lotus-bowl-wide.webp, marble-face-wide.webp and white-basin-wide.webp: wide crops of moon-jar, resting-head, lotus-bowl, marble-face and white-basin above (the same objects, sources and license) for the heroes on a photograph. Each has two smaller copies for phones, named with -1200 and -800.
 
 assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp: the pictures of Unhurried 1.1.1, kept for pages made with it.
 Created for this theme by the theme author, generated from original code.

@@ -901,10 +901,12 @@ a:where(:not(.wp-element-button)) {
 	overflow: hidden;
 	isolation: isolate;
 }
-/* The shade leans to the lower left, where the words sit; the face stays lit. */
+/* The shade leans to the lower left, where the words sit; the face stays lit.
+   It reaches to 72% of the width: ending at 68%, it left the accent word at
+   the end of the headline at 2.89:1 at 1440 wide (3:1 needed). */
 .unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
 	background:
-		linear-gradient(90deg, rgba(22, 20, 15, .82) 0%, rgba(22, 20, 15, .5) 36%, rgba(22, 20, 15, 0) 68%),
+		linear-gradient(90deg, rgba(22, 20, 15, .82) 0%, rgba(22, 20, 15, .56) 36%, rgba(22, 20, 15, 0) 72%),
 		linear-gradient(to top, rgba(22, 20, 15, .55), rgba(22, 20, 15, 0) 45%);
 	background-color: transparent !important;
 	opacity: 1 !important;
@@ -912,9 +914,14 @@ a:where(:not(.wp-element-button)) {
 /* Core sizes a positioned cover's content to fit; this one spans the frame. */
 .unhurried-hero-statue__stage > .wp-block-cover__inner-container,
 .unhurried-hero-statue__foot { width: 100% !important; max-width: none !important; }
-.unhurried-hero-statue__stage .wp-block-button:not(.is-style-text-link) > .wp-block-button__link {
+:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link {
 	background-color: var(--wp--preset--color--base);
 	color: var(--wp--preset--color--contrast);
+}
+/* A text link over the photograph stays light under the pointer: the usual
+   hover, the accent leaned toward Ink, is dark on the shade. */
+:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button.is-style-text-link > .wp-block-button__link:hover {
+	color: color-mix(in srgb, var(--wp--preset--color--accent) 30%, white);
 }
 .unhurried-hero-statue__title { margin-block: .3em clamp(1.5rem, 5vh, 3.5rem) !important; }
 .unhurried-hero-statue__body p { color: color-mix(in srgb, currentColor 80%, transparent); }
@@ -1065,6 +1072,57 @@ a:where(:not(.wp-element-button)) {
 	to { letter-spacing: -0.03em; filter: none; }
 }
 
+/* ─── Hero on a photograph: the type heroes, page heads and journal heads ─── */
+/* A Cover in the statue hero's rounded, inset frame, as tall as its words
+   need (each pattern sets its own height), with one of the theme's
+   black-and-white photographs behind them. The shade is the statue hero's,
+   a little deeper because these headlines run wider: Ink leaning to the
+   lower left, where the words sit, so the picture stays lit on the right.
+   The words are light in every look (core draws a Cover's text white;
+   DESIGN-GUIDE section 3, the Glass rule), the shade is the same fixed Ink,
+   so what they read against does not change with the look. */
+.unhurried-hero-photo { --uh-under: 0px; }
+.unhurried-hero-photo:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap)); }
+.unhurried-hero-photo__stage.wp-block-cover {
+	padding-bottom: calc(var(--wp--preset--spacing--70) + var(--uh-under)) !important;
+	overflow: hidden;
+	isolation: isolate;
+}
+.unhurried-hero-photo__stage > .wp-block-cover__background.wp-block-cover__background {
+	background:
+		linear-gradient(90deg, rgba(22, 20, 15, .84) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .18) 80%),
+		linear-gradient(to top, rgba(22, 20, 15, .6), rgba(22, 20, 15, 0) 65%);
+	background-color: transparent !important;
+	opacity: 1 !important;
+}
+/* Core sizes a positioned cover's content to fit; this one spans the frame. */
+.unhurried-hero-photo__stage > .wp-block-cover__inner-container { width: 100% !important; max-width: none !important; }
+/* Ledes, excerpts and descriptions at 84% of the light text, as on the statue. */
+.unhurried-hero-photo__stage :is(p:not(.is-style-eyebrow), .wp-block-post-excerpt, .wp-block-term-description) { color: color-mix(in srgb, currentColor 84%, transparent); }
+.unhurried-hero-photo__stage :is(.wp-block-post-excerpt, .wp-block-term-description) p { color: inherit; }
+.unhurried-hero-photo__stage .unhurried-breadcrumbs,
+.unhurried-hero-photo__stage .unhurried-breadcrumbs :is(a, [aria-current]) { color: inherit; }
+.unhurried-hero-photo__stage .unhurried-breadcrumbs a:hover { color: inherit; }
+/* A search box over the photograph is a light pill with dark words in every
+   look (assets/css/dark-covers.css swaps the two colors in a dark look). */
+.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__inside-wrapper { background: var(--wp--preset--color--base); border-color: transparent; }
+.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__input { color: var(--wp--preset--color--contrast); }
+.unhurried-hero-photo__stage .wp-block-search__input::placeholder { color: color-mix(in srgb, currentColor 68%, transparent); opacity: 1; }
+/* On a phone the words can run the frame's whole height (a long title, the
+   Topics search), so the shade never drops below .46 Ink: white text stays
+   at 4.5:1 over all but the brightest few pixels of these photographs. */
+@media (max-width: 781px) {
+	.unhurried-hero-photo__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .68) 45%, rgba(22, 20, 15, .46) 100%);
+	}
+}
+/* Words spread across the whole frame (Hero, staggered type): an even shade
+   at every width, deeper at the foot. */
+.unhurried-hero-photo__stage--even > .wp-block-cover__background.wp-block-cover__background {
+	background:
+		linear-gradient(rgba(22, 20, 15, .52), rgba(22, 20, 15, .52)),
+		linear-gradient(to top, rgba(22, 20, 15, .6), rgba(22, 20, 15, 0) 60%);
+}
 
 /* ─── Footer: search, topic and latest-post lists on Ink ─────────────────── */
 .unhurried-footer .unhurried-footer-list { list-style: none; margin-inline: 0; margin-bottom: 0; padding: 0; display: grid; gap: .55rem; }
