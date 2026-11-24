@@ -196,3 +196,24 @@ if ( ! function_exists( 'unhurried_woocommerce_still_body' ) ) :
 	}
 endif;
 add_filter( 'body_class', 'unhurried_woocommerce_still_body' );
+
+if ( ! function_exists( 'unhurried_woocommerce_still_scripts' ) ) :
+	/**
+	 * Stops jQuery's own animations on the purchase pages.
+	 *
+	 * WooCommerce slides a variable product's price in and out (200ms, and
+	 * it ran twice, so Add to cart jumped down, up and down again under the
+	 * pointer) and the product gallery slides its height. With jQuery's
+	 * documented switch every such step lands at once: the price appears
+	 * in place, the button moves once and never bounces.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_woocommerce_still_scripts() {
+		if ( unhurried_woocommerce_is_purchase_page() && wp_script_is( 'jquery-core', 'registered' ) ) {
+			wp_add_inline_script( 'jquery-core', 'jQuery.fx.off = true;' );
+		}
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_woocommerce_still_scripts', 20 );
