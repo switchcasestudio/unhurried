@@ -475,9 +475,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .unhurried-wordmark__letters > span {
 	display: inline-block;
 	text-shadow: 0 1.2em var(--wp--preset--color--accent);
-	/* Letters set off one after another, half a stagger apart, and from the
-	   ninth on together, so a long title rolls in no more than the panel
-	   time plus 160ms. They roll back down at the exit pace. */
+	/* Letters 20ms apart, the ninth on together; back at the exit pace. */
 	transition: transform calc(var(--uh-dur-panel) * var(--uh-exit)) var(--uh-ease-in) calc(min(var(--i, 0), 8) * var(--uh-stagger) / 2);
 }
 /* Letters that reach above or below a capital (an accent, a cedilla, the
@@ -663,47 +661,14 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	}
 }
 
-/* ─── Motion system (1.2.0; one set of tokens since 1.2.1) ──────────────────
-   One vocabulary for the whole theme and for Unhurried Pro. Calm and
-   weighty: things decelerate into place and never bounce, overshoot or
-   loop (the marquee and the spiral hero's slow turn are the only loops).
-   Five layers:
-   1. Entrances: assets/js/reveal.js marks each element with data-uh and its
-      kind, and adds .is-in as it scrolls into view; items entering together
-      are staggered by --uh-delay. What is on the first screen rises with the
-      page, by CSS alone, from opacity .4; the hidden "before" states exist
-      only for what the script has marked below the window. Both need
-      <html> to have .uh-motion, which unhurried_motion_head() adds before
-      the first paint. No script, reduced motion, the editor, print:
-      everything is visible.
-   2. Feedback: every control answers a hover in --uh-dur-quick and a press
-      in --uh-dur-press, well inside the 400 ms Doherty window. Only
-      interactive things react to the pointer.
-   3. Depth: scroll-linked drift on photographs (where supported).
-   4. Continuity: pages cross-fade while the header stays put.
-   5. Reduced motion: nothing moves; colors and fades take 100ms at most.
-   Opt out for any block or section with the class "unhurried-still".
-
-   Tokens (new in 1.2.1; theme.json's settings.custom.motion now points at
-   them, so --wp--custom--motion--* gives the same values):
-   --uh-dur-press   100ms  a press shows at once (under 100ms reads as instant)
-   --uh-dur-quick   160ms  color, underlines, borders, small icons
-   --uh-dur-base    240ms  a control changing state: chevrons, dropdowns, cards
-   --uh-dur-panel   320ms  a surface arriving: drawer, accordion body, roll
-   --uh-dur-slow    420ms  entrances, a photo settling or leaning in
-   --uh-exit        .65    an exit takes 65% of its entrance:
-                           calc(var(--uh-dur-base) * var(--uh-exit))
-   --uh-stagger     40ms   between items entering together
-   --uh-stagger-cap 160ms  the longest wait in a batch (slow + cap = 580ms)
-   --uh-ease-out    entering and settling; --uh-ease-in leaving;
-   --uh-ease-in-out a crossing from one state to another
-   --uh-dist-reveal 16px   how far an entrance rises
-   --uh-dist-panel  8px    how far a dropdown or panel rises
-   --uh-press-y, --uh-press-scale  a button's press (1px down, 98%)
-   --uh-zoom        1.03   a photo leaning in under the pointer
-   --uh-lift        -3px   a linked card rising toward the pointer
-   The older names (--uh-ease, --uh-ease-io, --uh-press, --uh-quick,
-   --uh-reveal, --uh-slow, --uh-rise) stay and follow the new ones. */
+/* ─── Motion system (1.2.0; tokens 1.2.1) ────────────────────────────────
+   Calm and weighty: things decelerate into place, never bounce or loop
+   (the marquee and the spiral's turn excepted). 1 Entrances (reveal.js
+   marks data-uh; the first screen rises by CSS from .4 under .uh-motion),
+   2 Feedback, 3 Depth (scroll-linked), 4 Continuity (page cross-fade),
+   5 Reduced motion. Exits take --uh-exit of their entrance. The 1.2.0
+   names follow the new tokens; theme.json's custom.motion points at them.
+   Opt out per block or section with "unhurried-still". */
 :root {
 	--uh-dur-press: 100ms;
 	--uh-dur-quick: 160ms;
@@ -733,27 +698,14 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 }
 
 /* 1. Entrances */
-/* The first screen enters with the page itself. Every block in main and
-   the footer rises from opacity .4 and a little below its place, as an
-   animation that starts at the first paint (DESIGN-GUIDE section 6: it
-   never looks missing). The script is not waited for, so the first screen
-   rises even when the script is late, blocked or broken, and the browser
-   counts the headline and the hero image as painted from the first frame.
-   When the script starts it leaves whatever is already on screen (or above
-   it) to finish this animation, and holds back only what is still below the
-   window, for its scroll-in entrance (data-uh). Only the outermost block
-   moves, so a card rises as one piece. The journal's results count is in
-   the list, so it rises with the grid instead of standing still beside it
-   (on the theme's pages the script's other kinds sit inside one of these).
-   Never moved: anything marked "unhurried-still" (a block, a section, or
-   the whole page through the body class), the parts the script skips, and
-   the body of an article. */
+/* The first screen rises with the page from opacity .4 (never missing,
+   counted as painted at once); the script holds back only what is below
+   the window. Only the outermost block moves. */
 @media (prefers-reduced-motion: no-preference) {
 	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
 		animation: var(--uh-arrive, uh-arrive) var(--uh-dur-slow) var(--uh-ease-out) both;
 	}
-	/* The same three kinds as the script's entrance: text rises, a picture
-	   and a card come from a little further, a card a touch smaller. */
+	/* Text rises; pictures and cards come from further. */
 	.uh-motion :is(figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure) { --uh-arrive: uh-arrive-far; }
 	.uh-motion :is(.wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel) { --uh-arrive: uh-arrive-card; }
 }
@@ -792,10 +744,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 }
 
 /* 2. Feedback */
-/* Buttons change color under the pointer and press in on click: 1px down
-   and 98%, in --uh-dur-press, and spring back at the quick pace on
-   release. They no longer lift on hover (1.2.0 raised them 2px with a
-   shadow): one quiet answer per action. */
+/* Buttons: color on hover (no lift since 1.2.1), a 1px, 98% press. */
 .wp-block-button__link,
 .wp-element-button {
 	transition:
@@ -829,11 +778,8 @@ a:where(:not(.wp-element-button)) {
 }
 .wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
 .wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
-/* Header menu (1.2.1): hover and keyboard focus fill a pill shaped like the
-   header button, in --uh-pill. The pill's padding is there at rest and its
-   negative margin gives the room back, so nothing moves; .75rem a side meets
-   the next pill across the menu's 1.5rem gap. The current page keeps its
-   underline, on the pill too. The open mobile menu keeps the underline. */
+/* Header menu (1.2.1): a pill in --uh-pill on hover and keyboard focus;
+   its padding is there at rest, so nothing moves. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
 	padding: .6rem .75rem;
 	margin: -.6rem -.75rem;
@@ -845,9 +791,7 @@ a:where(:not(.wp-element-button)) {
 	color: var(--uh-pill-ink);
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):is(:hover, :focus-visible) { text-decoration-color: transparent; }
-/* An item with a dropdown: the pill reaches over its arrow (13px: the arrow
-   and the space before it), and stays filled while the pointer is on the
-   arrow or in the dropdown, so the open dropdown shows where it hangs from. */
+/* A dropdown's item: the pill covers its arrow and stays while open. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:has(> .wp-block-navigation__submenu-icon) > .wp-block-navigation-item__content {
 	padding-inline-end: calc(.75rem + 13px);
 	margin-inline-end: calc(-.75rem - 13px);
@@ -859,10 +803,8 @@ a:where(:not(.wp-element-button)) {
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content:not([aria-current]) { text-decoration-color: transparent; }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > .wp-block-navigation__submenu-icon { color: var(--uh-pill-ink); }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; transition: color var(--uh-dur-quick) var(--uh-ease-out); } /* the arrow stays clickable over the pill */
-/* Dropdowns rise 8px into place as they fade in, and leave a third faster.
-   !important: core's own transition on the dropdown is declared with it.
-   Visibility flips at the end of the fade out, so a dropdown that is going
-   takes no clicks once it has gone. */
+/* Dropdowns rise 8px in, leave a third faster. !important: core's own
+   transition is. */
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
 		transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), visibility 0s linear calc(var(--uh-dur-base) * var(--uh-exit)) !important;
@@ -873,24 +815,20 @@ a:where(:not(.wp-element-button)) {
 		translate: 0 0;
 		transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important;
 	}
-	/* The phone menu fades in and rises (core's own keyframes, which lasted
-	   100ms). Closing is instant: core removes it from the page at once. */
+	/* Phone menu: core's fade and rise, longer. Closing is instant (core). */
 	.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
 		animation-duration: var(--uh-dur-panel);
 		animation-timing-function: var(--uh-ease-out);
 	}
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content { transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out); }
-/* The menu's open and close buttons (the phone menu, and the header's when
-   the menu always folds) answer like the other icon buttons. */
+/* The menu's open and close buttons. */
 .wp-block-navigation__responsive-container-open,
 .wp-block-navigation__responsive-container-close { transition: color var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out), transform var(--uh-dur-quick) var(--uh-ease-out); }
 @media (prefers-reduced-motion: no-preference) {
 	:is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close):active { transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale)); transition-duration: var(--uh-dur-press); }
 }
-/* Cards that lead somewhere rise 3px toward the pointer; their photo leans
-   in to 103% (inside its frame, which hides the overflow). Entering takes
-   the base time, a photo the slow one; leaving is a third faster. */
+/* Linked cards rise 3px; their photo leans in to 103%. */
 .is-style-card:has(.wp-block-button),
 .is-style-section-card:has(a) {
 	transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out), border-color var(--uh-dur-quick) var(--uh-ease-out);
@@ -912,9 +850,7 @@ a:where(:not(.wp-element-button)) {
 :where(.wp-site-blocks) :where(input, textarea, select) { transition: border-color var(--uh-dur-quick) var(--uh-ease-out), box-shadow var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out); }
 :where(.wp-site-blocks) :where(input:not([type="submit"]), textarea, select):focus-visible { box-shadow: 0 0 0 4px color-mix(in srgb, var(--wp--preset--color--accent) 18%, transparent); }
 .wp-block-search__inside-wrapper { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
-/* Accordions open in the panel time and close a third faster, where the
-   browser can size to "auto"; elsewhere they open at once and only the
-   marker turns. */
+/* Accordions open in the panel time, close faster (where auto sizes). */
 @supports (interpolate-size: allow-keywords) {
 	@media (prefers-reduced-motion: no-preference) {
 		:root { interpolate-size: allow-keywords; }
@@ -932,16 +868,12 @@ a:where(:not(.wp-element-button)) {
 }
 .wp-block-details summary { transition: color var(--uh-dur-quick) var(--uh-ease-out); }
 @media (hover: hover) { .wp-block-details summary:hover { color: var(--wp--preset--color--accent); color: color-mix(in srgb, var(--wp--preset--color--accent) 80%, currentColor); } }
-/* Notices fade in from the theme's floor of .4 (never from nothing, so a
-   notice that takes keyboard focus as it appears is never hidden): store
-   notices, WooCommerce's messages, Contact Form 7's answer. */
+/* Notices fade in from .4, never from 0 (one may take focus). */
 @media (prefers-reduced-motion: no-preference) {
 	:where(.wc-block-components-notice-banner, .woocommerce-message, .woocommerce-info, .woocommerce-error, .wpcf7-response-output) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 }
 @keyframes uh-notice-in { from { opacity: .4; } }
-/* The gift card tilts toward the pointer like a card held in the hand
-   (reveal.js sets the angles): it follows in the slow time, so it lags
-   the hand a little, and settles back at the exit pace. */
+/* The gift card tilts toward the pointer (reveal.js sets the angles). */
 .unhurried-giftcard {
 	position: relative;
 	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
@@ -961,10 +893,7 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-giftcard:hover { transition-duration: var(--uh-dur-quick), var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); box-shadow: 0 50px 80px -40px rgba(22, 20, 15, .6); }
 	.unhurried-giftcard:hover::after { opacity: 1; transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
 }
-/* The map pin rings three times as the map arrives, then rests: it marks a
-   real place without pulling the eye from the form beside it for good
-   (4.8s in all, under the 5 seconds after which moving content needs a
-   pause control). */
+/* The map pin rings three times (4.8s, under 5s), then rests. */
 .unhurried-map::after {
 	content: "";
 	position: absolute;
@@ -1028,12 +957,8 @@ a:where(:not(.wp-element-button)) {
 @keyframes uh-recede { to { opacity: .2; translate: 0 -40px; } }
 @keyframes uh-capsule-lift { to { box-shadow: 0 24px 50px -28px rgba(22, 20, 15, .55), 0 0 0 1px rgba(22, 20, 15, .05); } }
 
-/* 4. Continuity: pages cross-fade; the header and marquee stay where they
-   are. A short fade, no slide: the old page leaves in 156ms while the new
-   one arrives in 240ms. Browsers without cross-document view transitions
-   simply load the next page. A page held still (the body class
-   unhurried-still: Unhurried Pro's shop, cart, checkout and account) skips
-   the fade, so nothing stands between a buyer and the next step. */
+/* 4. Continuity: a short cross-fade, no slide; header and marquee hold.
+   A still page (body.unhurried-still) arrives without one. */
 @media (prefers-reduced-motion: no-preference) {
 	@view-transition { navigation: auto; }
 	.unhurried-capsule { view-transition-name: uh-capsule; }
@@ -1049,10 +974,8 @@ a:where(:not(.wp-element-button)) {
 @keyframes uh-page-out { to { opacity: 0; } }
 @keyframes uh-page-in { from { opacity: 0; } }
 
-/* 5. Reduced motion: nothing moves anywhere, the theme's own motion and
-   any block's or plugin's alike. Only color and opacity may still change,
-   in 100ms, so a hover still answers. !important: the visitor's setting has
-   to win over every rule a block or plugin brings, including inline ones. */
+/* 5. Reduced motion: nothing moves; color and opacity change in 100ms.
+   !important: the visitor's setting wins over any block or plugin. */
 @media (prefers-reduced-motion: reduce) {
 	:root {
 		--uh-dur-press: 0ms;
@@ -1073,7 +996,7 @@ a:where(:not(.wp-element-button)) {
 	::before,
 	::after {
 		transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, opacity, box-shadow !important;
-		transition-duration: 100ms !important;
+		transition-duration: var(--uh-dur-quick) !important;
 		transition-delay: 0s !important;
 	}
 }
@@ -1127,12 +1050,8 @@ a:where(:not(.wp-element-button)) {
 		}
 	}
 }
-/* The hero's photograph is the page's largest picture, the one the browser
-   times the page by, so it is never dimmed or darkened (1.2.0 brought it up
-   from opacity .4 and 30% brightness over 3.2s). It is whole from the first
-   frame and only settles from 104% to its place in the slow time. Its heading
-   rises with the rest of the first screen; the accent word no longer
-   "exhales" (it widened and blurred for 3.4s, which reflowed the headline). */
+/* The hero photo (the page's LCP) is whole from the first frame and only
+   settles from 104% (1.2.0 dimmed it for 3.2s). */
 @keyframes unhurried-unveil {
 	from { scale: 1.04; }
 }
@@ -1237,9 +1156,7 @@ a:where(:not(.wp-element-button)) {
 	.uh-motion .unhurried-hero-spiral__title { --uh-arrive: uh-arrive-fade; }
 }
 @keyframes uh-arrive-fade { from { opacity: .4; } }
-/* The disc settles from 104% as the page paints, whole and undimmed from
-   the first frame (1.2.0 brought it out of a blur over 2.8s), while its
-   turn starts at once: the turn is transform, the settle is scale. */
+/* The disc settles from 104%, never dimmed; it turns from the start. */
 @keyframes unhurried-emerge {
 	from { scale: 1.04; }
 }
@@ -1250,9 +1167,7 @@ a:where(:not(.wp-element-button)) {
 	from { transform: translate(-3%, 2%) scale(1); }
 	to { transform: translate(3%, -2%) scale(1.08); }
 }
-/* No longer used by the theme (1.2.1): the heroes' accent word widened and
-   blurred into place, which reflowed the headline. Kept for anything that
-   names it. */
+/* Unused since 1.2.1 (it reflowed the headline); kept for anything naming it. */
 @keyframes unhurried-exhale {
 	from { letter-spacing: .08em; filter: blur(min(12px, .08em)); }
 	to { letter-spacing: -0.03em; filter: none; }
@@ -1551,8 +1466,7 @@ html { scroll-padding-top: 96px; }
 .unhurried-author-box .avatar { border-radius: 50%; }
 .unhurried-author-box .wp-block-post-author__name { font-weight: 600; }
 .unhurried-author-box .wp-block-post-author__bio { color: var(--wp--preset--color--contrast-2); font-size: var(--wp--preset--font-size--small); }
-/* The bar fills as the reader scrolls. With reduced motion there is no bar:
-   the window's own scroll bar already says how far along the reader is. */
+/* With reduced motion there is no bar (the scroll bar says the same). */
 @supports (animation-timeline: scroll()) {
 	body.single-post::before {
 		content: "";
