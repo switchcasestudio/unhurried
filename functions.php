@@ -95,6 +95,51 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_enqueue_assets' );
 
+if ( ! function_exists( 'unhurried_touch_button_rest' ) ) :
+	/**
+	 * Keeps a tapped button at its resting colors on a touch screen.
+	 *
+	 * WordPress prints the button hover colors of theme.json (and of the Site
+	 * Editor) for every device. A touch screen keeps a tapped element in its
+	 * hover state until something else is tapped, so a button stayed in its
+	 * hover color after the tap (the cart's Apply, for example). Where there
+	 * is no hover, the hover state takes the button's resting colors, read
+	 * from the same global styles, so a color chosen in the Site Editor is
+	 * the one kept. Devices with a pointer keep the hover.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_touch_button_rest() {
+		if ( ! function_exists( 'wp_get_global_styles' ) || ! wp_style_is( 'global-styles', 'enqueued' ) ) {
+			return;
+		}
+		$colors     = (array) wp_get_global_styles( array( 'elements', 'button', 'color' ) );
+		$rules      = array();
+		$properties = array(
+			'background' => 'background-color',
+			'text'       => 'color',
+		);
+		foreach ( $properties as $key => $property ) {
+			if ( empty( $colors[ $key ] ) || ! is_string( $colors[ $key ] ) ) {
+				continue;
+			}
+			$value = $colors[ $key ];
+			// A preset saved by the Site Editor: var:preset|color|contrast.
+			if ( 0 === strpos( $value, 'var:' ) ) {
+				$value = 'var(--wp--' . str_replace( '|', '--', substr( $value, 4 ) ) . ')';
+			}
+			if ( preg_match( '/^[a-zA-Z0-9#(),.%\s_-]+$/', $value ) ) {
+				$rules[] = $property . ':' . $value;
+			}
+		}
+		if ( $rules ) {
+			wp_add_inline_style( 'global-styles', '@media (hover: none){:root :where(.wp-element-button:hover, .wp-block-button__link:hover){' . implode( ';', $rules ) . '}}' );
+		}
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_touch_button_rest', 20 );
+
 if ( ! function_exists( 'unhurried_motion_head' ) ) :
 	/**
 	 * Turns on the automatic motion before the first paint.
