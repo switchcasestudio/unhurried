@@ -968,8 +968,9 @@ a:where(:not(.wp-element-button)) {
 	::view-transition-new(*) { animation-duration: var(--uh-dur-base); animation-timing-function: var(--uh-ease-out); }
 	::view-transition-old(root) { animation: uh-page-out calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) both; }
 	::view-transition-new(root) { animation: uh-page-in var(--uh-dur-base) var(--uh-ease-out) both; }
-	html:has(> body.unhurried-still)::view-transition-old(root),
-	html:has(> body.unhurried-still)::view-transition-new(root) { animation: none; }
+	html:has(> body.unhurried-still)::view-transition-group(*),
+	html:has(> body.unhurried-still)::view-transition-old(*),
+	html:has(> body.unhurried-still)::view-transition-new(*) { animation: none; }
 }
 @keyframes uh-page-out { to { opacity: 0; } }
 @keyframes uh-page-in { from { opacity: 0; } }
