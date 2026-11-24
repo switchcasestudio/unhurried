@@ -2,6 +2,13 @@
 
 All notable changes to the free Unhurried theme.
 
+## 1.2.1 (unreleased)
+
+- **Header menu pill.** Hovering or tabbing to a top-level menu link fills a pill shaped like the header button, in `--uh-pill` (new: the accent leaned 15% toward the text color) with Base text (`--uh-pill-ink`, new). Measured in all 20 looks: text on the pill 4.98:1 or more, pill against the capsule 4.98:1 or more. The pill's padding is there at rest and a negative margin gives the room back, so nothing moves on hover. An item with a dropdown fills over its arrow and stays filled while the dropdown is open. The current page keeps its underline. The open mobile menu is unchanged.
+- **No focus ring on click.** `theme.json`'s link and button focus apply on `:focus-visible` (was `:focus`, so a clicked chip, button or link showed a ring), and `:is(a, button, summary, [tabindex]):focus:not(:focus-visible)` clears any other `:focus` outline. Keyboard focus keeps its ring. A journal topic chip is one control: its link covers the whole pill, count included, and the keyboard ring goes around the pill instead of around the name. Chip hover edges show only where there is a pointer.
+- **Header title in capitals, with the wordmark's roll.** `text-transform: uppercase` (the stored title is unchanged). On hover or keyboard focus the letters roll up one after another into `--uh-pill`, with the footer wordmark's timing and easing: `unhurried_header_title_letters()` (`render_block_core/group`, on the capsule) splits the title with the new `unhurried_split_title_letters()`, which `unhurried_wordmark_letters()` now uses too (same output). Screen readers hear the title once. Reduced motion: a color change only. Right-to-left sites and joined scripts keep the title whole and change color.
+- **Footer ruled like a notebook.** The Explore, Topics and Latest columns share one line pitch (`--uh-footer-line`, 1.75rem): every line box is one pitch tall with nothing between, and the text is one face and size (the dates now the same size as the titles), so baselines line up across the columns. Measured at 1440: every line within 1px of the 28px grid.
+
 ## 1.2.0 (unreleased)
 
 - **Lorem Ipsum** in every content pattern; body copy lengthened to two or three sentences, and the sections that read thin filled out to a real site's density: ledes of two sentences (type heroes, Journal, Hours, Gift card), the four Services index rows, five rows of hours, six questions. Header, the default footer, 404, search and comments keep real words; the Quiet and Visit footers' closing line, heading and address are Lorem, and so are the names in the Names strip. Dev blueprint seeds 12 Lorem posts in five described categories with ten tags, an author bio and a Topics page.
