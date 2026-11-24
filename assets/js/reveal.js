@@ -4,7 +4,8 @@
  * Every section enters gently as it scrolls into view: headings and text
  * rise, images settle, cards and list items follow one another, dividers
  * draw, and figures count up. Items entering together are staggered
- * (capped, so nothing waits long) so the eye takes in one thing at a time.
+ * (40ms apart, capped at 160ms, so nothing waits long) so the eye takes
+ * in one thing at a time.
  *
  * The <head> adds the class "uh-motion" before first paint (see
  * unhurried_motion_head() in functions.php). With it, the first screen
@@ -27,8 +28,17 @@
 		return;
 	}
 
-	var STAGGER = 70; // ms, matches --wp--custom--motion--stagger.
-	var MAX_STEPS = 8; // the ninth item in a batch waits no longer than the eighth.
+	// Timing comes from the motion tokens in style.css (--uh-stagger,
+	// --uh-stagger-cap, --uh-dur-slow), so a child theme that retunes them
+	// retunes this too. The numbers after || are the tokens' own values.
+	var rootStyle = window.getComputedStyle( html );
+	function token( name, fallback ) {
+		var value = parseFloat( rootStyle.getPropertyValue( name ) );
+		return isFinite( value ) ? value : fallback;
+	}
+	var STAGGER = token( '--uh-stagger', 40 ); // ms between items entering together.
+	var MAX_DELAY = token( '--uh-stagger-cap', 160 ); // the longest any item waits.
+	var ENTER = token( '--uh-dur-slow', 420 ); // ms an entrance takes.
 	var auto = html.classList.contains( 'uh-motion' );
 
 	/* ── Legacy opt-in reveal ─────────────────────────────────────────── */
@@ -198,7 +208,7 @@
 		el.appendChild( shown );
 		el.appendChild( real );
 		var start = null;
-		var duration = 1400;
+		var duration = ENTER + MAX_DELAY; // a count is over when its batch has settled.
 		function frame( now ) {
 			if ( null === start ) {
 				start = now;
@@ -218,7 +228,8 @@
 	}
 
 	function finish( el, delay ) {
-		var long = el.getAttribute( 'data-uh' ) === 'image' || el.getAttribute( 'data-uh' ) === 'words' ? 1500 : 950;
+		// The wordmark's letters set off up to MAX_DELAY after one another.
+		var long = ENTER + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
 		window.setTimeout( function () {
 			el.classList.add( 'is-done' );
 			el.style.removeProperty( '--uh-delay' );
@@ -229,7 +240,7 @@
 	var tallObserver;
 
 	function enter( el, step ) {
-		var delay = Math.min( step, MAX_STEPS ) * STAGGER;
+		var delay = Math.min( step * STAGGER, MAX_DELAY );
 		el.style.setProperty( '--uh-delay', delay + 'ms' );
 		el.classList.add( 'is-in' );
 		observer.unobserve( el );
