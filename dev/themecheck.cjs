@@ -1,4 +1,4 @@
-const {chromium}=require('/Users/imac/.npm/_npx/e41f203b7505f1fb/node_modules/playwright');
+const {chromium}=require('playwright');
 const base='http://127.0.0.1:9400';
 (async()=>{const b=await chromium.launch();const c=await b.newContext();const p=await c.newPage();
 await c.addCookies([{name:'wordpress_test_cookie',value:'WP%20Cookie%20check',url:base}]);

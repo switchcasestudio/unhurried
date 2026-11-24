@@ -1,4 +1,4 @@
-const {chromium}=require('/Users/imac/.npm/_npx/e41f203b7505f1fb/node_modules/playwright');
+const {chromium}=require('playwright');
 (async()=>{const b=await chromium.launch();const c=await b.newContext({viewport:{width:1440,height:900}});const p=await c.newPage();
 const r=await (await c.request.get('http://127.0.0.1:9400/wp-json/wc/store/v1/products?per_page=2')).json();
 for(const x of r){await p.goto('http://127.0.0.1:9400/?add-to-cart='+x.id,{timeout:90000});}

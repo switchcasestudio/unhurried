@@ -1,4 +1,4 @@
-const {chromium}=require('/Users/imac/.npm/_npx/e41f203b7505f1fb/node_modules/playwright');
+const {chromium}=require('playwright');
 const base='http://127.0.0.1:9400';
 const routes=process.argv.slice(2).length?process.argv.slice(2):['/','/about/','/services/','/contact/','/journal/','/what-a-first-consultation-is-really-for/','/nope404/'];
 (async()=>{const b=await chromium.launch();
