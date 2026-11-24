@@ -96,6 +96,20 @@ Tags: blog, portfolio, one-column, two-columns, wide-blocks, block-patterns, blo
 	outline-offset: 3px;
 }
 .wp-block-cover :where(a, button, input, select, textarea, summary):focus-visible { box-shadow: 0 0 0 3px var(--uh-focus-in); }
+/* The ring is for the keyboard. A click or a tap draws none (1.2.0 and
+   earlier drew it on :focus, so a clicked chip showed a ring around its link
+   text only). theme.json's link and button focus apply on :focus-visible
+   since 1.2.1; this also clears a :focus outline a block or plugin draws. */
+:is(a, button, summary, [tabindex]):focus:not(:focus-visible) { outline: none; }
+/* Pill: the hover fill of the header's menu links (and Unhurried Pro's
+   account and bag icons), and the color the header title rolls into. The
+   accent leaned 15% toward the text color: against Base it clears 4.5:1 both
+   ways in all 20 looks, so Base text reads on it (plain accent is 3.96:1 in
+   the default look). */
+:root { --uh-pill: var(--wp--preset--color--accent); --uh-pill-ink: var(--wp--preset--color--base); }
+@supports (color: color-mix(in srgb, red, blue)) {
+	:root { --uh-pill: color-mix(in srgb, var(--wp--preset--color--accent) 85%, var(--wp--preset--color--contrast)); }
+}
 /* A ring is drawn outside its link, so a block that hides its overflow cuts
    it off: the site title in the capsule (kept to one line) and a post's
    picture (rounded corners) showed no ring at all, the footer wordmark
@@ -487,6 +501,30 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	text-decoration-thickness: .04em;
 	text-underline-offset: .1em;
 }
+/* Header title (1.2.1): capitals, and on hover or keyboard focus the footer
+   wordmark's roll, in --uh-pill. unhurried_header_title_letters() splits it
+   as unhurried_wordmark_letters() splits the wordmark, so the timing and the
+   easing are the wordmark's own. The title already clips (it truncates), so
+   the letters need no window of their own: the wrapper stays inline, each
+   letter is cut off one by one when the title runs out of room, and the roll
+   travels 1.5em, past the title's line box. The stored title is unchanged;
+   screen readers hear it once, from the hidden copy. */
+.unhurried-capsule .wp-block-site-title { text-transform: uppercase; letter-spacing: .06em; }
+.unhurried-capsule .wp-block-site-title .unhurried-visually-hidden { text-transform: none; }
+.unhurried-capsule .wp-block-site-title .unhurried-wordmark__letters { display: inline; overflow: visible; padding: 0; margin: 0; }
+.unhurried-capsule .wp-block-site-title .unhurried-wordmark__letters > span { text-shadow: 0 1.5em var(--uh-pill); }
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-capsule .wp-block-site-title:has(a:focus-visible) .unhurried-wordmark__letters > span { transform: translateY(-1.5em); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-capsule .wp-block-site-title:hover .unhurried-wordmark__letters > span { transform: translateY(-1.5em); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.unhurried-capsule .wp-block-site-title .unhurried-wordmark__letters > span { text-shadow: none; transition: none; }
+	.unhurried-capsule .wp-block-site-title a:is(:hover, :focus-visible) { color: var(--uh-pill); }
+}
+/* A title left whole (right-to-left sites, joined scripts) takes the color only. */
+.unhurried-capsule .wp-block-site-title a:not(:has(.unhurried-wordmark__letters)):is(:hover, :focus-visible) { color: var(--uh-pill); }
 .unhurried-visually-hidden {
 	position: absolute !important;
 	width: 1px;
@@ -749,6 +787,36 @@ a:where(:not(.wp-element-button)) {
 }
 .wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
 .wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
+/* Header menu (1.2.1): hover and keyboard focus fill a pill shaped like the
+   header button, in --uh-pill. The pill's padding is there at rest and its
+   negative margin gives the room back, so nothing moves; .75rem a side meets
+   the next pill across the menu's 1.5rem gap. The current page keeps its
+   underline, on the pill too. The open mobile menu keeps the underline. */
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content {
+	padding: .6rem .75rem;
+	margin: -.6rem -.75rem;
+	border-radius: var(--wp--custom--radius--pill, 999px);
+	line-height: 1.2;
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:is(:hover, :focus-visible) {
+	background-color: var(--uh-pill);
+	color: var(--uh-pill-ink);
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content:not([aria-current]):is(:hover, :focus-visible) { text-decoration-color: transparent; }
+/* An item with a dropdown: the pill reaches over its arrow (13px: the arrow
+   and the space before it), and stays filled while the pointer is on the
+   arrow or in the dropdown, so the open dropdown shows where it hangs from. */
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:has(> .wp-block-navigation__submenu-icon) > .wp-block-navigation-item__content {
+	padding-inline-end: calc(.75rem + 13px);
+	margin-inline-end: calc(-.75rem - 13px);
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content {
+	background-color: var(--uh-pill);
+	color: var(--uh-pill-ink);
+}
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content:not([aria-current]) { text-decoration-color: transparent; }
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > .wp-block-navigation__submenu-icon { color: var(--uh-pill-ink); }
+.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; } /* the arrow stays clickable over the pill */
 /* Dropdowns unfold from the item. */
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container {
@@ -1148,6 +1216,23 @@ a:where(:not(.wp-element-button)) {
 .unhurried-footer .wp-block-categories a { color: var(--wp--preset--color--base); }
 .unhurried-footer .wp-block-latest-posts { font-size: var(--wp--preset--font-size--small); gap: .9rem; }
 .unhurried-footer .wp-block-latest-posts__post-date { display: block; margin-top: .15rem; font-size: var(--wp--preset--font-size--x-small); opacity: .7; }
+/* Ruled like a notebook (1.2.1): in the Explore, Topics and Latest columns
+   every line of text, the headings included, sits on one shared line pitch.
+   Each line box is one pitch tall, nothing between them, and the text is one
+   size and face, so baselines line up across the columns, and down each
+   column when they stack. Footers saved before 1.2.1 match too: the rules
+   hang on the column's contents, not on new classes. */
+.unhurried-footer { --uh-footer-line: 1.75rem; }
+.unhurried-footer .wp-block-column:has(> .unhurried-footer-list, > .unhurried-nav-plain) > * { margin-block: 0; }
+.unhurried-footer .wp-block-column:has(> .unhurried-footer-list, > .unhurried-nav-plain) :is(.is-style-eyebrow, li, a, .wp-block-latest-posts__post-date) {
+	font-family: var(--wp--preset--font-family--display);
+	line-height: var(--uh-footer-line);
+}
+.unhurried-footer .wp-block-column:has(> .unhurried-footer-list, > .unhurried-nav-plain) :is(.unhurried-footer-list, .unhurried-nav-plain, .wp-block-latest-posts__post-date) { font-size: var(--wp--preset--font-size--small); }
+.unhurried-footer .unhurried-footer-list,
+.unhurried-footer .unhurried-nav-plain .wp-block-navigation__container { gap: 0; }
+.unhurried-footer .wp-block-latest-posts__post-date { margin-top: 0; }
+.unhurried-footer .unhurried-nav-plain .wp-block-navigation-item__content { padding-block: 0; }
 .unhurried-footer-search { max-width: 26rem; }
 .unhurried-footer-search .wp-block-search__inside-wrapper {
 	border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 28%, transparent);
@@ -1291,12 +1376,22 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-terms .wp-block-term-name a { padding-inline-end: .35rem; }
 .unhurried-chip-terms .wp-block-term-count { padding-inline-end: .95rem; font-size: var(--wp--preset--font-size--x-small); color: var(--wp--preset--color--contrast-2); }
 .unhurried-chip a { border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; }
-.unhurried-chip-terms .wp-block-term:hover,
-.unhurried-chip a:hover { border-color: var(--wp--preset--color--contrast); }
+/* Hover only where there is a pointer: on a touch screen the darker edge
+   stayed on the tapped chip. */
+@media (hover: hover) {
+	.unhurried-chip-terms .wp-block-term:hover,
+	.unhurried-chip a:hover { border-color: var(--wp--preset--color--contrast); }
+}
 .unhurried-chip.is-current a,
 .unhurried-chip-terms .wp-block-term:has(.is-current) { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); }
 .unhurried-chip.is-current a,
 .unhurried-chip-terms .wp-block-term:has(.is-current) :is(a, .wp-block-term-count) { color: var(--wp--preset--color--base); }
+/* A topic chip is one control (1.2.1): its link covers the whole pill, count
+   included, and the keyboard ring goes around the pill, not around the name. */
+.unhurried-chip-terms .wp-block-term { position: relative; }
+.unhurried-chip-terms .wp-block-term-name a::after { content: ""; position: absolute; inset: 0; border-radius: 999px; }
+.unhurried-chip-terms .wp-block-term:has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
+.unhurried-chip-terms .wp-block-term a:focus-visible { outline: none; }
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }
 .unhurried-chip-links a { display: inline-block; padding: .3rem .7rem; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; font-size: var(--wp--preset--font-size--x-small); line-height: 1.1; text-decoration: none; color: var(--wp--preset--color--contrast); }

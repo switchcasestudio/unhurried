@@ -661,34 +661,20 @@ if ( ! function_exists( 'unhurried_size_wordmark' ) ) :
 endif;
 add_filter( 'render_block_core/site-title', 'unhurried_size_wordmark', 10, 2 );
 
-if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
+if ( ! function_exists( 'unhurried_split_title_letters' ) ) :
 	/**
-	 * Splits the footer wordmark into one span per letter for the hover roll.
+	 * Splits a rendered site title into one span per letter, the markup the
+	 * footer wordmark's roll uses: the letters hidden from assistive technology,
+	 * the whole title repeated in a visually hidden span. Marks, joiners,
+	 * right-to-left scripts and emoji skin tones leave the title whole.
 	 *
-	 * The letters are hidden from assistive technology and the whole title is
-	 * repeated in a visually hidden span, so screen readers still hear one word.
+	 * Shared by the footer wordmark and, since 1.2.1, the header title.
 	 *
-	 * Each letter becomes a box of its own, so the title is left whole, as in
-	 * 1.1.1, where boxes would misread it: on a right-to-left site the boxes
-	 * line up from the right (a Latin title read backwards), and letters that
-	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
-	 * accent typed apart, an emoji sequence) would come apart.
-	 *
-	 * A title with a letter outside plain ASCII (an accented capital, the
-	 * Cyrillic Д, Greek, Chinese, Japanese, an emoji) gets the modifier class
-	 * unhurried-wordmark__letters--tall: its letters reach above or below a
-	 * capital, so style.css gives them a taller window and a longer roll.
-	 *
-	 * @since 1.2.0
-	 * @param string $block_content Rendered block HTML.
-	 * @param array  $block         Parsed block.
+	 * @since 1.2.1
+	 * @param string $block_content Rendered site title HTML.
 	 * @return string
 	 */
-	function unhurried_wordmark_letters( $block_content, $block ) {
-		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
-		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) || is_rtl() ) {
-			return $block_content;
-		}
+	function unhurried_split_title_letters( $block_content ) {
 		$split = static function ( $inner ) {
 			$text = trim( html_entity_decode( wp_strip_all_tags( $inner ), ENT_QUOTES, get_bloginfo( 'charset' ) ) );
 			// Marks, joiners, right-to-left scripts and emoji skin tones stay whole.
@@ -726,7 +712,73 @@ if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
 		return is_string( $out ) ? $out : $block_content;
 	}
 endif;
+
+if ( ! function_exists( 'unhurried_wordmark_letters' ) ) :
+	/**
+	 * Splits the footer wordmark into one span per letter for the hover roll.
+	 *
+	 * The letters are hidden from assistive technology and the whole title is
+	 * repeated in a visually hidden span, so screen readers still hear one word.
+	 *
+	 * Each letter becomes a box of its own, so the title is left whole, as in
+	 * 1.1.1, where boxes would misread it: on a right-to-left site the boxes
+	 * line up from the right (a Latin title read backwards), and letters that
+	 * join or carry separate marks (Arabic, Hebrew, the Indic scripts, an
+	 * accent typed apart, an emoji sequence) would come apart.
+	 *
+	 * A title with a letter outside plain ASCII (an accented capital, the
+	 * Cyrillic Д, Greek, Chinese, Japanese, an emoji) gets the modifier class
+	 * unhurried-wordmark__letters--tall: its letters reach above or below a
+	 * capital, so style.css gives them a taller window and a longer roll.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered block HTML.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_wordmark_letters( $block_content, $block ) {
+		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+		if ( false === strpos( $class, 'unhurried-wordmark' ) || false !== strpos( $block_content, 'unhurried-wordmark__letters' ) || is_rtl() ) {
+			return $block_content;
+		}
+		return unhurried_split_title_letters( $block_content );
+	}
+endif;
 add_filter( 'render_block_core/site-title', 'unhurried_wordmark_letters', 11, 2 );
+
+if ( ! function_exists( 'unhurried_header_title_letters' ) ) :
+	/**
+	 * Splits the header title into letters for its hover roll (style.css,
+	 * "Header title").
+	 *
+	 * The title is found inside the header capsule (the group with the class
+	 * unhurried-capsule) once the capsule has rendered, so it works in the
+	 * theme's headers, the header patterns and a header saved in the Site
+	 * Editor alike, whatever the title says and with or without the logo.
+	 * Right-to-left sites keep the title whole, as the wordmark does.
+	 *
+	 * @since 1.2.1
+	 * @param string $block_content Rendered group HTML.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_header_title_letters( $block_content, $block ) {
+		$class = isset( $block['attrs']['className'] ) ? (string) $block['attrs']['className'] : '';
+		if ( false === strpos( $class, 'unhurried-capsule' ) || false === strpos( $block_content, 'wp-block-site-title' ) || is_rtl() ) {
+			return $block_content;
+		}
+		$out = preg_replace_callback(
+			'#<(p|h[1-6])\b[^>]*\bclass="[^"]*\bwp-block-site-title\b[^"]*"[^>]*>.*?</\1>#s',
+			static function ( $m ) {
+				return false !== strpos( $m[0], 'unhurried-wordmark__letters' ) ? $m[0] : unhurried_split_title_letters( $m[0] );
+			},
+			$block_content,
+			1
+		);
+		return is_string( $out ) ? $out : $block_content;
+	}
+endif;
+add_filter( 'render_block_core/group', 'unhurried_header_title_letters', 10, 2 );
 
 if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
 	/**

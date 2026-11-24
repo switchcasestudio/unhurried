@@ -393,7 +393,7 @@
 						"textDecoration": "none"
 					}
 				},
-				":focus": {
+				":focus-visible": {
 					"outline": {
 						"color": "var(--uh-focus, var(--wp--preset--color--accent))",
 						"offset": "3px",
@@ -432,7 +432,7 @@
 						"text": "var(--wp--preset--color--base)"
 					}
 				},
-				":focus": {
+				":focus-visible": {
 					"outline": {
 						"color": "var(--uh-focus, var(--wp--preset--color--accent))",
 						"offset": "3px",
