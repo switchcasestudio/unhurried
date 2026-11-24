@@ -332,6 +332,53 @@ if ( ! function_exists( 'unhurried_theme_image_loading' ) ) :
 endif;
 add_filter( 'wp_get_loading_optimization_attributes', 'unhurried_theme_image_loading', 10, 3 );
 
+if ( ! function_exists( 'unhurried_hero_image_priority' ) ) :
+	/**
+	 * Lets the photograph of a hero that a template places load first.
+	 *
+	 * WordPress gives the first large picture in a page's content
+	 * fetchpriority="high" and keeps it from lazy loading, but it leaves
+	 * pictures that are part of the template itself to their blocks (the
+	 * journal, archive, search and page-not-found heroes since 1.2.0), and
+	 * a Cover block decides nothing for a picture it holds. The post pictures
+	 * in the grid further down were counted first, so
+	 * unhurried_theme_image_loading() then lazy-loaded the hero's photograph,
+	 * the largest thing on the first screen. Here the photograph of a theme
+	 * hero (a Cover with the class unhurried-hero-photo__stage or
+	 * unhurried-hero-statue__stage) shown outside a post's content gets
+	 * fetchpriority="high", when nothing on the page has had it yet. In a
+	 * post's content WordPress's own rule is left to decide.
+	 *
+	 * @since 1.2.0
+	 * @param string $block_content Rendered Cover block.
+	 * @return string
+	 */
+	function unhurried_hero_image_priority( $block_content ) {
+		if ( false === strpos( (string) $block_content, 'unhurried-hero-' ) || doing_filter( 'the_content' ) || ! function_exists( 'wp_high_priority_element_flag' ) || ! wp_high_priority_element_flag() || ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag() || ! ( $tags->has_class( 'unhurried-hero-photo__stage' ) || $tags->has_class( 'unhurried-hero-statue__stage' ) ) ) {
+			return $block_content;
+		}
+		// The Cover's own photograph comes first, before or after its shade.
+		$seen = 0;
+		while ( $seen < 2 && $tags->next_tag() ) {
+			++$seen;
+			if ( 'IMG' === $tags->get_tag() && $tags->has_class( 'wp-block-cover__image-background' ) ) {
+				if ( null !== $tags->get_attribute( 'loading' ) || null !== $tags->get_attribute( 'fetchpriority' ) ) {
+					return $block_content;
+				}
+				$tags->set_attribute( 'fetchpriority', 'high' );
+				wp_high_priority_element_flag( false );
+				return $tags->get_updated_html();
+			}
+		}
+		return $block_content;
+	}
+endif;
+add_filter( 'render_block_core/cover', 'unhurried_hero_image_priority', 11 );
+
 if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	/**
 	 * Lets phones load a smaller copy of a bundled Cover photograph.
