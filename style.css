@@ -1116,6 +1116,16 @@ a:where(:not(.wp-element-button)) {
 		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .68) 45%, rgba(22, 20, 15, .46) 100%);
 	}
 }
+/* Right to left, each line runs to the right while the left-justified groups
+   keep their boxes at the left, so the words can stand anywhere across the
+   frame: the shade is even, as on the staggered hero (below). */
+@media (min-width: 782px) {
+	[dir="rtl"] .unhurried-hero-photo__stage > .wp-block-cover__background.wp-block-cover__background {
+		background:
+			linear-gradient(rgba(22, 20, 15, .52), rgba(22, 20, 15, .52)),
+			linear-gradient(to top, rgba(22, 20, 15, .6), rgba(22, 20, 15, 0) 60%);
+	}
+}
 /* Words spread across the whole frame (Hero, staggered type): an even shade
    at every width, deeper at the foot. */
 .unhurried-hero-photo__stage--even > .wp-block-cover__background.wp-block-cover__background {
