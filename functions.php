@@ -203,7 +203,7 @@ if ( ! function_exists( 'unhurried_page_head_names' ) ) :
 		wp_add_inline_style(
 			'unhurried-style',
 			'@media (prefers-reduced-motion: no-preference){'
-			. '.single main .wp-block-post-featured-image:not(.wp-block-post *) img,.single-product main .woocommerce-product-gallery__image:first-child img{view-transition-name:uh-photo}'
+			. '.single main .wp-block-post-featured-image:not(.wp-block-post *) img,.single-product main .woocommerce-product-gallery__image:first-child img.wp-post-image{view-transition-name:uh-photo}'
 			. '.single main h1.wp-block-post-title,.single-product main h1:is(.wp-block-post-title,.product_title){view-transition-name:uh-title}'
 			. '::view-transition-group(uh-photo),::view-transition-group(uh-title),::view-transition-old(uh-photo),::view-transition-new(uh-photo),::view-transition-old(uh-title),::view-transition-new(uh-title){animation-duration:480ms}}'
 		);
