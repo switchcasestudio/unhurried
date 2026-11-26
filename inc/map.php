@@ -196,12 +196,12 @@ if ( ! function_exists( 'unhurried_map_frame' ) ) :
 		// The map's own full-screen button needs the frame's permission, as
 		// Google's embed code gives it (1.2.1). A plugin's frame may come
 		// without (Gmap Block does), and Safari then logged a failed
-		// "fullscreen" permission check. Both copies below carry it.
+		// "fullscreen" permission check. Both copies below carry it, as
+		// allowfullscreen alone: it allows any address the frame goes on to,
+		// and maps.google.com moves on to www.google.com. An allow attribute
+		// naming fullscreen would allow only the first address and would
+		// overrule allowfullscreen, so the theme adds none.
 		$tags->set_attribute( 'allowfullscreen', true );
-		$allow = trim( (string) $tags->get_attribute( 'allow' ) );
-		if ( ! preg_match( '/(^|;)\s*fullscreen(\s|;|$)/i', $allow ) ) {
-			$tags->set_attribute( 'allow', '' === $allow ? 'fullscreen' : rtrim( $allow, '; ' ) . '; fullscreen' );
-		}
 		// The address waits in data-src until map.js sees the map within
 		// about a screen of the window (the browser's own lazy loading reached
 		// Google two to four screens ahead). Without JavaScript the copy in
