@@ -35,6 +35,8 @@ $unhurried_search     = serialize_block_attributes(
 );
 // Newsletter: a plugin's signup form (see unhurried_newsletter_form()), or the RSS feed.
 $unhurried_newsletter = unhurried_newsletter_form();
+// Privacy, Terms and Returns beside the copyright, once those pages are published (inc/legal.php).
+$unhurried_legal = function_exists( 'unhurried_legal_links_block' ) ? unhurried_legal_links_block() : '';
 
 /*
  * Social profiles. They ship as "#" placeholders, which
@@ -134,6 +136,10 @@ $unhurried_social = array(
 	<!-- wp:site-title {"level":0,"className":"unhurried-wordmark","style":{"typography":{"fontSize":"clamp(3.5rem, 15vw, 17rem)","fontWeight":"500"}}} /-->
 	<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40"},"blockGap":"var:preset|spacing|60"},"border":{"top":{"color":"#f6f4ef2e","width":"1px","style":"solid"}}},"fontSize":"x-small","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
 	<div class="wp-block-group has-x-small-font-size" style="border-top-color:#f6f4ef2e;border-top-style:solid;border-top-width:1px;padding-top:var(--wp--preset--spacing--40)">
+		<?php if ( '' !== $unhurried_legal ) : ?>
+		<!-- wp:group {"className":"unhurried-footer-start","style":{"spacing":{"blockGap":"var:preset|spacing|50"}},"layout":{"type":"flex","flexWrap":"wrap"}} -->
+		<div class="wp-block-group unhurried-footer-start">
+		<?php endif; ?>
 		<!-- wp:paragraph -->
 		<p>
 		<?php
@@ -146,6 +152,11 @@ $unhurried_social = array(
 		?>
 		</p>
 		<!-- /wp:paragraph -->
+		<?php if ( '' !== $unhurried_legal ) : ?>
+			<?php echo $unhurried_legal; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_legal_links_block(), which escapes each address and label. ?>
+		</div>
+		<!-- /wp:group -->
+		<?php endif; ?>
 		<!-- wp:paragraph -->
 		<p><a href="#top"><?php esc_html_e( 'Back to top ↑', 'unhurried' ); ?></a></p>
 		<!-- /wp:paragraph -->
