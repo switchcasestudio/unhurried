@@ -182,7 +182,18 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 :not(.unhurried-header) > .unhurried-marquee { margin: 0 !important; }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-marquee__track { animation: unhurried-marquee 70s linear infinite; }
-	.unhurried-marquee:is(:hover, :focus-within) .unhurried-marquee__track { animation-play-state: paused; }
+	/* It holds still under a pointer that hovers and while the keyboard is in
+	   it (1.2.1). Not after a tap: a touch screen keeps its hover on the tapped
+	   button, and the line stayed still after Play until the reader tapped
+	   elsewhere. Play (is-played, reveal-late.js) moves it at once even with
+	   the pointer or the focus still on it. */
+	@media (hover: hover) {
+		.unhurried-marquee:hover:not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	}
+	.unhurried-marquee:has(:focus-visible):not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	@supports not selector(:has(a)) {
+		.unhurried-marquee:focus-within:not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	}
 	[dir="rtl"] .unhurried-marquee__track { animation-name: unhurried-marquee-rtl; }
 }
 /* Without JavaScript there is no pause button, so the line stands still (WCAG 2.2.2). */

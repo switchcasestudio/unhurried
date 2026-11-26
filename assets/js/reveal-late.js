@@ -157,6 +157,18 @@
 			var paused = 'true' !== button.getAttribute( 'aria-pressed' );
 			button.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
 			line.classList.toggle( 'is-paused', paused );
+			// Play moves the line at once, with the pointer or the focus
+			// still on the button; hover and focus hold it again once they
+			// have left it (style.css).
+			line.classList.toggle( 'is-played', ! paused );
+		} );
+		line.addEventListener( 'pointerleave', function () {
+			line.classList.remove( 'is-played' );
+		} );
+		line.addEventListener( 'focusout', function ( event ) {
+			if ( ! line.contains( event.relatedTarget ) ) {
+				line.classList.remove( 'is-played' );
+			}
 		} );
 	} );
 
