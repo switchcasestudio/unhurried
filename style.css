@@ -185,6 +185,8 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.unhurried-marquee:is(:hover, :focus-within) .unhurried-marquee__track { animation-play-state: paused; }
 	[dir="rtl"] .unhurried-marquee__track { animation-name: unhurried-marquee-rtl; }
 }
+/* Without JavaScript there is no pause button, so the line stands still (WCAG 2.2.2). */
+@media (scripting: none) { .unhurried-marquee__track { animation: none !important; } } /* !important: the moving rule above */
 @keyframes unhurried-marquee { to { transform: translateX(-50%); } }
 @keyframes unhurried-marquee-rtl { to { transform: translateX(50%); } }
 
@@ -943,7 +945,7 @@ a:where(:not(.wp-element-button)) {
 	}
 }
 @keyframes uh-capsule-in { from { opacity: .4; translate: 0 -12px; } }
-@keyframes uh-drift { from { translate: 0 -6%; scale: 1.14; } to { translate: 0 6%; scale: 1.14; } }
+@keyframes uh-drift { from { translate: 0 -3%; scale: 1.07; } to { translate: 0 3%; scale: 1.07; } }
 @keyframes uh-float-up { from { translate: 0 22px; } to { translate: 0 -22px; } }
 @keyframes uh-float-down { from { translate: 0 -14px; } to { translate: 0 30px; } }
 @keyframes uh-sink { to { translate: 0 16%; } }
@@ -958,7 +960,7 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 		.uh-motion .wp-block-post .wp-block-post-featured-image:not(:has(img[style*="radius"])) img { animation: uh-frame-drift linear both; animation-timeline: view(); }
 	}
 }
-:root { --uh-drift: 4%; --uh-drift-scale: 1.1; }
+:root { --uh-drift: 2%; --uh-drift-scale: 1.05; }
 @keyframes uh-frame-drift { from { translate: 0 calc(-1 * var(--uh-drift)); scale: var(--uh-drift-scale); } to { translate: 0 var(--uh-drift); scale: var(--uh-drift-scale); } }
 
 @media (prefers-reduced-motion: no-preference) {

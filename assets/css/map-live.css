@@ -36,3 +36,5 @@
 }
 /* The address under a map, as text. !important: the column's block gap. */
 .unhurried-map-caption { margin-block-start: var(--wp--preset--spacing--30) !important; letter-spacing: .02em; }
+/* Without JavaScript the map in <noscript> shows; the frame waiting for map.js stays out. */
+@media (scripting: none) { .unhurried-map-frame iframe[data-src] { display: none; } }

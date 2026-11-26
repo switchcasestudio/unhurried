@@ -37,9 +37,36 @@
 		keyboard = false;
 	}, true );
 
+	// A live map's frame gets its address (data-src, from inc/map.php) only
+	// once it is within about a screen of the window: until then the page
+	// contacts no one for it.
+	function load( map ) {
+		if ( map && map.hasAttribute( 'data-src' ) ) {
+			map.src = map.getAttribute( 'data-src' );
+			map.removeAttribute( 'data-src' );
+		}
+	}
+	var near = 'IntersectionObserver' in window ? new window.IntersectionObserver( function ( entries ) {
+		entries.forEach( function ( entry ) {
+			if ( entry.isIntersecting ) {
+				near.unobserve( entry.target );
+				load( entry.target );
+			}
+		} );
+	}, { rootMargin: '100% 0px' } ) : null;
+	frames.forEach( function ( frame ) {
+		var map = frame.querySelector( 'iframe[data-src]' );
+		if ( map && near ) {
+			near.observe( map );
+		} else {
+			load( map );
+		}
+	} );
+
 	function live( frame, focus ) {
 		var button = frame.querySelector( '.unhurried-map-frame__use' );
 		var map = frame.querySelector( 'iframe' );
+		load( map );
 		frame.classList.add( 'is-live' );
 		if ( button ) {
 			button.hidden = true;

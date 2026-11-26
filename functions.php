@@ -146,7 +146,7 @@ if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
 	/**
 	 * The scroll choreography and the quiet responses (assets/css/scroll.css).
 	 *
-	 * Loaded by assets/js/reveal.js once the page has loaded, so it never
+	 * Loaded by assets/js/reveal-late.js once the page has loaded, so it never
 	 * competes with the first screen: all it styles is below the window or
 	 * answers a pointer. Without JavaScript a noscript link loads it for the
 	 * pointer responses (unhurried_scroll_styles_noscript()). Child themes
@@ -157,7 +157,17 @@ if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
 	 * @return void
 	 */
 	function unhurried_scroll_styles() {
-		wp_localize_script( 'unhurried-reveal', 'unhurriedScroll', array( 'css' => unhurried_scroll_styles_url() ) );
+		// The rest of the motion (assets/js/reveal-late.js, 1.2.1) is fetched
+		// by reveal.js when the page is idle after load; it loads scroll.css.
+		$late = add_query_arg( 'ver', rawurlencode( (string) wp_get_theme( get_template() )->get( 'Version' ) ), get_theme_file_uri( 'assets/js/reveal-late.js' ) );
+		wp_localize_script(
+			'unhurried-reveal',
+			'unhurriedScroll',
+			array(
+				'css'  => unhurried_scroll_styles_url(),
+				'late' => $late,
+			)
+		);
 	}
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_scroll_styles', 20 );
