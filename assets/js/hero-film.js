@@ -7,7 +7,8 @@
  * only when motion is allowed (no reduced motion), the visitor has not asked
  * for less data, the page has finished loading (so the film never competes
  * with the page itself), the film is in view and, where the button names a
- * media query (data-media: the stage's film needs a wide window), the window
+ * media query (data-media: the stage's film needs a wide window, wider than
+ * tall and at least 480px tall, so never a phone held either way), the window
  * matches it; it pauses when it leaves the view and goes on when it
  * returns. It is always muted and plays inline on phones. The button beside
  * the caption pauses and plays it, and the choice is kept for this visitor
