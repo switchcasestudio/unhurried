@@ -84,6 +84,11 @@
 @media (hover: hover) {
 	.unhurried-hero-film__toggle:hover { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
 }
+/* Touch screens: a tap across 44px, through a layer that draws nothing. */
+@media (any-pointer: coarse) {
+	.unhurried-hero-film__toggle { position: relative; }
+	.unhurried-hero-film__toggle::before { content: ""; position: absolute; inset: -3px; }
+}
 
 /* Tablets held upright: words and frame side by side, as on wider screens. !important: core stacks columns below 782px. */
 @media (min-width: 600px) and (max-width: 781px) {
@@ -104,8 +109,10 @@
 
 /* The statue hero's stage with a film: the film covers the whole stage, over its photograph and
    under the shade and the words (z-index as the Cover's own picture). It plays only where the
-   stage is wide (data-media on its button); elsewhere the photograph stays. */
+   stage is wide (data-media on its button); elsewhere the photograph stays, and this file may
+   not load at all (inc/hero-film.php): what every window needs is in style.css. */
 .wp-block-cover.has-film > .unhurried-hero-film__film {
+	display: block;
 	position: absolute;
 	inset: 0;
 	z-index: 0;
@@ -146,10 +153,8 @@
 		linear-gradient(to top, rgba(22, 20, 15, .45) 0%, rgba(22, 20, 15, 0) 55%),
 		radial-gradient(ellipse at 100% 100%, rgba(22, 20, 15, .35) 0%, rgba(22, 20, 15, 0) 40%);
 }
-/* The caption, small, at the lower right where the film is brightest: a little more of its color. */
-.wp-block-cover.has-film .unhurried-hero-statue__caption { opacity: .85; }
-/* The button beside the caption, never on the words: the two side by side, the button's place kept. */
-.unhurried-hero-film__aside { display: flex; align-items: center; gap: var(--wp--preset--spacing--30); }
+/* Right to left the words stand at the right: the shade, mirrored. */
+[dir="rtl"] .wp-block-cover.has-film > .unhurried-hero-film__film::after { scale: -1 1; }
 .wp-block-cover .unhurried-hero-film__toggle { color: inherit; }
 @media (hover: hover) {
 	.wp-block-cover .unhurried-hero-film__toggle:hover { border-color: rgb(246, 244, 239); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }

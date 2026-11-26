@@ -331,8 +331,11 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
    the header button and an accordion's question take a tap across at least
    44 by 44px, through a layer that draws nothing. Each stays inside the room
    already around it, so no tap lands on a neighbor and nothing moves. On a
-   phone the capsule leaves 8px each side of the 24px menu button, and a cut
-   title can stand right beside it: there it takes 40 by 44px. */
+   phone the capsule leaves 8px after the 24px menu button, and 12px of its
+   layer reach back toward the title: the site title (its ellipsis too) and
+   the logo stand above that layer, so where a long or cut title comes closer
+   than 12px the title keeps every tap and the button takes what is left
+   (40px wide at the least, the 8px each side it always had). */
 @media (any-pointer: coarse) {
 	.wp-block-navigation__responsive-container-open { position: relative; }
 	.wp-block-navigation__responsive-container-open::before,
@@ -342,7 +345,8 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.wp-block-details summary { position: relative; }
 }
 @media (any-pointer: coarse) and (max-width: 480px) {
-	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -8px; }
+	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -12px -8px; }
+	.unhurried-capsule :is(.wp-block-site-title, .wp-block-site-logo) { position: relative; z-index: 1; }
 }
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
@@ -1099,6 +1103,18 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	background-color: transparent !important;
 	opacity: 1 !important;
 }
+/* Right to left the words stand at the right, over the face: the shade
+   follows them, mirrored (1.2.1), and the caption, now at the lower left
+   over brighter marble, gets a little more in its corner. Phones and a
+   phone held sideways have their own shades below. */
+@media (min-width: 782px) {
+	[dir="rtl"] .unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background:
+			linear-gradient(270deg, rgba(22, 20, 15, .82) 0%, rgba(22, 20, 15, .56) 36%, rgba(22, 20, 15, 0) 72%),
+			linear-gradient(to top, rgba(22, 20, 15, .55), rgba(22, 20, 15, 0) 45%),
+			radial-gradient(ellipse at 0% 100%, rgba(22, 20, 15, .6) 0%, rgba(22, 20, 15, 0) 50%);
+	}
+}
 /* Core sizes a positioned cover's content to fit; this one spans the frame. */
 .unhurried-hero-statue__stage > .wp-block-cover__inner-container,
 .unhurried-hero-statue__foot { width: 100% !important; max-width: none !important; }
@@ -1114,11 +1130,30 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 .unhurried-hero-statue__title { margin-block: .3em clamp(1.5rem, 5vh, 3.5rem) !important; }
 .unhurried-hero-statue__body p { color: color-mix(in srgb, currentColor 80%, transparent); }
 .unhurried-hero-statue__caption { margin: 0; opacity: .7; letter-spacing: .04em; }
+/* A stage with a film (inc/hero-film.php). Its stylesheet, assets/css/hero-film.css,
+   loads only for a window where the film can play; in every window the film's
+   layer is left out until then, and the caption stands beside the film
+   button's place, kept while the button is hidden, a little stronger. */
+.wp-block-cover.has-film > .unhurried-hero-film__film { display: none; }
+.unhurried-hero-film__aside { display: flex; align-items: center; gap: var(--wp--preset--spacing--30); }
+.unhurried-hero-film__aside > .unhurried-hero-film__toggle[hidden] { display: inline-flex; visibility: hidden; box-sizing: border-box; width: 2.5rem; height: 2.5rem; margin: 0; padding: 0; color: inherit; }
+.wp-block-cover.has-film .unhurried-hero-statue__caption { opacity: .85; }
 @media (max-width: 781px) {
 	.unhurried-hero-statue__stage.wp-block-cover { min-height: max(560px, calc(100svh - 80px + var(--uh-under))) !important; }
 	:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background { object-position: 72% 30% !important; }
+	/* The shade holds .62 Ink up to 620px above the stage's foot, past the
+	   eyebrow at every phone width (1.2.1): the portrait copy puts brighter
+	   marble behind it, and a shade that faded out from 45% of the stage's
+	   height left the eyebrow at 1.8 to 3.3:1 there. The face above stays lit. */
 	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
-		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0, rgba(22, 20, 15, .66) 380px, rgba(22, 20, 15, .62) 620px, rgba(22, 20, 15, .1) 780px);
+	}
+}
+/* Narrower than a phone held upright (page zoom): the words reach nearly to
+   the stage's top, and the shade holds behind all of them. */
+@media (max-width: 319.98px) {
+	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0, rgba(22, 20, 15, .66) 380px, rgba(22, 20, 15, .62) 100%);
 	}
 }
 /* A phone held sideways (1.2.1): a window wider than it is tall and under
@@ -1128,13 +1163,17 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
    the words start near the top of the stage and take less room: the
    eyebrow, the title and the lede show on the first screen, the buttons at
    its foot. Phones held upright, tablets and desktops are unchanged.
-   !important: the rules above, the block's own inline padding and
-   WordPress's preset size classes all carry it. */
+   The words sit close (1.2.1, Safari's landscape tab bar leaves 280px): the
+   buttons show whole from about 300px tall (all of them at 750 × 330), and
+   their label at 280px; below 330px the title steps down to 1.5rem, never
+   under the 24px of large text. !important: the rules above, the block's
+   own inline padding and WordPress's preset size classes all carry it. */
 @media (orientation: landscape) and (max-height: 479.98px) {
-	.unhurried-hero-statue__stage.wp-block-cover { min-height: 0 !important; padding-top: var(--wp--preset--spacing--40) !important; }
-	.unhurried-hero-statue__stage .unhurried-hero-statue__title { font-size: clamp(2rem, 11svh, 3rem) !important; margin-block: .2em var(--wp--preset--spacing--40) !important; }
-	.unhurried-hero-statue__stage .unhurried-hero-statue__body > p { max-width: min(46ch, 58vw); font-size: var(--wp--preset--font-size--medium) !important; }
-	.unhurried-hero-statue__stage .unhurried-hero-statue__body > * + * { margin-block-start: var(--wp--preset--spacing--40); }
+	.unhurried-hero-statue__stage.wp-block-cover { min-height: 0 !important; padding-top: var(--wp--preset--spacing--20) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__title { font-size: clamp(1.5rem, min(11svh, 24.6svh - 2.8rem), 3rem) !important; margin-block: .2em var(--wp--preset--spacing--30) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__foot { margin-block-start: 0 !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > p { max-width: min(46ch, 58vw); font-size: var(--wp--preset--font-size--medium) !important; line-height: 1.35 !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > * + * { margin-block-start: var(--wp--preset--spacing--20); }
 	/* The words in one column at the left, the caption last; the shade is
 	   deepest there (at least .62 Ink wherever a word can sit, so the small
 	   words keep 4.5:1 over the brightest marble), and the face stays lit. */
@@ -1547,12 +1586,16 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-terms .wp-block-term-name a::after { content: ""; position: absolute; inset: 0; border-radius: 999px; }
 .unhurried-chip-terms .wp-block-term:has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
 .unhurried-chip-terms .wp-block-term a:focus-visible { outline: none; }
-/* Touch targets (1.2.1): a chip takes a tap 4px above and below its pill,
-   half the 8px between two rows of chips, so no tap lands on the next row. */
+/* Touch targets (1.2.1): a chip takes a tap across 44px, centered on its
+   33px pill. Rows of chips stand that much further apart on a touch screen
+   (11px instead of 8px between rows; the pill is 1rem of padding, the small
+   size and its edge), so the layers of two rows meet and never overlap; a
+   pointer that hovers keeps the 8px. */
 @media (any-pointer: coarse) {
 	.unhurried-chip a { position: relative; }
-	.unhurried-chip a::before { content: ""; position: absolute; inset: -4px 0; }
-	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: -4px; }
+	.unhurried-chip a::before { content: ""; position: absolute; inset-inline: 0; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: auto; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	:is(.wp-block-group.unhurried-chips, .unhurried-chip-terms .wp-block-term-template) { row-gap: max(.5rem, calc(42px - 1rem - var(--wp--preset--font-size--small))); }
 }
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }

@@ -48,16 +48,30 @@ add_action( 'after_setup_theme', 'unhurried_hero_film_editor_style', 11 );
 
 if ( ! function_exists( 'unhurried_hero_film_assets' ) ) :
 	/**
-	 * Loads the films' stylesheet (printed inline) and, with a film, its script.
+	 * Loads the films' stylesheet (printed inline when it fits) and, with a film, its script.
+	 *
+	 * A stage's film plays only in a window that matches its media query: on a
+	 * page whose only film is a stage's, the stylesheet's link carries that
+	 * query, so a window where the film never plays (a phone) does not wait for
+	 * it (style.css holds the few rules every window needs there). The framed
+	 * picture needs the stylesheet in every window: once it asks, or two
+	 * queries differ, the link is for every window.
 	 *
 	 * @since 1.2.1
-	 * @param bool $script Whether a film is on the page.
+	 * @param bool   $script Whether a film is on the page.
+	 * @param string $media  The media query the stylesheet is needed for ('' for every window).
 	 * @return void
 	 */
-	function unhurried_hero_film_assets( $script ) {
+	function unhurried_hero_film_assets( $script, $media = '' ) {
 		$version = wp_get_theme( get_template() )->get( 'Version' );
-		wp_enqueue_style( 'unhurried-hero-film', get_template_directory_uri() . '/assets/css/hero-film.css', array( 'unhurried-style' ), $version );
-		wp_style_add_data( 'unhurried-hero-film', 'path', get_template_directory() . '/assets/css/hero-film.css' );
+		$styles  = wp_styles();
+		if ( ! isset( $styles->registered['unhurried-hero-film'] ) ) {
+			wp_register_style( 'unhurried-hero-film', get_template_directory_uri() . '/assets/css/hero-film.css', array( 'unhurried-style' ), $version, '' === $media ? 'all' : $media );
+			wp_style_add_data( 'unhurried-hero-film', 'path', get_template_directory() . '/assets/css/hero-film.css' );
+		} elseif ( '' === $media || $media !== $styles->registered['unhurried-hero-film']->args ) {
+			$styles->registered['unhurried-hero-film']->args = 'all';
+		}
+		wp_enqueue_style( 'unhurried-hero-film' );
 		if ( $script ) {
 			wp_enqueue_script(
 				'unhurried-hero-film',
@@ -192,7 +206,8 @@ if ( ! function_exists( 'unhurried_hero_film_stage' ) ) :
 			$at = strpos( $html, '>' ) + 1;
 		}
 		$html   = substr_replace( $html, $film->get_updated_html(), $at, 0 );
-		$button = unhurried_hero_film_button( $video_id, '(min-width: 782px) and (min-aspect-ratio: 1/1) and (min-height: 480px)' );
+		$media  = '(min-width: 782px) and (min-aspect-ratio: 1/1) and (min-height: 480px)';
+		$button = unhurried_hero_film_button( $video_id, $media );
 		if ( preg_match( '#<p\b[^>]*\bunhurried-hero-statue__caption\b[^>]*>.*?</p>#s', $html, $caption, PREG_OFFSET_CAPTURE ) ) {
 			$html = substr_replace( $html, '<div class="unhurried-hero-film__aside">' . $caption[0][0] . $button . '</div>', $caption[0][1], strlen( $caption[0][0] ) );
 		} else {
@@ -203,7 +218,7 @@ if ( ! function_exists( 'unhurried_hero_film_stage' ) ) :
 				$html = substr_replace( $html, '<div class="unhurried-hero-film__aside">' . $button . '</div>', $inner, 0 );
 			}
 		}
-		unhurried_hero_film_assets( true );
+		unhurried_hero_film_assets( true, $media );
 		return $html;
 	}
 endif;
