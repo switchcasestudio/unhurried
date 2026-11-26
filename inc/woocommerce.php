@@ -214,7 +214,7 @@ if ( ! function_exists( 'unhurried_woocommerce_still_scripts' ) ) :
 	 * @return void
 	 */
 	function unhurried_woocommerce_still_scripts() {
-		if ( ( unhurried_woocommerce_is_purchase_page() || is_product() ) && wp_script_is( 'jquery-core', 'registered' ) ) {
+		if ( ( unhurried_woocommerce_is_purchase_page() || ( function_exists( 'is_product' ) && is_product() ) ) && wp_script_is( 'jquery-core', 'registered' ) ) {
 			wp_add_inline_script( 'jquery-core', 'jQuery.fx.off = true;' );
 		}
 	}
