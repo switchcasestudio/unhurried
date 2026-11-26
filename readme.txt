@@ -28,7 +28,7 @@ The theme includes:
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
 * Two header patterns: centered title, and quiet (no navigation).
 * A journal with breadcrumbs, topic chips, a posts-only search, reading time, related posts, an author box and a reading progress bar, plus a Topics directory page pattern and a long-form Essay pattern.
-* An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section, a quiet footer, and a footer with visit details for your address and email.
+* An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section (a drawn map, or a live Google map with a free plugin, see Live Google map below), a quiet footer, and a footer with visit details for your address and email.
 * An About Unhurried screen under Appearance, with getting-started steps, credits, a short list of plugins that fit, and a note about Unhurried Pro, the paid child theme that styles WooCommerce. The screen links to a setup guide on switchcasestudio.com; some links on that guide are affiliate links.
 
 == Installation ==
@@ -65,6 +65,26 @@ In the dark looks (Nocturne, Moss, Harbor, Plum, Lagoon, Dusk) the theme tells t
 `add_filter( 'unhurried_dark_color_scheme', '__return_false' );`
 
 WPForms Lite sets its own label colors for a light page. In the dark looks the theme gives its labels, notes and required marks the look's text colors; a form you style in the WPForms block keeps the colors you chose.
+
+== Live Google map ==
+
+The Map and directions section, on the homepage and the Visit page, shows a drawn map with a pin. The theme loads no map service by itself. Two free ways put a live Google map in its place, and neither needs a Google account, an API key or a paid plan. Either way the map takes the theme's look: a rounded frame, black and white (dark in the dark looks), and a terracotta pin that drops onto your place as visitors scroll to it. The map moves only once a visitor clicks it or presses Pan and zoom, so the page scrolls past it freely.
+
+With the free Gmap Block plugin (recommended):
+
+1. Go to Plugins > Add Plugin, search for Gmap Block, then click Install Now and Activate.
+2. Open the page with the map in the editor. A page made from the Homepage or the Map and directions pattern after step 1 already shows a live map at the demo place. If yours still shows the drawn map, click the drawn map, delete it (the three dots in its toolbar, then Delete), and in the same spot add a Google Map block (the + button, then search for Google Map).
+3. Select the map and type your address, or your latitude and longitude, in its Enter a Location box in the settings on the right. A Zoom Level of 15 shows a few streets around you.
+4. Change the address beside the map and the line under it, and point the Get directions button to https://www.google.com/maps/search/?api=1&query= followed by your address, with + between the words.
+
+Without a plugin:
+
+1. In Google Maps, search for your address.
+2. Before you move the map, click Share, then Embed a map, then Copy HTML. This keeps your place in the middle of the map, where the theme's pin lands.
+3. In the editor, click the drawn map, delete it, and in the same spot add a Custom HTML block. Paste the code into it.
+4. Under it, add a paragraph with your address, so it can be read without the map.
+
+The map comes from Google: visitors' browsers load it from google.com as they scroll near it, and only on pages that show it. Mention Google Maps in your privacy policy.
 
 == Changelog ==
 
