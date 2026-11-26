@@ -172,3 +172,11 @@
 
 /* Forms: a field that was left wrong says so with its edge. */
 :where(.wp-site-blocks) :where(input:not([type="submit"], [type="checkbox"], [type="radio"]), textarea, select):user-invalid { border-color: var(--wp--preset--color--accent); }
+
+/* Print shows everything, as it was before any of this moved. */
+@media print {
+	.uh-motion [data-uh] > *,
+	.uh-motion [data-uh] img,
+	.uh-motion .uh-w { opacity: 1 !important; clip-path: none !important; translate: none !important; scale: none !important; transition: none !important; }
+	.uh-header-away header.wp-block-template-part { translate: none !important; }
+}
