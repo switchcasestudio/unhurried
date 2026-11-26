@@ -1105,6 +1105,32 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
 	}
 }
+/* A phone held sideways (1.2.1): a window wider than it is tall and under
+   480px tall (about 750 × 330 on an iPhone 17e, 832 × 330 on a large
+   iPhone). The stage kept a full window of photograph above its words, so
+   the first screen showed the eyebrow and the top of the title only. Here
+   the words start near the top of the stage and take less room: the
+   eyebrow, the title and the lede show on the first screen, the buttons at
+   its foot. Phones held upright, tablets and desktops are unchanged.
+   !important: the rules above, the block's own inline padding and
+   WordPress's preset size classes all carry it. */
+@media (orientation: landscape) and (max-height: 479.98px) {
+	.unhurried-hero-statue__stage.wp-block-cover { min-height: 0 !important; padding-top: var(--wp--preset--spacing--40) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__title { font-size: clamp(2rem, 11svh, 3rem) !important; margin-block: .2em var(--wp--preset--spacing--40) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > p { max-width: min(46ch, 58vw); font-size: var(--wp--preset--font-size--medium) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > * + * { margin-block-start: var(--wp--preset--spacing--40); }
+	/* The words in one column at the left, the caption last; the shade is
+	   deepest there (at least .62 Ink wherever a word can sit, so the small
+	   words keep 4.5:1 over the brightest marble), and the face stays lit. */
+	.unhurried-hero-statue__stage .unhurried-hero-statue__foot { flex-direction: column; align-items: flex-start; }
+	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(90deg, rgba(22, 20, 15, .86) 0%, rgba(22, 20, 15, .7) 45%, rgba(22, 20, 15, .62) 66%, rgba(22, 20, 15, .18) 100%);
+	}
+	/* Right to left the words stand at the right: the shade follows them. */
+	[dir="rtl"] .unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(270deg, rgba(22, 20, 15, .86) 0%, rgba(22, 20, 15, .7) 45%, rgba(22, 20, 15, .62) 66%, rgba(22, 20, 15, .18) 100%);
+	}
+}
 @media (prefers-reduced-motion: no-preference) {
 	/* Browsers with scroll-linked animation get this plus the sink (Motion system, Depth). */
 	@supports not (animation-timeline: view()) {
