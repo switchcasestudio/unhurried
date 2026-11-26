@@ -44,6 +44,33 @@
 		window.addEventListener( 'load', loadLate );
 	}
 
+	// Page to page (style.css, Continuity): the clicked card's photo and title
+	// become the next page's head; the page's own head lets go of the names.
+	var openedCard = null;
+	document.addEventListener( 'click', function ( event ) {
+		var link = event.target.closest ? event.target.closest( 'a[href]' ) : null;
+		openedCard = link ? link.closest( '.wp-block-post, .wc-block-product' ) : null;
+	}, true );
+	window.addEventListener( 'pageswap', function ( event ) {
+		if ( ! event.viewTransition || ! openedCard ) {
+			return;
+		}
+		document.querySelectorAll( 'main img, main h1' ).forEach( function ( el ) {
+			var name = window.getComputedStyle( el ).viewTransitionName;
+			if ( 'uh-photo' === name || 'uh-title' === name ) {
+				el.style.viewTransitionName = 'none';
+			}
+		} );
+		var photo = openedCard.querySelector( '.wp-block-post-featured-image img, .wc-block-components-product-image img' );
+		var title = openedCard.querySelector( '.wp-block-post-title' );
+		if ( photo ) {
+			photo.style.viewTransitionName = 'uh-photo';
+		}
+		if ( title ) {
+			title.style.viewTransitionName = 'uh-title';
+		}
+	} );
+
 	if ( ! ( 'IntersectionObserver' in window ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
 		html.classList.remove( 'uh-motion' );
 		return;

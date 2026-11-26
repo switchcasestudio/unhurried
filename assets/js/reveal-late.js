@@ -5,9 +5,8 @@
  *
  * It loads the scroll choreography's stylesheet (assets/css/scroll.css), and
  * runs what answers the reader after load: state fades, the marquee's pause
- * button, Escape for dropdowns, the shared photo and title between pages, the
- * header that steps aside, the gift card's tilt, headings arriving line by
- * line and figures counting up.
+ * button, Escape for dropdowns, the header that steps aside, the gift card's
+ * tilt, headings arriving line by line and figures counting up.
  *
  * @package Unhurried
  */
@@ -139,37 +138,6 @@
 				item.classList.remove( 'uh-dismissed' );
 			}, { once: true } );
 		} );
-	} );
-
-	/* ── Page to page: the card you opened becomes the page's head ──────── */
-	// Cross-document view transitions (style.css, Continuity). The page being
-	// left names the photo and title of the card that was clicked; the post
-	// or product page names its own head, so the two morph into each other.
-	var openedCard = null;
-	document.addEventListener( 'click', function ( event ) {
-		var link = event.target.closest ? event.target.closest( 'a[href]' ) : null;
-		openedCard = link ? link.closest( '.wp-block-post, .wc-block-product' ) : null;
-	}, true );
-	window.addEventListener( 'pageswap', function ( event ) {
-		if ( ! event.viewTransition || ! openedCard ) {
-			return;
-		}
-		// The page's own head carries the same names (a post or product page,
-		// unhurried_page_head_names()); one element per name, so it lets go.
-		document.querySelectorAll( 'main img, main h1' ).forEach( function ( el ) {
-			var name = window.getComputedStyle( el ).viewTransitionName;
-			if ( 'uh-photo' === name || 'uh-title' === name ) {
-				el.style.viewTransitionName = 'none';
-			}
-		} );
-		var photo = openedCard.querySelector( '.wp-block-post-featured-image img, .wc-block-components-product-image img' );
-		var title = openedCard.querySelector( '.wp-block-post-title' );
-		if ( photo ) {
-			photo.style.viewTransitionName = 'uh-photo';
-		}
-		if ( title ) {
-			title.style.viewTransitionName = 'uh-title';
-		}
 	} );
 
 	if ( still ) {
