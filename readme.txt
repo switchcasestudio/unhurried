@@ -56,7 +56,7 @@ Open the footer in the Site Editor, select each icon and paste your profile addr
 
 = How do I put a film in the hero? =
 
-The framed hero on the homepage (the Hero, film pattern) shows Michelangelo's David and can also play a short silent film. Open the page in the editor, select the video box at the foot of the picture (Film (optional) in the List View), and choose Upload or Media Library. A loop of 6 to 12 seconds in a 4:5 frame, at most about 1.5 MB, in black and white, suits the photographs. The theme plays it muted and looping, only after the page has loaded and while the hero is in view, with a pause button beside the caption; visitors who prefer reduced motion or save data see the picture instead. To go back to the picture alone, delete the video block.
+The framed hero on the homepage (the Hero, film pattern) shows Michelangelo's David and can also play a short silent film. Open the page in the editor, click the small Video label at the foot of the picture (the Film (optional) block in the List View), and choose Upload or Media Library. A loop of 6 to 12 seconds in a 4:5 frame, at most about 1.5 MB, in black and white, suits the photographs. The theme plays it muted and looping, only after the page has loaded and while the hero is in view, with a pause button beside the caption; visitors who prefer reduced motion or save data see the picture instead. To go back to the picture alone, delete the video block.
 
 = How do I keep an image in color? =
 
