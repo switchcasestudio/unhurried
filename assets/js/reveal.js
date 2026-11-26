@@ -105,10 +105,19 @@
 		};
 		document.head.appendChild( link );
 	}
+	// After the load event and once the page is idle: fetched any earlier, it
+	// competed with the first screen in slow-network simulations (Lighthouse).
+	function loadScrollCssSoon() {
+		if ( 'requestIdleCallback' in window ) {
+			window.requestIdleCallback( loadScrollCss, { timeout: 600 } );
+		} else {
+			window.setTimeout( loadScrollCss, 200 );
+		}
+	}
 	if ( 'complete' === document.readyState ) {
-		loadScrollCss();
+		loadScrollCssSoon();
 	} else {
-		window.addEventListener( 'load', loadScrollCss );
+		window.addEventListener( 'load', loadScrollCssSoon );
 	}
 
 	if ( ! ( 'IntersectionObserver' in window ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
