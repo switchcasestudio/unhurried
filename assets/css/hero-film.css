@@ -79,8 +79,14 @@
 	.unhurried-hero-film__toggle:hover { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
 }
 
-/* Narrow windows: the words, then the frame, square and at most 30rem, so the whole frame fits on the first screen under them; the picture keeps the head in view. */
-@media (max-width: 781px) {
+/* Tablets held upright: words and frame side by side, as on wider screens. !important: core stacks columns below 782px. */
+@media (min-width: 600px) and (max-width: 781px) {
+	.wp-block-columns.unhurried-hero-film__row { flex-wrap: nowrap !important; }
+	.unhurried-hero-film__row > .unhurried-hero-film__text { flex-basis: 58% !important; }
+	.unhurried-hero-film__row > .unhurried-hero-film__media { flex-basis: 42% !important; }
+}
+/* Phones: the words, then the frame, square and at most 30rem; the picture keeps the head in view. */
+@media (max-width: 599px) {
 	.unhurried-hero-film__media { max-width: 30rem; }
 	.unhurried-hero-film__frame {
 		max-width: none;
