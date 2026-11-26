@@ -40,14 +40,25 @@ add_action( 'after_setup_theme', 'unhurried_map_editor_style', 11 );
 
 if ( ! function_exists( 'unhurried_map_assets' ) ) :
 	/**
-	 * Loads the pin's stylesheet and, for a live map, the frame's stylesheet
-	 * and script. WordPress prints small stylesheets inline in the page.
+	 * Loads the pin's stylesheet and the script that drops it and, for a live
+	 * map, the frame's stylesheet. WordPress prints small stylesheets inline.
+	 *
+	 * A live map's styles go in the head: they hold its frame's shape from the
+	 * first paint. The drawn map's only add the pin's drop, so they wait for
+	 * the end of the page and hold up nothing above it (in the head they took
+	 * the place of another stylesheet WordPress would have printed inline).
 	 *
 	 * @since 1.2.1
 	 * @param bool $live Whether a live map is on the page.
 	 * @return void
 	 */
 	function unhurried_map_assets( $live = false ) {
+		if ( ! $live && ! did_action( 'wp_head' ) ) {
+			if ( false === has_action( 'wp_footer', 'unhurried_map_late_assets' ) ) {
+				add_action( 'wp_footer', 'unhurried_map_late_assets', 0 );
+			}
+			return;
+		}
 		$version = wp_get_theme( get_template() )->get( 'Version' );
 		$files   = $live ? array( 'unhurried-map', 'unhurried-map-live' ) : array( 'unhurried-map' );
 		foreach ( $files as $handle ) {
@@ -62,7 +73,7 @@ if ( ! function_exists( 'unhurried_map_assets' ) ) :
 				wp_add_inline_style( $handle, ':root{--uh-map-filter:grayscale(1) invert(.9) contrast(.88) brightness(1.04)}' );
 			}
 		}
-		if ( $live && ! wp_script_is( 'unhurried-map', 'enqueued' ) ) {
+		if ( ! wp_script_is( 'unhurried-map', 'enqueued' ) ) {
 			wp_enqueue_script(
 				'unhurried-map',
 				get_template_directory_uri() . '/assets/js/map.js',
@@ -74,6 +85,18 @@ if ( ! function_exists( 'unhurried_map_assets' ) ) :
 				)
 			);
 		}
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_map_late_assets' ) ) :
+	/**
+	 * Loads the drawn map's pin stylesheet at the end of the page.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_map_late_assets() {
+		unhurried_map_assets( false );
 	}
 endif;
 

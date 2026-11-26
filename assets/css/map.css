@@ -35,15 +35,15 @@
 }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-map, .unhurried-map-frame { --uh-pin-fall: calc(var(--uh-dur-slow, 420ms) * 1.8); --uh-pin-wait: 0ms; }
-	/* The drawn map rises as a card (reveal.js): its pin waits for it. */
+	/* The drawn map may rise into view as part of its section: its pin waits for it. */
 	.uh-motion .unhurried-map { --uh-pin-wait: var(--uh-dur-slow, 420ms); }
 	.uh-motion .unhurried-map::before,
 	.is-ready .unhurried-map-frame__pin::before { animation: uh-pin-drop var(--uh-pin-fall) linear var(--uh-pin-wait) both; }
 	.uh-motion .unhurried-map::after,
 	.is-ready .unhurried-map-frame__pin::after { animation: uh-pin-ring calc(var(--uh-dur-slow, 420ms) * 2.6) var(--uh-ease-out, ease-out) calc(var(--uh-pin-wait) + var(--uh-pin-fall) / 2) forwards; }
-	/* Out of view, a pin waits out of sight. */
-	.uh-motion .unhurried-map[data-uh]:not(.is-in)::before,
-	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after,
+	/* A pin waits out of sight until map.js (or reveal.js) sees its map in view. */
+	.uh-motion .unhurried-map:not(.is-in)::before,
+	.uh-motion .unhurried-map:not(.is-in)::after,
 	.unhurried-map-frame:not(.is-in) .unhurried-map-frame__pin::before,
 	.unhurried-map-frame:not(.is-in) .unhurried-map-frame__pin::after { animation-play-state: paused; }
 }

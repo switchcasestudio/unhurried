@@ -1,14 +1,18 @@
 /**
- * Unhurried live map (inc/map.php puts a Google map in .unhurried-map-frame).
+ * Unhurried maps: the drawn map (.unhurried-map) and a Google map in the
+ * theme's frame (.unhurried-map-frame, from inc/map.php).
  *
- * Where the map shows one place at its center (.has-pin), the theme's pin
- * marks it and drops in once the map is 40% in view (assets/css/map.css).
- * Until the visitor reaches for the map, it ignores the pointer, so the page
- * scrolls over it and the map cannot move away from under the pin. A click
- * on the map or on "Pan and zoom", or keyboard focus moving into the map,
- * hands it over: the pin fades and the map answers as Google made it, its
- * own pin on the place. Keyboard focus inside a map draws the theme's ring
- * around the frame. Without this script the map is Google's own.
+ * A pin drops in once its map is 40% in view (.is-in; assets/css/map.css):
+ * the drawn map's, and the theme's pin over a live map that shows one place
+ * at its center (.has-pin).
+ *
+ * Until the visitor reaches for a live map, it ignores the pointer, so the
+ * page scrolls over it and the map cannot move away from under the pin. A
+ * click on the map or on "Pan and zoom", or keyboard focus moving into the
+ * map, hands it over: the pin fades and the map answers as Google made it,
+ * its own pin on the place. Keyboard focus inside a map draws the theme's
+ * ring around the frame. Without this script a live map is Google's own and
+ * the drawn map's pin simply stands.
  *
  * Plain JavaScript, no dependencies.
  *
@@ -19,7 +23,8 @@
 	'use strict';
 
 	var frames = document.querySelectorAll( '.unhurried-map-frame' );
-	if ( ! frames.length ) {
+	var drawn = document.querySelectorAll( '.unhurried-map' );
+	if ( ! frames.length && ! drawn.length ) {
 		return;
 	}
 
@@ -52,6 +57,14 @@
 			}
 		} );
 	}, { threshold: 0.4 } ) : null;
+
+	drawn.forEach( function ( map ) {
+		if ( seen ) {
+			seen.observe( map );
+		} else {
+			map.classList.add( 'is-in' );
+		}
+	} );
 
 	frames.forEach( function ( frame ) {
 		var button = frame.querySelector( '.unhurried-map-frame__use' );
