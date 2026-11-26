@@ -119,6 +119,9 @@ if ( ! function_exists( 'unhurried_image_frame' ) ) :
 		if ( ! class_exists( 'WP_HTML_Tag_Processor' )
 			|| false !== strpos( $block_content, '<figcaption' )
 			|| preg_match( '/is-style-(arch|rounded|circle)/', $class )
+			// A picture that shares its frame with another layer (the film
+			// hero's poster under its film) must not drift or round alone.
+			|| false !== strpos( $class, 'unhurried-hero-' )
 			|| ! empty( $attrs['width'] ) || ! empty( $attrs['height'] )
 			|| ! empty( $border['width'] ) || ! empty( $border['color'] ) || ! empty( $border['style'] ) || ! empty( $attrs['borderColor'] )
 			|| ( '' !== $radius && ( ! is_string( $radius ) || ! preg_match( '/^[0-9.]+(px|rem|em|%)$/', $radius ) ) ) ) {
@@ -975,8 +978,8 @@ if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
 			$copy->set_attribute( 'tabindex', '-1' );
 		}
 		return substr( $block_content, 0, $open + 1 )
-			. '<div class="unhurried-marquee__track"><div class="unhurried-marquee__set">' . $inner . '</div>'
-			. '<div class="unhurried-marquee__set" aria-hidden="true">' . $copy->get_updated_html() . '</div></div>'
+			. '<div class="unhurried-marquee__window"><div class="unhurried-marquee__track"><div class="unhurried-marquee__set">' . $inner . '</div>'
+			. '<div class="unhurried-marquee__set" aria-hidden="true">' . $copy->get_updated_html() . '</div></div></div>'
 			// A pause control (1.2.1): the line moves for good, so it can be
 			// stopped (WCAG 2.2.2). Shown by assets/js/reveal.js, which runs it.
 			. '<button type="button" class="unhurried-marquee__pause" aria-pressed="false" hidden><span class="unhurried-visually-hidden">' . esc_html__( 'Pause the moving line', 'unhurried' ) . '</span></button>'

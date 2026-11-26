@@ -19,7 +19,7 @@
 	'use strict';
 
 	var KEY = 'unhurried-film-paused';
-	var toggles = document.querySelectorAll( '.unhurried-hero-film__toggle[aria-controls]' );
+	var toggles = document.querySelectorAll( '.unhurried-hero-film__toggle[data-film]' );
 	if ( ! toggles.length ) {
 		return;
 	}
@@ -50,7 +50,7 @@
 	}
 
 	function setUp( button ) {
-		var video = document.getElementById( button.getAttribute( 'aria-controls' ) );
+		var video = document.getElementById( button.getAttribute( 'data-film' ) );
 		var frame = video && video.closest( '.unhurried-hero-film__frame' );
 		if ( ! frame || 'function' !== typeof video.play || ! ( 'IntersectionObserver' in window ) ) {
 			return;

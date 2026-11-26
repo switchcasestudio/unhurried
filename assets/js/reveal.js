@@ -29,10 +29,38 @@
 	// pointer, so it never competes with the first screen.
 	var scrollCss = window.unhurriedScroll && window.unhurriedScroll.css;
 	var scrollCssReady = [];
+	var STATE_FADES = '.single_variation_wrap .woocommerce-variation-price, .single_variation_wrap .woocommerce-variation-availability, .wc-block-cart-items__row, .wp-block-details > :not(summary), .woocommerce-Tabs-panel';
+	// An accordion opened or a tab chosen later fades its content in.
+	document.addEventListener( 'toggle', function ( event ) {
+		if ( event.target.matches && event.target.matches( '.wp-block-details' ) && event.target.open ) {
+			Array.prototype.forEach.call( event.target.children, function ( el ) {
+				el.removeAttribute( 'data-uh-seen' );
+			} );
+		}
+	}, true );
+	document.addEventListener( 'click', function ( event ) {
+		if ( event.target.closest && event.target.closest( '.woocommerce-tabs .tabs a' ) ) {
+			document.querySelectorAll( '.woocommerce-Tabs-panel[data-uh-seen]' ).forEach( function ( el ) {
+				el.removeAttribute( 'data-uh-seen' );
+			} );
+		}
+	}, true );
 	function loadScrollCss() {
 		if ( ! scrollCss || document.getElementById( 'unhurried-scroll-css' ) ) {
 			return;
 		}
+		// What is already showing never fades in again when the stylesheet
+		// arrives: its state animations are for changes after load only.
+		document.querySelectorAll( STATE_FADES ).forEach( function ( el ) {
+			el.setAttribute( 'data-uh-seen', '' );
+		} );
+		html.classList.add( 'uh-late' );
+		// The accent rule is for the sections below the first screen.
+		document.querySelectorAll( 'main .is-style-eyebrow' ).forEach( function ( el ) {
+			if ( el.getBoundingClientRect().top + window.scrollY < window.innerHeight ) {
+				el.setAttribute( 'data-uh-first', '' );
+			}
+		} );
 		var link = document.createElement( 'link' );
 		link.rel = 'stylesheet';
 		link.id = 'unhurried-scroll-css';
@@ -67,7 +95,7 @@
 	var MAX_DELAY = token( '--uh-stagger-cap', 160 ); // the longest any item waits.
 	var ENTER = token( '--uh-dur-slow', 420 ); // ms an entrance takes.
 	// The larger moves (assets/css/scroll.css): text, photos, rules, counts.
-	var LONGEST = Math.max( token( '--uh-dur-large', 760 ), token( '--uh-dur-draw', 900 ), token( '--uh-dur-text', 560 ) + 3 * token( '--uh-line-stagger', 90 ) );
+	var LONGEST = Math.max( token( '--uh-dur-large', 760 ), token( '--uh-dur-draw', 900 ), token( '--uh-dur-text', 420 ) + 3 * token( '--uh-line-stagger', 90 ) );
 	var COUNT = token( '--uh-dur-count', 1100 );
 	var auto = html.classList.contains( 'uh-motion' );
 
@@ -116,6 +144,30 @@
 		} );
 	} );
 
+	/* ── Escape closes a dropdown from anywhere (WCAG 1.4.13) ──────────── */
+	// A dropdown the pointer rests on closes without the pointer moving, and
+	// focus stays where it is; it opens again once the pointer comes back.
+	// (With focus inside it, the Navigation block's own Escape handles it.)
+	document.addEventListener( 'keydown', function ( event ) {
+		if ( 'Escape' !== event.key ) {
+			return;
+		}
+		document.querySelectorAll( '.wp-block-navigation .wp-block-navigation-submenu' ).forEach( function ( item ) {
+			var toggle = item.querySelector( ':scope > [aria-expanded]' );
+			var shown = item.matches( ':hover' ) || ( toggle && 'true' === toggle.getAttribute( 'aria-expanded' ) );
+			if ( ! shown || item.contains( event.target ) || item.closest( '.is-menu-open' ) ) {
+				return;
+			}
+			item.classList.add( 'uh-dismissed' );
+			if ( toggle ) {
+				toggle.setAttribute( 'aria-expanded', 'false' );
+			}
+			item.addEventListener( 'pointerleave', function () {
+				item.classList.remove( 'uh-dismissed' );
+			}, { once: true } );
+		} );
+	} );
+
 	/* ── Page to page: the card you opened becomes the page's head ──────── */
 	// Cross-document view transitions (style.css, Continuity). The page being
 	// left names the photo and title of the card that was clicked; the post
@@ -130,6 +182,14 @@
 		if ( ! event.viewTransition || ! openedCard ) {
 			return;
 		}
+		// The page's own head carries the same names (a post or product page,
+		// unhurried_page_head_names()); one element per name, so it lets go.
+		document.querySelectorAll( 'main img, main h1' ).forEach( function ( el ) {
+			var name = window.getComputedStyle( el ).viewTransitionName;
+			if ( 'uh-photo' === name || 'uh-title' === name ) {
+				el.style.viewTransitionName = 'none';
+			}
+		} );
 		var photo = openedCard.querySelector( '.wp-block-post-featured-image img, .wc-block-components-product-image img' );
 		var title = openedCard.querySelector( '.wp-block-post-title' );
 		if ( photo ) {
@@ -170,6 +230,31 @@
 		}, { passive: true } );
 		headerPart.addEventListener( 'focusin', function () {
 			html.classList.remove( 'uh-header-away' );
+		} );
+	}
+
+	// Whatever a reader scrolls past before the page has loaded has been seen:
+	// it is never hidden again for an entrance (startReveal() skips it).
+	var early = false;
+	function markSeen() {
+		early = false;
+		document.querySelectorAll( 'main :is(h1, h2, h3, h4, h5, h6, p, li, figure, form, .wp-block-buttons, .wp-block-post, .wc-block-product, .wp-block-columns, .wp-block-cover)' ).forEach( function ( el ) {
+			var r = el.getBoundingClientRect();
+			if ( r.top < window.innerHeight && r.bottom > 0 ) {
+				el.setAttribute( 'data-uh-early', '' );
+			}
+		} );
+	}
+	function onEarlyScroll() {
+		if ( ! early ) {
+			early = true;
+			window.requestAnimationFrame( markSeen );
+		}
+	}
+	if ( 'complete' !== document.readyState ) {
+		window.addEventListener( 'scroll', onEarlyScroll, { passive: true } );
+		window.addEventListener( 'load', function () {
+			window.removeEventListener( 'scroll', onEarlyScroll );
 		} );
 	}
 
@@ -312,7 +397,7 @@
 
 		scopes.forEach( function ( scope ) {
 			scope.querySelectorAll( selector ).forEach( function ( el ) {
-				if ( el.hasAttribute( 'data-uh' ) || el.closest( SKIP ) ) {
+				if ( el.hasAttribute( 'data-uh' ) || el.closest( SKIP ) || el.closest( '[data-uh-early]' ) || el.querySelector( '[data-uh-early]' ) ) {
 					return;
 				}
 				var parent = el.parentElement && el.parentElement.closest( '[data-uh]' );
@@ -480,7 +565,8 @@
 					}
 				} );
 			},
-			{ rootMargin: '0px', threshold: 0.15 }
+			// Starts a little before it is in view, so text is readable as it arrives.
+			{ rootMargin: '0px 0px 8% 0px', threshold: 0.15 }
 		);
 		// Something taller than the window may never show 15% of itself (past
 		// about 6.7 screens it cannot: a long form on a phone stayed hidden), so

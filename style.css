@@ -159,7 +159,6 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	height: 34px;
 	display: flex;
 	align-items: center;
-	overflow: hidden;
 	margin-top: -10px !important;
 	margin-bottom: 10px !important;
 	margin-inline: calc(-1 * clamp(10px, 2vw, 28px));
@@ -168,6 +167,8 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	text-transform: uppercase;
 	white-space: nowrap;
 }
+/* The line runs in its own window (clip: focus cannot scroll it), the pause button beside it. */
+.unhurried-marquee__window { display: flex; flex: 1 1 auto; min-width: 0; overflow: clip; }
 .unhurried-marquee__track,
 .unhurried-marquee__set { display: flex; flex: none; }
 .unhurried-marquee p { margin: 0; padding-inline-end: 2.5rem; }
@@ -759,26 +760,7 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
 	.wp-block-button.is-style-text-link > .wp-block-button__link:hover { text-underline-offset: 9px; }
 }
-@media (prefers-reduced-motion: no-preference) {
-	
-	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"])):active {
-		transform: translateY(var(--uh-press-y));
-		transition-duration: var(--uh-dur-press);
-	}
-	:is(.wp-element-button.has-icon, .unhurried-footer-social .wp-social-link):active {
-		transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale));
-	}
-}
 
-@media (hover: hover) {
-	:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover,
-	:is(.unhurried-journal-search, .unhurried-footer-search) .wp-block-search__button:hover { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent); }
-	.wp-block-cover :is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover:focus-visible,
-	.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button:hover:focus-visible { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent), 0 0 0 3px var(--uh-focus-in); }
-	.wp-block-button:not(.is-style-text-link) > .wp-block-button__link.has-background:hover { box-shadow: inset 0 0 0 100vmax rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 14%); }
-	
-	:is(.wp-block-post-terms, .wp-block-term-name, .wp-block-site-title, .wp-block-post-author-name) a:not(:is(.unhurried-capsule, .unhurried-wordmark, .unhurried-chip-terms, .unhurried-chip-links) *):hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
-	.unhurried-text-link a:hover { border-bottom-color: transparent; }
 }
 .unhurried-text-link a { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
 
@@ -848,6 +830,8 @@ a:where(:not(.wp-element-button)) {
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content:not([aria-current]) { text-decoration-color: transparent; }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:is(:hover, :has(> .wp-block-navigation-item__content:focus-visible)) > .wp-block-navigation__submenu-icon { color: var(--uh-pill-ink); }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon { position: relative; z-index: 1; } /* the arrow stays clickable over the pill */
+/* Escape closed it under a resting pointer (reveal.js). */
+.wp-block-navigation .uh-dismissed > .wp-block-navigation__submenu-container { visibility: hidden !important; opacity: 0 !important; transition: none !important; }
 /* !important: core's transition is. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { height: auto; width: auto; overflow: visible; }
 .wp-block-navigation .wp-block-navigation__submenu-icon svg { transition: transform calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out); }
@@ -871,43 +855,10 @@ a:where(:not(.wp-element-button)) {
 		animation-timing-function: var(--uh-ease-out);
 	}
 }
-/* Hover intent: open after --uh-intent-in, close after --uh-intent-out, the next dropdown swaps in one frame; not for the keyboard or touch. */
-@media (hover: hover) {
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition-delay: var(--uh-intent-out); }
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition-delay: var(--uh-intent-in); }
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon:focus-visible svg { transition-delay: 0s; }
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container:has(> .wp-block-navigation-submenu:hover) > .wp-block-navigation-submenu:not(:hover, :has(:focus-visible)) > .wp-block-navigation__submenu-container {
-		visibility: hidden !important;
-		opacity: 0 !important;
-		transition: opacity 0s linear var(--uh-intent-in), translate 0s linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important;
-	}
-}
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-base) * var(--uh-exit)) !important; }
-	.unhurried-capsule .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-container,
-	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), translate var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
-	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), visibility 0s linear calc(var(--uh-dur-base) * var(--uh-exit)) !important; }
-	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important; }
-	.unhurried-capsule .wp-block-navigation__container .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
-}
-/* !important: the reduced-motion rule below. */
-@media (hover: hover) and (prefers-reduced-motion: reduce) {
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-quick)) !important; }
-	.unhurried-capsule .wp-block-navigation-submenu:hover > .wp-block-navigation__submenu-container,
-	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
-	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s linear var(--uh-dur-quick) !important; }
-	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s !important; }
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition: transform 0s linear var(--uh-intent-out) !important; }
-	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition: transform 0s linear var(--uh-intent-in) !important; }
-	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation__submenu-icon svg { transition: none !important; }
-}
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content { transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out); }
 
 .wp-block-navigation__responsive-container-open,
 .wp-block-navigation__responsive-container-close { transition: color var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out), transform var(--uh-dur-quick) var(--uh-ease-out); }
-@media (prefers-reduced-motion: no-preference) {
-	:is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close):active { transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale)); transition-duration: var(--uh-dur-press); }
-}
 
 .wp-block-post:has(.wp-block-post-title a) { position: relative; }
 .wp-block-post .wp-block-post-title a::before { content: ""; position: absolute; inset: 0; z-index: 0; }
@@ -950,48 +901,6 @@ a:where(:not(.wp-element-button)) {
 	:where(.wc-block-components-notice-banner, .woocommerce-message, .woocommerce-info, .woocommerce-error, .wpcf7-response-output) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 }
 @keyframes uh-notice-in { from { opacity: .4; } }
-
-.unhurried-giftcard {
-	position: relative;
-	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
-	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
-}
-.unhurried-giftcard::after {
-	content: "";
-	position: absolute;
-	inset: 0;
-	border-radius: inherit;
-	background: radial-gradient(circle at var(--uh-glare-x, 30%) var(--uh-glare-y, 20%), rgba(246, 244, 239, .16), transparent 55%);
-	opacity: 0;
-	transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
-	pointer-events: none;
-}
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-	.unhurried-giftcard:hover { transition-duration: var(--uh-dur-quick), var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); box-shadow: 0 50px 80px -40px rgba(22, 20, 15, .6); }
-	.unhurried-giftcard:hover::after { opacity: 1; transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
-}
-
-.unhurried-map::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 14px;
-	height: 14px;
-	margin: -7px 0 0 -7px;
-	border-radius: 50%;
-	border: 2px solid var(--wp--preset--color--accent);
-	opacity: 0;
-	pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-	.unhurried-map::after { animation: uh-ping 1.6s var(--uh-ease-out) var(--uh-dur-slow) 3; }
-	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; }
-}
-@keyframes uh-ping {
-	0% { opacity: .55; scale: 1; }
-	80%, 100% { opacity: 0; scale: 4.2; }
-}
 
 /* 3. Depth (scroll-linked, where the browser supports it) */
 @supports (animation-timeline: view()) {
