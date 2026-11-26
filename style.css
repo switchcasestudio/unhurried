@@ -803,7 +803,7 @@ a:where(:not(.wp-element-button)) {
 }
 /* Label switches in one step (dark looks: dark-covers.css). */
 :root { --uh-pill-switch-in: 39ms; --uh-pill-switch-out: 9ms; }
-/* 1.2.1: a dropdown opens once the pointer rests on its item and stays a moment after it leaves (hover intent; Unhurried Pro's mega menu reads the same two). An arrow's pill gets more room before the label than after the arrow. */
+/* Hover intent (also read by Pro's mega menu); an arrow item's pill: more room before the label. */
 :root { --uh-intent-in: 100ms; --uh-intent-out: 250ms; --uh-pill-lead: var(--wp--preset--spacing--10); --uh-pill-trail: calc(var(--wp--preset--spacing--10) / 2); }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon {
@@ -868,7 +868,7 @@ a:where(:not(.wp-element-button)) {
 		animation-timing-function: var(--uh-ease-out);
 	}
 }
-/* Hover intent (1.2.1), for a pointer that hovers: a dropdown and its arrow wait --uh-intent-in before opening and --uh-intent-out before closing; pointing at the next dropdown swaps the two in one frame; the keyboard waits for neither. With reduced motion the waits stay and nothing moves. Touch screens keep the timing above. */
+/* Hover intent: open after --uh-intent-in, close after --uh-intent-out, the next dropdown swaps in one frame; not for the keyboard or touch. */
 @media (hover: hover) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition-delay: var(--uh-intent-out); }
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition-delay: var(--uh-intent-in); }
@@ -887,7 +887,7 @@ a:where(:not(.wp-element-button)) {
 	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important; }
 	.unhurried-capsule .wp-block-navigation__container .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
 }
-/* !important: the reduced-motion rule for every element below. */
+/* !important: the reduced-motion rule below. */
 @media (hover: hover) and (prefers-reduced-motion: reduce) {
 	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-quick)) !important; }
 	.unhurried-capsule .wp-block-navigation-submenu:hover > .wp-block-navigation__submenu-container,
