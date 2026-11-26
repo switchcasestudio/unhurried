@@ -127,6 +127,12 @@
 	object-position: 70% 30%;
 }
 .wp-block-cover.has-film.is-playing > .unhurried-hero-film__film { opacity: 1; transition-duration: var(--uh-dur-slow, 420ms); }
+/* Where the stage's film never plays, its layer is left out: narrower than
+   782px, taller than wide, or under 480px tall (a phone held either way).
+   The same condition as the button's data-media (inc/hero-film.php). */
+@media not all and (min-width: 782px) and (min-aspect-ratio: 1/1) and (min-height: 480px) {
+	.wp-block-cover.has-film > .unhurried-hero-film__film { display: none; }
+}
 /* The film moves bright marble behind the words: it brings a shade of its own, under the stage's
    (which the photograph keeps as in 1.2.0) and fading in and out with it. Darkest where the words
    sit, at the lower left, and a little at the lower right behind the caption; the right of the

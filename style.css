@@ -182,7 +182,18 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 :not(.unhurried-header) > .unhurried-marquee { margin: 0 !important; }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-marquee__track { animation: unhurried-marquee 70s linear infinite; }
-	.unhurried-marquee:is(:hover, :focus-within) .unhurried-marquee__track { animation-play-state: paused; }
+	/* It holds still under a pointer that hovers and while the keyboard is in
+	   it (1.2.1). Not after a tap: a touch screen keeps its hover on the tapped
+	   button, and the line stayed still after Play until the reader tapped
+	   elsewhere. Play (is-played, reveal-late.js) moves it at once even with
+	   the pointer or the focus still on it. */
+	@media (hover: hover) {
+		.unhurried-marquee:hover:not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	}
+	.unhurried-marquee:has(:focus-visible):not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	@supports not selector(:has(a)) {
+		.unhurried-marquee:focus-within:not(.is-played) .unhurried-marquee__track { animation-play-state: paused; }
+	}
 	[dir="rtl"] .unhurried-marquee__track { animation-name: unhurried-marquee-rtl; }
 }
 /* Without JavaScript there is no pause button, so the line stands still (WCAG 2.2.2). */
@@ -286,6 +297,53 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.unhurried-capsule > .wp-block-group { gap: .5rem !important; }
 	.unhurried-header .wp-block-button__link { padding: .55rem .95rem; font-size: .8125rem; }
 }
+/* Narrower than a phone held upright (1.2.1): a phone's page zoom at 200%
+   gives a window 195px wide. The site title shows whole and nothing runs
+   past the screen. The header button that goes to Contact steps aside when
+   the menu holds a Contact link (the open phone menu shows it, above); what
+   still does not fit beside the title moves to a second row, at the end, and
+   the capsule's ends round to its first row so a second row sits inside
+   them. A title wider than the whole capsule still ends in an ellipsis.
+   From 320px the capsule is as it was, pixel for pixel. */
+@media (max-width: 319.98px) {
+	.unhurried-header .unhurried-capsule { flex-wrap: wrap; border-radius: 30px !important; } /* !important: the block's own radius is an inline style */
+	.unhurried-header .unhurried-capsule > * { max-width: 100%; }
+	.unhurried-header .unhurried-capsule > .wp-block-group:has(> .wp-block-site-title) { flex: 0 0 auto; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) { justify-content: flex-end; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) > .wp-block-group:has(> .wp-block-site-title) { margin-inline-end: auto; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) > .wp-block-group:has(> .wp-block-site-title) + * { margin-inline-start: auto; }
+	.unhurried-header .unhurried-capsule > .wp-block-group:not(:has(> .wp-block-site-title)) { flex-wrap: wrap; justify-content: flex-end; }
+	/* Centered title: the title keeps the middle of its row, the button's side its end. */
+	.unhurried-header .unhurried-capsule.is-centered > * { flex-grow: 0; }
+	.unhurried-header .unhurried-capsule.is-centered > .wp-block-group:has(> .wp-block-site-title) { margin-inline: auto; }
+	.unhurried-header .unhurried-capsule.is-centered > :last-child:not(:has(> .wp-block-site-title)) { margin-inline-start: auto; }
+	.unhurried-header .unhurried-capsule:has(.wp-block-navigation .unhurried-nav-contact) .wp-block-buttons:not(:has(.wp-block-button__link:not(.unhurried-button-contact))) { display: none; }
+	html { scroll-padding-top: 140px; }
+	/* The page itself: a word or an address wider than its column breaks (a
+	   40px "commodo", a topic's name, the privacy policy's links), and the
+	   journal's toolbar gives way to the window (its search and the topics
+	   grid: below). */
+	body { overflow-wrap: break-word; }
+	.unhurried-toolbar > * { min-width: 0; max-width: 100%; }
+	.unhurried-toolbar .wp-block-search__input { min-width: 0; }
+}
+/* Touch targets (1.2.1): on a touch screen the menu's open and close buttons,
+   the header button and an accordion's question take a tap across at least
+   44 by 44px, through a layer that draws nothing. Each stays inside the room
+   already around it, so no tap lands on a neighbor and nothing moves. On a
+   phone the capsule leaves 8px each side of the 24px menu button, and a cut
+   title can stand right beside it: there it takes 40 by 44px. */
+@media (any-pointer: coarse) {
+	.wp-block-navigation__responsive-container-open { position: relative; }
+	.wp-block-navigation__responsive-container-open::before,
+	.wp-block-navigation__responsive-container-close::before { content: ""; position: absolute; inset: -10px; }
+	.unhurried-header .wp-block-button__link { position: relative; }
+	:is(.unhurried-header .wp-block-button__link, .wp-block-details summary)::before { content: ""; position: absolute; inset-inline: 0; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	.wp-block-details summary { position: relative; }
+}
+@media (any-pointer: coarse) and (max-width: 480px) {
+	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -8px; }
+}
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
 .unhurried-rise {
@@ -296,10 +354,18 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 
 /* Hairline buttons on Ink surfaces: the hover fills Bone, not Ink-on-Ink
    (the block style's own hover would make the pill vanish into the section) */
-.is-style-section-ink .wp-block-button.is-style-hairline .wp-block-button__link:hover {
-	background: var(--wp--preset--color--base);
-	color: var(--wp--preset--color--contrast);
-	border-color: var(--wp--preset--color--base);
+@media (hover: hover) {
+	.is-style-section-ink .wp-block-button.is-style-hairline .wp-block-button__link:hover {
+		background: var(--wp--preset--color--base);
+		color: var(--wp--preset--color--contrast);
+		border-color: var(--wp--preset--color--base);
+	}
+}
+/* On a touch screen a tapped Hairline button keeps its resting look (1.2.1):
+   the tap leaves the hover state on it, and its fill read as pressed until
+   the reader tapped elsewhere. A pointer that hovers still fills it. */
+@media (hover: none) {
+	.wp-block-button[class*="is-style-hairline"] > .wp-block-button__link:hover { background-color: transparent; color: inherit; border-color: currentColor; }
 }
 
 /* ─── Display helpers ────────────────────────────────────────────────────── */
@@ -432,9 +498,13 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .wp-block-details > :not(summary) { max-width: 60ch; }
 .is-style-glass > .wp-block-details:first-child { border-top: 0; padding-top: 0; }
 
-/* Navigation links: underline on hover and keyboard focus; vertical menus get taller touch targets */
-.wp-block-navigation a:hover,
+/* Navigation links: underline on hover and keyboard focus; vertical menus get taller touch targets.
+   The underline also marks the current page, so a tap (which leaves a touch
+   screen's hover on the link) does not draw it (1.2.1). */
 .wp-block-navigation a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+@media (hover: hover) {
+	.wp-block-navigation a:hover { text-decoration: underline; text-underline-offset: 5px; }
+}
 .wp-block-navigation.is-vertical .wp-block-navigation-item__content { padding-block: .35rem; }
 
 /* Giant wordmark in the footer. It keeps its 15vw size until the site title
@@ -776,7 +846,10 @@ a:where(:not(.wp-element-button)) {
 	text-underline-offset: 11px;
 	transition: text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out);
 }
-.wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
+.wp-block-navigation .wp-block-navigation-item__content:focus-visible { text-decoration-color: currentColor; text-underline-offset: 5px; }
+@media (hover: hover) {
+	.wp-block-navigation .wp-block-navigation-item__content:hover { text-decoration-color: currentColor; text-underline-offset: 5px; }
+}
 .wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
 
 /* Header menu pill (1.2.1): its padding is there at rest, so nothing moves. */
@@ -1047,6 +1120,32 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background { object-position: 72% 30% !important; }
 	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
 		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
+	}
+}
+/* A phone held sideways (1.2.1): a window wider than it is tall and under
+   480px tall (about 750 × 330 on an iPhone 17e, 832 × 330 on a large
+   iPhone). The stage kept a full window of photograph above its words, so
+   the first screen showed the eyebrow and the top of the title only. Here
+   the words start near the top of the stage and take less room: the
+   eyebrow, the title and the lede show on the first screen, the buttons at
+   its foot. Phones held upright, tablets and desktops are unchanged.
+   !important: the rules above, the block's own inline padding and
+   WordPress's preset size classes all carry it. */
+@media (orientation: landscape) and (max-height: 479.98px) {
+	.unhurried-hero-statue__stage.wp-block-cover { min-height: 0 !important; padding-top: var(--wp--preset--spacing--40) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__title { font-size: clamp(2rem, 11svh, 3rem) !important; margin-block: .2em var(--wp--preset--spacing--40) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > p { max-width: min(46ch, 58vw); font-size: var(--wp--preset--font-size--medium) !important; }
+	.unhurried-hero-statue__stage .unhurried-hero-statue__body > * + * { margin-block-start: var(--wp--preset--spacing--40); }
+	/* The words in one column at the left, the caption last; the shade is
+	   deepest there (at least .62 Ink wherever a word can sit, so the small
+	   words keep 4.5:1 over the brightest marble), and the face stays lit. */
+	.unhurried-hero-statue__stage .unhurried-hero-statue__foot { flex-direction: column; align-items: flex-start; }
+	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(90deg, rgba(22, 20, 15, .86) 0%, rgba(22, 20, 15, .7) 45%, rgba(22, 20, 15, .62) 66%, rgba(22, 20, 15, .18) 100%);
+	}
+	/* Right to left the words stand at the right: the shade follows them. */
+	[dir="rtl"] .unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(270deg, rgba(22, 20, 15, .86) 0%, rgba(22, 20, 15, .7) 45%, rgba(22, 20, 15, .62) 66%, rgba(22, 20, 15, .18) 100%);
 	}
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1333,7 +1432,10 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	font-weight: 500;
 	cursor: pointer;
 }
-:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:is(:hover, :focus-visible) { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:focus-visible { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+@media (hover: hover) {
+	:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:hover { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+}
 /* Social icons: hairline circles that fill on hover. */
 .unhurried-footer-social.wp-block-social-links { margin-inline: 0; margin-bottom: 0; }
 .unhurried-footer-social .wp-social-link {
@@ -1344,7 +1446,16 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 }
 .unhurried-footer-social .wp-social-link a { padding: .55rem; }
 .unhurried-footer-social .wp-social-link svg { width: 18px; height: 18px; }
-.unhurried-footer-social .wp-social-link:is(:hover, :focus-within) { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+/* Filled under a pointer that hovers and for the keyboard, not after a tap
+   (a touch screen keeps its hover, and a browser its focus, on the tapped
+   icon, which then read as pressed; 1.2.1). */
+.unhurried-footer-social .wp-social-link:has(:focus-visible) { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+@supports not selector(:has(a)) {
+	.unhurried-footer-social .wp-social-link:focus-within { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+}
+@media (hover: hover) {
+	.unhurried-footer-social .wp-social-link:hover { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+}
 
 /* ─── Forms from any plugin (Contact Form 7, WPForms, Jetpack, comments) ─── */
 /* :where() keeps these at zero specificity, so a block's or a plugin's own
@@ -1381,7 +1492,9 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	cursor: pointer;
 	transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out), transform var(--uh-dur-quick) var(--uh-ease-out);
 }
-:where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]):where(:not(.wp-element-button, .wp-block-search__button)):hover { background: var(--wp--preset--color--accent); }
+@media (hover: hover) {
+	:where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]):where(:not(.wp-element-button, .wp-block-search__button)):hover { background: var(--wp--preset--color--accent); }
+}
 /* Contact Form 7: labels above fields, one gap between rows. */
 .wpcf7 form > p { margin: 0 0 1rem; }
 .wpcf7 label { display: block; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--contrast-2); }
@@ -1435,13 +1548,30 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-terms .wp-block-term-name a::after { content: ""; position: absolute; inset: 0; border-radius: 999px; }
 .unhurried-chip-terms .wp-block-term:has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
 .unhurried-chip-terms .wp-block-term a:focus-visible { outline: none; }
+/* Touch targets (1.2.1): a chip takes a tap 4px above and below its pill,
+   half the 8px between two rows of chips, so no tap lands on the next row. */
+@media (any-pointer: coarse) {
+	.unhurried-chip a { position: relative; }
+	.unhurried-chip a::before { content: ""; position: absolute; inset: -4px 0; }
+	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: -4px; }
+}
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }
 .unhurried-chip-links a { display: inline-block; padding: .3rem .7rem; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; font-size: var(--wp--preset--font-size--x-small); line-height: 1.1; text-decoration: none; color: var(--wp--preset--color--contrast); }
-.unhurried-chip-links a:hover { border-color: var(--wp--preset--color--contrast); }
+@media (hover: hover) {
+	.unhurried-chip-links a:hover { border-color: var(--wp--preset--color--contrast); }
+}
 
 /* Search boxes in the journal: a pill with the icon button inside. */
 .unhurried-journal-search { min-width: min(22rem, 100%); }
+/* Phones (1.2.1): the journal's search is 22rem wide or its whole line, as
+   before, and never wider than the line. In WebKit at 320px that minimum came
+   out wider than the line, and the journal scrolled sideways by 6px (131px
+   at 200% zoom): the line is the search group's now, and the size its width. */
+@media (max-width: 479.98px) {
+	.unhurried-toolbar > :has(> .unhurried-journal-search) { flex: 1 1 100%; min-width: 0; }
+	.unhurried-toolbar .unhurried-journal-search { width: min(22rem, 100%); min-width: 0; }
+}
 .unhurried-journal-search .wp-block-search__inside-wrapper { border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; padding: .25rem .25rem .25rem 1.1rem; background: var(--wp--preset--color--base); }
 .unhurried-journal-search .wp-block-search__input { border: 0; background: transparent; padding: .45rem 0; }
 .unhurried-journal-search .wp-block-search__button { margin: 0; border-radius: 999px; padding: .5rem .7rem; background: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
@@ -1473,6 +1603,10 @@ html { scroll-padding-top: 96px; }
 }
 @media (max-width: 781px) {
 	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: 1fr; }
+}
+/* Narrower than a phone held upright (1.2.1, page zoom): the column gives way to the window, and a topic's name breaks instead. */
+@media (max-width: 319.98px) {
+	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Single post: author box and the reading progress bar (scroll-linked, no script). */

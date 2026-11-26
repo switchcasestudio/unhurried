@@ -143,10 +143,14 @@ if ( ! function_exists( 'unhurried_hero_film_stage' ) ) :
 	 * buttons, in a place kept for it from the start.
 	 *
 	 * The film plays only where the stage is wide enough for it: at 782px
-	 * and wider in a window wider than it is tall. A landscape film in the
-	 * tall stage of a phone or an upright tablet would be cropped to less than
-	 * half its width and lose the face as it turns: there the photograph stays
-	 * (and the film is never loaded).
+	 * and wider in a window wider than it is tall, and at least 480px tall
+	 * (since 1.2.1's iPhone pass: a large phone held sideways is 832px wide
+	 * and only about 330px tall). A landscape film in the tall stage of a
+	 * phone or an upright tablet would be cropped to less than half its width
+	 * and lose the face as it turns, and a phone held sideways is a phone:
+	 * there the photograph stays (and the film is never loaded). Tablets in
+	 * landscape and desktops keep the film. The same condition is in
+	 * assets/css/hero-film.css, which then leaves the film's layer out.
 	 *
 	 * @since 1.2.1
 	 * @param string $block_content Rendered Cover block.
@@ -188,7 +192,7 @@ if ( ! function_exists( 'unhurried_hero_film_stage' ) ) :
 			$at = strpos( $html, '>' ) + 1;
 		}
 		$html   = substr_replace( $html, $film->get_updated_html(), $at, 0 );
-		$button = unhurried_hero_film_button( $video_id, '(min-width: 782px) and (min-aspect-ratio: 1/1)' );
+		$button = unhurried_hero_film_button( $video_id, '(min-width: 782px) and (min-aspect-ratio: 1/1) and (min-height: 480px)' );
 		if ( preg_match( '#<p\b[^>]*\bunhurried-hero-statue__caption\b[^>]*>.*?</p>#s', $html, $caption, PREG_OFFSET_CAPTURE ) ) {
 			$html = substr_replace( $html, '<div class="unhurried-hero-film__aside">' . $caption[0][0] . $button . '</div>', $caption[0][1], strlen( $caption[0][0] ) );
 		} else {
