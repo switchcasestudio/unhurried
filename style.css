@@ -321,11 +321,11 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	html { scroll-padding-top: 140px; }
 	/* The page itself: a word or an address wider than its column breaks (a
 	   40px "commodo", a topic's name, the privacy policy's links), and the
-	   journal's search gives way to the window (the topics grid: below). */
+	   journal's toolbar gives way to the window (its search and the topics
+	   grid: below). */
 	body { overflow-wrap: break-word; }
 	.unhurried-toolbar > * { min-width: 0; max-width: 100%; }
-	.unhurried-journal-search,
-	.unhurried-journal-search .wp-block-search__input { min-width: 0; }
+	.unhurried-toolbar .wp-block-search__input { min-width: 0; }
 }
 /* Touch targets (1.2.1): on a touch screen the menu's open and close buttons,
    the header button and an accordion's question take a tap across at least
@@ -1564,6 +1564,14 @@ html { scroll-padding-top: 96px; }
 
 /* Search boxes in the journal: a pill with the icon button inside. */
 .unhurried-journal-search { min-width: min(22rem, 100%); }
+/* Phones (1.2.1): the journal's search is 22rem wide or its whole line, as
+   before, and never wider than the line. In WebKit at 320px that minimum came
+   out wider than the line, and the journal scrolled sideways by 6px (131px
+   at 200% zoom): the line is the search group's now, and the size its width. */
+@media (max-width: 479.98px) {
+	.unhurried-toolbar > :has(> .unhurried-journal-search) { flex: 1 1 100%; min-width: 0; }
+	.unhurried-toolbar .unhurried-journal-search { width: min(22rem, 100%); min-width: 0; }
+}
 .unhurried-journal-search .wp-block-search__inside-wrapper { border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; padding: .25rem .25rem .25rem 1.1rem; background: var(--wp--preset--color--base); }
 .unhurried-journal-search .wp-block-search__input { border: 0; background: transparent; padding: .45rem 0; }
 .unhurried-journal-search .wp-block-search__button { margin: 0; border-radius: 999px; padding: .5rem .7rem; background: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
