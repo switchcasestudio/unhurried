@@ -250,66 +250,78 @@
 			{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
 		);
 
-		// Marked in short slices (a slow phone never waits on it), each one
-		// reading every box first and writing after; what is on screen at that
-		// moment shows, only what is below the window waits.
+		// Planned in short slices (a slow phone never waits on it) that only
+		// read; then marked in one go, so the page restyles once. What is on
+		// screen at that moment shows, only what is below the window waits.
 		var next = 0;
+		var plan = [];
+		var kindOf = new Map();
+		function inside( el ) {
+			for ( var n = el.parentElement; n && n !== document.body; n = n.parentElement ) {
+				if ( kindOf.has( n ) ) {
+					return kindOf.get( n );
+				}
+			}
+			return '';
+		}
 		function slice() {
 			var began = window.performance.now();
+			var fold = window.innerHeight;
+			var width = document.documentElement.clientWidth;
 			while ( next < candidates.length && window.performance.now() - began < 8 ) {
-				var chunk = candidates.slice( next, next + 12 );
-				next += chunk.length;
-				var fold = window.innerHeight;
-				var width = document.documentElement.clientWidth;
-				var offset = window.pageYOffset;
-				var boxes = chunk.map( function ( el ) {
-					return el.getBoundingClientRect();
-				} );
-				chunk.forEach( function ( el, n ) {
-					if ( el.hasAttribute( 'data-uh' ) ) {
-						return;
+				var el = candidates[ next++ ];
+				var parent = inside( el );
+				if ( parent && ! ( /^(side-|image)/.test( parent ) && el.matches( 'h1, h2, h3' ) ) ) {
+					continue;
+				}
+				for ( var i = 0; i < KINDS.length; i++ ) {
+					if ( ! el.matches( KINDS[ i ][ 1 ] ) ) {
+						continue;
 					}
-					var parent = el.parentElement && el.parentElement.closest( '[data-uh]' );
-					if ( parent && ! ( /^(side-|image)/.test( parent.getAttribute( 'data-uh' ) ) && el.matches( 'h1, h2, h3' ) ) ) {
-						return;
+					var kind = KINDS[ i ][ 0 ];
+					var box = el.getBoundingClientRect();
+					// On screen or passed: it entered with the page.
+					if ( 'draw' !== kind && 'words' !== kind && ( box.top < fold || box.top + window.pageYOffset < shownTo ) ) {
+						break;
 					}
-					var box = boxes[ n ];
-					for ( var i = 0; i < KINDS.length; i++ ) {
-						if ( ! el.matches( KINDS[ i ][ 1 ] ) ) {
+					if ( 'side' === kind ) {
+						// Two columns arrive from their sides, with room to travel.
+						var row = el.parentElement;
+						if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
 							continue;
 						}
-						var kind = KINDS[ i ][ 0 ];
-						// On screen or passed: it entered with the page.
-						if ( 'draw' !== kind && 'words' !== kind && ( box.top < fold || box.top + offset < shownTo ) ) {
-							return;
+						var start = row.firstElementChild === el;
+						if ( start !== rtl ? box.left < 64 : width - box.right < 64 ) {
+							continue;
 						}
-						if ( 'side' === kind ) {
-							// Two columns arrive from their sides, with room to travel.
-							var row = el.parentElement;
-							if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
-								continue;
-							}
-							var start = row.firstElementChild === el;
-							if ( start !== rtl ? box.left < 64 : width - box.right < 64 ) {
-								continue;
-							}
-							kind = start ? 'side-start' : 'side-end';
-						}
-						el.setAttribute( 'data-uh', kind );
-						if ( 'line' === kind && hooks.watch ) {
-							hooks.watch( el );
-						}
-						observer.observe( el );
-						tallObserver.observe( el );
-						return;
+						kind = start ? 'side-start' : 'side-end';
 					}
-				} );
+					kindOf.set( el, kind );
+					plan.push( el );
+					break;
+				}
 			}
 			if ( next < candidates.length ) {
 				later( slice );
-			} else {
-				html.classList.add( 'uh-motion-live' );
+				return;
 			}
+			// Read once more (a reader may have scrolled meanwhile), then write.
+			var tops = plan.map( function ( el ) {
+				return el.getBoundingClientRect().top;
+			} );
+			plan.forEach( function ( el, n ) {
+				var kind = kindOf.get( el );
+				if ( 'draw' !== kind && 'words' !== kind && tops[ n ] < window.innerHeight ) {
+					return;
+				}
+				el.setAttribute( 'data-uh', kind );
+				if ( 'line' === kind && hooks.watch ) {
+					hooks.watch( el );
+				}
+				observer.observe( el );
+				tallObserver.observe( el );
+			} );
+			html.classList.add( 'uh-motion-live' );
 		}
 		later( slice );
 	}
