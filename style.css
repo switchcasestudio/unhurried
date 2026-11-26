@@ -995,7 +995,7 @@ a:where(:not(.wp-element-button)) {
 			animation-range: 0 320px;
 		}
 		.uh-enter .unhurried-capsule {
-			animation: uh-capsule-in var(--uh-dur-panel) var(--uh-ease-out) both, uh-capsule-lift linear both;
+			animation: uh-capsule-in var(--uh-dur-panel) var(--uh-ease-out) backwards, uh-capsule-lift linear both;
 			animation-timeline: auto, scroll(root);
 			animation-range: normal, 0 320px;
 		}
