@@ -999,8 +999,7 @@ a:where(:not(.wp-element-button)) {
 @keyframes uh-sink { to { translate: 0 16%; } }
 @keyframes uh-recede { to { opacity: .2; translate: 0 -40px; } }
 @keyframes uh-capsule-lift { to { box-shadow: 0 24px 50px -28px rgba(22, 20, 15, .55), 0 0 0 1px rgba(22, 20, 15, .05); } }
-/* Photos in a frame of their own shape (1.2.1): the picture drifts inside it
-   as the page scrolls, and eases in under the pointer. */
+/* Framed photos drift inside the frame (1.2.1). */
 figure.unhurried-frame:not(.unhurried-arch *) { border-radius: var(--uh-frame-r, var(--wp--custom--radius--media, 16px)); overflow: clip; }
 .wp-block-post .wp-block-post-featured-image:not(:has(img[style*="radius"])) { border-radius: var(--wp--custom--radius--media, 16px); overflow: clip; }
 figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
@@ -1010,7 +1009,7 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 		.uh-motion .wp-block-post .wp-block-post-featured-image:not(:has(img[style*="radius"])) img { animation: uh-frame-drift linear both; animation-timeline: view(); }
 	}
 }
-:root { --uh-drift: 4%; --uh-drift-scale: 1.1; } /* the picture travels 8% of its frame; 110% keeps the frame filled */
+:root { --uh-drift: 4%; --uh-drift-scale: 1.1; }
 @keyframes uh-frame-drift { from { translate: 0 calc(-1 * var(--uh-drift)); scale: var(--uh-drift-scale); } to { translate: 0 var(--uh-drift); scale: var(--uh-drift-scale); } }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -1022,17 +1021,6 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	::view-transition-new(*) { animation-duration: var(--uh-dur-base); animation-timing-function: var(--uh-ease-out); }
 	::view-transition-old(root) { animation: uh-page-out calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) both; }
 	::view-transition-new(root) { animation: uh-page-in var(--uh-dur-base) var(--uh-ease-out) both; }
-	/* A post's or product's head takes over the opened card (reveal.js names the card's). */
-	.single main .wp-block-post-featured-image:not(.wp-block-post *) img,
-	.single-product main .woocommerce-product-gallery__image:first-child img { view-transition-name: uh-photo; }
-	.single main h1.wp-block-post-title,
-	.single-product main h1:is(.wp-block-post-title, .product_title) { view-transition-name: uh-title; }
-	::view-transition-group(uh-photo),
-	::view-transition-group(uh-title),
-	::view-transition-old(uh-photo),
-	::view-transition-new(uh-photo),
-	::view-transition-old(uh-title),
-	::view-transition-new(uh-title) { animation-duration: var(--uh-dur-morph, 480ms); }
 	html:has(> body.unhurried-still)::view-transition-group(*),
 	html:has(> body.unhurried-still)::view-transition-old(*),
 	html:has(> body.unhurried-still)::view-transition-new(*) { animation: none; }
@@ -1209,7 +1197,6 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	.unhurried-hero-spiral__disc img {
 		animation: unhurried-emerge var(--uh-dur-slow) var(--uh-ease-out) both;
 	}
-	/* The disc turns with the scroll, no longer on its own for good (1.2.1). */
 	@supports (animation-timeline: scroll()) {
 		.unhurried-hero-spiral__disc img { animation: unhurried-emerge var(--uh-dur-slow) var(--uh-ease-out) both, uh-spiral-turn linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100vh; }
 		.unhurried-hero-spiral__disc::after { animation: uh-spiral-turn linear both reverse; animation-timeline: scroll(root); animation-range: 0 100vh; }

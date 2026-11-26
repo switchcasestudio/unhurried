@@ -156,6 +156,34 @@ if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
 endif;
 add_action( 'wp_footer', 'unhurried_scroll_styles', 1 );
 
+if ( ! function_exists( 'unhurried_page_head_names' ) ) :
+	/**
+	 * Names a post's or a product's head for the page-to-page transition.
+	 *
+	 * The script assets/js/reveal.js names the photo and title of the card that was
+	 * clicked; these name the head they become, so the two morph into each
+	 * other (style.css, Continuity). Printed only on those pages: it has to
+	 * be in place at the page's first paint.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_page_head_names() {
+		$product = function_exists( 'is_product' ) && is_product();
+		if ( ! is_singular( 'post' ) && ! $product ) {
+			return;
+		}
+		wp_add_inline_style(
+			'unhurried-style',
+			'@media (prefers-reduced-motion: no-preference){'
+			. '.single main .wp-block-post-featured-image:not(.wp-block-post *) img,.single-product main .woocommerce-product-gallery__image:first-child img{view-transition-name:uh-photo}'
+			. '.single main h1.wp-block-post-title,.single-product main h1:is(.wp-block-post-title,.product_title){view-transition-name:uh-title}'
+			. '::view-transition-group(uh-photo),::view-transition-group(uh-title),::view-transition-old(uh-photo),::view-transition-new(uh-photo),::view-transition-old(uh-title),::view-transition-new(uh-title){animation-duration:480ms}}'
+		);
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_page_head_names', 20 );
+
 if ( ! function_exists( 'unhurried_touch_button_rest' ) ) :
 	/**
 	 * Keeps a tapped button at its resting colors on a touch screen.
