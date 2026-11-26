@@ -327,6 +327,23 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.unhurried-journal-search,
 	.unhurried-journal-search .wp-block-search__input { min-width: 0; }
 }
+/* Touch targets (1.2.1): on a touch screen the menu's open and close buttons,
+   the header button and an accordion's question take a tap across at least
+   44 by 44px, through a layer that draws nothing. Each stays inside the room
+   already around it, so no tap lands on a neighbor and nothing moves. On a
+   phone the capsule leaves 8px each side of the 24px menu button, and a cut
+   title can stand right beside it: there it takes 40 by 44px. */
+@media (any-pointer: coarse) {
+	.wp-block-navigation__responsive-container-open { position: relative; }
+	.wp-block-navigation__responsive-container-open::before,
+	.wp-block-navigation__responsive-container-close::before { content: ""; position: absolute; inset: -10px; }
+	.unhurried-header .wp-block-button__link { position: relative; }
+	:is(.unhurried-header .wp-block-button__link, .wp-block-details summary)::before { content: ""; position: absolute; inset-inline: 0; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	.wp-block-details summary { position: relative; }
+}
+@media (any-pointer: coarse) and (max-width: 480px) {
+	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -8px; }
+}
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
 .unhurried-rise {
@@ -1531,6 +1548,13 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-terms .wp-block-term-name a::after { content: ""; position: absolute; inset: 0; border-radius: 999px; }
 .unhurried-chip-terms .wp-block-term:has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
 .unhurried-chip-terms .wp-block-term a:focus-visible { outline: none; }
+/* Touch targets (1.2.1): a chip takes a tap 4px above and below its pill,
+   half the 8px between two rows of chips, so no tap lands on the next row. */
+@media (any-pointer: coarse) {
+	.unhurried-chip a { position: relative; }
+	.unhurried-chip a::before { content: ""; position: absolute; inset: -4px 0; }
+	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: -4px; }
+}
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }
 .unhurried-chip-links a { display: inline-block; padding: .3rem .7rem; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; font-size: var(--wp--preset--font-size--x-small); line-height: 1.1; text-decoration: none; color: var(--wp--preset--color--contrast); }
