@@ -30,6 +30,9 @@
 	margin-inline-start: auto !important; /* !important: the frame's own margin reset above */
 	overflow: hidden;
 	border-radius: var(--wp--custom--radius--card, 24px);
+	/* A playing video is drawn on a layer of its own, which a rounded overflow alone left square at the corners. */
+	clip-path: inset(0 round var(--wp--custom--radius--card, 24px));
+	isolation: isolate;
 }
 .unhurried-hero-film__frame > * { margin: 0 !important; } /* !important: the group's own block gap */
 .unhurried-hero-film__frame > :is(.wp-block-image, .wp-block-video) { position: absolute; inset: 0; }
