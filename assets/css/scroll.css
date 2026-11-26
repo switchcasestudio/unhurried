@@ -12,24 +12,8 @@
  * @package Unhurried
  */
 
-/* Tokens for the larger moves (1.2.1, f68). The f66 tokens stay for
-   controls; these are for things the size of a photo, a heading, a section. */
-:root {
-	--uh-dur-text: 420ms;     /* text arriving (1.2.1 f69: was 560ms, read a beat late) */
-	--uh-dur-card: 560ms;     /* cards and split columns arriving */
-	--uh-dur-large: 760ms;    /* a photo's curtain, a cover */
-	--uh-dur-draw: 900ms;     /* a rule drawing across */
-	--uh-dur-count: 1100ms;   /* a figure counting up */
-	--uh-dur-morph: 480ms;    /* a card becoming the next page's head */
-	--uh-line-stagger: 90ms;  /* between the lines of a heading */
-	--uh-dist-text: 24px;     /* how far text rises */
-	--uh-dist-large: 48px;    /* how far a photo or a card travels */
-	--uh-settle: 1.14;        /* a photo settles from 114% */
-	--uh-zoom-photo: 1.06;    /* a photo eases forward under the pointer */
-}
-@media (prefers-reduced-motion: reduce) {
-	:root { --uh-dur-card: 0ms; --uh-dur-text: 0ms; --uh-dur-large: 0ms; --uh-dur-draw: 0ms; --uh-dur-count: 0ms; --uh-dur-morph: 0ms; --uh-line-stagger: 0ms; --uh-dist-text: 0px; --uh-dist-large: 0px; --uh-settle: 1; --uh-zoom-photo: 1; }
-}
+/* Tokens for the larger moves (--uh-dur-text, --uh-dist-large and the rest): style.css, Motion system
+   (on the root here, they restyled the whole page when this sheet arrived). */
 
 /* ─── Entrances, once ─────────────────────────────────────────────────── */
 /* Text and cards: a longer, plainly visible rise. */

@@ -961,6 +961,9 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	}
 }
 :root { --uh-drift: 2%; --uh-drift-scale: 1.05; }
+/* The larger moves (scroll.css): text, cards, photos, rules, counts, page heads. */
+:root { --uh-dur-text: 420ms; --uh-dur-card: 560ms; --uh-dur-large: 760ms; --uh-dur-draw: 900ms; --uh-dur-count: 1100ms; --uh-dur-morph: 480ms; --uh-line-stagger: 90ms; --uh-dist-text: 24px; --uh-dist-large: 48px; --uh-settle: 1.14; --uh-zoom-photo: 1.06; }
+@media (prefers-reduced-motion: reduce) { :root { --uh-dur-card: 0ms; --uh-dur-text: 0ms; --uh-dur-large: 0ms; --uh-dur-draw: 0ms; --uh-dur-count: 0ms; --uh-dur-morph: 0ms; --uh-line-stagger: 0ms; --uh-dist-text: 0px; --uh-dist-large: 0px; --uh-settle: 1; --uh-zoom-photo: 1; } }
 @keyframes uh-frame-drift { from { translate: 0 calc(-1 * var(--uh-drift)); scale: var(--uh-drift-scale); } to { translate: 0 var(--uh-drift); scale: var(--uh-drift-scale); } }
 
 @media (prefers-reduced-motion: no-preference) {

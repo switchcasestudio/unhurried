@@ -257,7 +257,7 @@
 		function slice() {
 			var began = window.performance.now();
 			while ( next < candidates.length && window.performance.now() - began < 8 ) {
-				var chunk = candidates.slice( next, next + 24 );
+				var chunk = candidates.slice( next, next + 12 );
 				next += chunk.length;
 				var fold = window.innerHeight;
 				var width = document.documentElement.clientWidth;
@@ -311,7 +311,7 @@
 				html.classList.add( 'uh-motion-live' );
 			}
 		}
-		slice();
+		later( slice );
 	}
 	if ( 'complete' === document.readyState ) {
 		startReveal();
