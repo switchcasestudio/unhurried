@@ -1,0 +1,38 @@
+/* A live Google map (1.2.1) in the theme's frame: 4:3, rounded, black and
+   white. Loaded with assets/css/map.css only on pages that show one
+   (inc/map.php), and in the editor. */
+.unhurried-map-frame { --uh-focus: var(--wp--preset--color--contrast); position: relative; aspect-ratio: 4 / 3; border-radius: var(--wp--custom--radius--card, 24px); }
+.unhurried-map-frame__map { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; clip-path: inset(0 round var(--wp--custom--radius--card, 24px)); background: var(--wp--preset--color--base-2); }
+/* !important: blocks write a map's size on it. */
+.unhurried-map-frame__map > *,
+.unhurried-map-frame__map iframe { position: absolute; inset: 0; display: block; width: 100% !important; height: 100% !important; margin: 0; padding: 0; border: 0; border-radius: 0; }
+.unhurried-map-frame__map iframe { filter: var(--uh-map-filter, grayscale(1) contrast(1.06)); }
+/* Keyboard focus in the map (map.js): Google's own ring turns gray with the map. */
+.unhurried-map-frame.is-focused { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
+.unhurried-map-frame__pin { display: none; position: absolute; inset: 0; z-index: 2; pointer-events: none; transition: opacity var(--uh-dur-quick, 160ms) var(--uh-ease-out, ease-out); }
+/* With the script, the pin marks the place and the map waits for the visitor. */
+.is-ready .unhurried-map-frame__pin { display: block; }
+.is-ready:not(.is-live) > .unhurried-map-frame__map { pointer-events: none; }
+.is-live .unhurried-map-frame__pin { opacity: 0; }
+.unhurried-map-frame__use {
+	position: absolute;
+	z-index: 3;
+	top: clamp(.75rem, 2vw, 1.25rem);
+	inset-inline-end: clamp(.75rem, 2vw, 1.25rem);
+	margin: 0;
+	padding: .55rem 1rem;
+	border: 1px solid rgba(246, 244, 239, .16);
+	border-radius: var(--wp--custom--radius--pill, 999px);
+	background: rgba(22, 20, 15, .86); /* the drawn map's glass note, in every look */
+	color: rgb(246, 244, 239);
+	box-shadow: 0 10px 30px -14px rgba(22, 20, 15, .45);
+	font: 500 var(--wp--preset--font-size--x-small)/1.2 var(--wp--preset--font-family--display);
+	cursor: pointer;
+	transition: background-color var(--uh-dur-quick, 160ms) var(--uh-ease-out, ease-out);
+}
+.unhurried-map-frame__use[hidden] { display: none; }
+@media (hover: hover) {
+	.unhurried-map-frame__use:hover { background: rgb(22, 20, 15); }
+}
+/* The address under a map, as text. !important: the column's block gap. */
+.unhurried-map-caption { margin-block-start: var(--wp--preset--spacing--30) !important; letter-spacing: .02em; }

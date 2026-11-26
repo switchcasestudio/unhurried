@@ -1,0 +1,63 @@
+/* Maps (1.2.1), loaded only on pages with a map (inc/map.php) and in the editor.
+   The pin, a terracotta teardrop, falls onto its place as the map comes into
+   view, lands with a small squash, and a ring spreads once on the ground. With
+   reduced motion, or no script, it is simply there. Its tip is the place. */
+.unhurried-map::before,
+.unhurried-map-frame__pin::before {
+	content: "";
+	position: absolute;
+	z-index: 2;
+	left: 50%;
+	top: 50%;
+	width: 28px; /* Google's pin's size: on a live map it covers it */
+	height: 28px;
+	margin: -28px 0 0;
+	border-radius: 50% 50% 50% 0;
+	background: radial-gradient(circle, var(--wp--preset--color--base) 0 4.5px, var(--wp--preset--color--accent) 5px);
+	box-shadow: none;
+	transform-origin: 0 100%;
+	transform: rotate(-45deg);
+}
+.unhurried-map::after,
+.unhurried-map-frame__pin::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 30px;
+	height: 11px;
+	margin: -5.5px 0 0 -15px;
+	border: 2px solid var(--wp--preset--color--accent);
+	border-radius: 50%;
+	opacity: 0;
+	pointer-events: none;
+	animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-map, .unhurried-map-frame { --uh-pin-fall: calc(var(--uh-dur-slow, 420ms) * 1.8); --uh-pin-wait: 0ms; }
+	/* The drawn map may rise into view as part of its section: its pin waits for it. */
+	.uh-motion .unhurried-map { --uh-pin-wait: var(--uh-dur-slow, 420ms); }
+	.uh-motion .unhurried-map::before,
+	.is-ready .unhurried-map-frame__pin::before { animation: uh-pin-drop var(--uh-pin-fall) linear var(--uh-pin-wait) both; }
+	.uh-motion .unhurried-map::after,
+	.is-ready .unhurried-map-frame__pin::after { animation: uh-pin-ring calc(var(--uh-dur-slow, 420ms) * 2.6) var(--uh-ease-out, ease-out) calc(var(--uh-pin-wait) + var(--uh-pin-fall) / 2) forwards; }
+	/* A pin waits out of sight until map.js (or reveal.js) sees its map in view. */
+	.uh-motion .unhurried-map:not(.is-in)::before,
+	.uh-motion .unhurried-map:not(.is-in)::after,
+	.unhurried-map-frame:not(.is-in) .unhurried-map-frame__pin::before,
+	.unhurried-map-frame:not(.is-in) .unhurried-map-frame__pin::after { animation-play-state: paused; }
+}
+@media print {
+	.unhurried-map::before, .unhurried-map-frame__pin::before { animation: none !important; } /* !important: on paper the pin stands where it lands */
+}
+@keyframes uh-pin-drop {
+	0% { translate: 0 -72px; opacity: 0; animation-timing-function: var(--uh-ease-in, ease-in); }
+	14% { opacity: 1; }
+	50% { translate: 0 0; scale: 1 1; animation-timing-function: var(--uh-ease-out, ease-out); }
+	64% { translate: 0 0; scale: 1.16 .8; animation-timing-function: var(--uh-ease-out, ease-out); }
+	100% { translate: 0 0; scale: 1 1; opacity: 1; }
+}
+@keyframes uh-pin-ring {
+	0% { opacity: .7; scale: .3; }
+	100% { opacity: 0; scale: 2.6; }
+}

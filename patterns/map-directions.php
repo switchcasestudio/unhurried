@@ -5,7 +5,7 @@
  * Categories: contact, featured
  * Keywords: map, directions, address, location, find us, parking, travel
  * Viewport width: 1400
- * Description: Address, how to get there and a Get directions button, beside a drawn map placeholder with a pin and an address note. Replace the placeholder group with your map plugin's block.
+ * Description: Address, how to get there and a Get directions button, beside a map: a drawn one with a pin and an address note, or, with the free Gmap Block plugin active, a live Google map in the theme's frame with the address under it. Type your address in the map block, or paste Google Maps' embed code in a Custom HTML block in its place.
  *
  * @package Unhurried
  * @author  Switch Case Studio
@@ -17,6 +17,12 @@ $unhurried_heading_tags = array(
 	'em' => array(),
 	'br' => array(),
 );
+
+// With the free Gmap Block plugin (Google Maps, no API key) the section shows
+// a live map in the theme's frame (inc/map.php); otherwise the drawn one. The
+// demo place is a point, not an address: Google turned the demo address into
+// a real business and showed its card.
+$unhurried_live_map = class_exists( 'WP_Block_Type_Registry' ) && WP_Block_Type_Registry::get_instance()->is_registered( 'gmap/gmap-block' );
 ?>
 <!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Map and directions', 'Pattern block name', 'unhurried' ); ?>"},"align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|80","bottom":"var:preset|spacing|80"},"margin":{"top":"0","bottom":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group alignfull" style="margin-top:0;margin-bottom:0;padding-top:var(--wp--preset--spacing--80);padding-bottom:var(--wp--preset--spacing--80)">
@@ -39,7 +45,7 @@ $unhurried_heading_tags = array(
 			<!-- wp:buttons -->
 			<div class="wp-block-buttons">
 				<!-- wp:button {"className":"is-style-hairline"} -->
-				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( 'https://www.google.com/maps/search/?api=1&query=12+Linden+Row+Hillsdale' ); ?>"><?php esc_html_e( 'Get directions', 'unhurried' ); ?></a></div>
+				<div class="wp-block-button is-style-hairline"><a class="wp-block-button__link wp-element-button" href="<?php echo esc_url( 'https://www.google.com/maps/search/?api=1&query=41.5087%2C-81.6129' ); ?>"><?php esc_html_e( 'Get directions', 'unhurried' ); ?></a></div>
 				<!-- /wp:button -->
 			</div>
 			<!-- /wp:buttons -->
@@ -47,6 +53,14 @@ $unhurried_heading_tags = array(
 		<!-- /wp:column -->
 		<!-- wp:column {"verticalAlignment":"center","width":"58%"} -->
 		<div class="wp-block-column is-vertically-aligned-center" style="flex-basis:58%">
+			<?php if ( $unhurried_live_map ) : ?>
+			<!-- wp:gmap/gmap-block {"address":"41.5087,-81.6129","zoom":15} -->
+			<div class="wp-block-gmap-gmap-block"><iframe src="https://maps.google.com/maps?q=41.5087%2C-81.6129&amp;z=15&amp;t=roadmap&amp;output=embed" class="embd-map" title="41.5087,-81.6129"></iframe></div>
+			<!-- /wp:gmap/gmap-block -->
+			<!-- wp:paragraph {"className":"unhurried-map-caption","textColor":"contrast-2","fontSize":"x-small"} -->
+			<p class="unhurried-map-caption has-contrast-2-color has-text-color has-x-small-font-size"><?php esc_html_e( '12 Lorem Est, Consequat', 'unhurried' ); ?></p>
+			<!-- /wp:paragraph -->
+			<?php else : ?>
 			<!-- wp:group {"className":"unhurried-map unhurried-reveal","layout":{"type":"default"}} -->
 			<div class="wp-block-group unhurried-map unhurried-reveal">
 				<!-- wp:group {"className":"is-style-glass unhurried-note","style":{"spacing":{"blockGap":"var:preset|spacing|10"}},"layout":{"type":"default"}} -->
@@ -61,6 +75,7 @@ $unhurried_heading_tags = array(
 				<!-- /wp:group -->
 			</div>
 			<!-- /wp:group -->
+			<?php endif; ?>
 		</div>
 		<!-- /wp:column -->
 	</div>
