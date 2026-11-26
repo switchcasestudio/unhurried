@@ -15,7 +15,8 @@
 /* Tokens for the larger moves (1.2.1, f68). The f66 tokens stay for
    controls; these are for things the size of a photo, a heading, a section. */
 :root {
-	--uh-dur-text: 560ms;     /* text and cards arriving */
+	--uh-dur-text: 420ms;     /* text arriving (1.2.1 f69: was 560ms, read a beat late) */
+	--uh-dur-card: 560ms;     /* cards and split columns arriving */
 	--uh-dur-large: 760ms;    /* a photo's curtain, a cover */
 	--uh-dur-draw: 900ms;     /* a rule drawing across */
 	--uh-dur-count: 1100ms;   /* a figure counting up */
@@ -27,7 +28,7 @@
 	--uh-zoom-photo: 1.06;    /* a photo eases forward under the pointer */
 }
 @media (prefers-reduced-motion: reduce) {
-	:root { --uh-dur-text: 0ms; --uh-dur-large: 0ms; --uh-dur-draw: 0ms; --uh-dur-count: 0ms; --uh-dur-morph: 0ms; --uh-line-stagger: 0ms; --uh-dist-text: 0px; --uh-dist-large: 0px; --uh-settle: 1; --uh-zoom-photo: 1; }
+	:root { --uh-dur-card: 0ms; --uh-dur-text: 0ms; --uh-dur-large: 0ms; --uh-dur-draw: 0ms; --uh-dur-count: 0ms; --uh-dur-morph: 0ms; --uh-line-stagger: 0ms; --uh-dist-text: 0px; --uh-dist-large: 0px; --uh-settle: 1; --uh-zoom-photo: 1; }
 }
 
 /* ─── Entrances, once ─────────────────────────────────────────────────── */
@@ -35,6 +36,7 @@
 .uh-motion [data-uh]:not(.is-done) { transition-duration: var(--uh-dur-text); }
 .uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-dist-text); }
 .uh-motion [data-uh="card"]:not(.is-in) { translate: 0 var(--uh-dist-large); scale: .96; }
+.uh-motion :is([data-uh="card"], [data-uh^="side-"]):not(.is-done) { transition-duration: var(--uh-dur-card); }
 
 /* Photos and covers: they rise 48px out of nothing while the picture settles
    from 114%. (A clip-path curtain was tried first: repainting it under the
@@ -42,8 +44,12 @@
    CPU; this costs none.) */
 .uh-motion [data-uh="image"]:not(.is-done) { transition-duration: var(--uh-dur-large); }
 .uh-motion [data-uh="image"]:not(.is-in) { translate: 0 var(--uh-dist-large); }
-.uh-motion [data-uh="image"]:not(.is-done) img { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
-.uh-motion [data-uh="image"]:not(.is-in) img { transform: scale(var(--uh-settle)); }
+.uh-motion .wp-block-cover[data-uh="image"] { overflow: clip; }
+/* The picture settles only inside a frame that clips it (a framed photo, a
+   cover): elsewhere a picture at 114% reached past its box and the page
+   scrolled sideways. */
+.uh-motion :is(figure.unhurried-frame, .wp-block-cover)[data-uh="image"]:not(.is-done) img { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
+.uh-motion :is(figure.unhurried-frame, .wp-block-cover)[data-uh="image"]:not(.is-in) img { transform: scale(var(--uh-settle)); }
 
 /* Headings: line by line, each line rising out of nothing. */
 .uh-motion [data-uh="line"] .uh-w { display: inline-block; }
@@ -85,8 +91,8 @@
 	@media (prefers-reduced-motion: no-preference) {
 		/* A section's eyebrow gains an accent rule as the section reaches
 		   the middle of the window, and keeps it. */
-		.uh-motion main .is-style-eyebrow:not(.unhurried-hero-photo *, .unhurried-hero-statue *, .unhurried-hero-spiral *, .unhurried-still *) { position: relative; }
-		.uh-motion main .is-style-eyebrow:not(.unhurried-hero-photo *, .unhurried-hero-statue *, .unhurried-hero-spiral *, .unhurried-still *)::after {
+		.uh-motion main .is-style-eyebrow:not([data-uh-first], [class*="unhurried-hero"] *, .unhurried-still *) { position: relative; }
+		.uh-motion main .is-style-eyebrow:not([data-uh-first], [class*="unhurried-hero"] *, .unhurried-still *)::after {
 			content: "";
 			position: absolute;
 			inset-inline-start: 0;
@@ -98,8 +104,14 @@
 			animation: uh-accent-draw linear both;
 			animation-timeline: view();
 			animation-range: entry 60% cover 50%;
+			transition: scale var(--uh-dur-slow) var(--uh-ease-out);
 		}
-		[dir="rtl"] .uh-motion main .is-style-eyebrow::after { transform-origin: 100% 50%; }
+		/* Under the pointer the section's rule reaches a little further. */
+		@media (hover: hover) {
+			.uh-motion main :is(.alignfull, .wp-block-column):hover > * .is-style-eyebrow::after,
+			.uh-motion main :is(.alignfull, .wp-block-column):hover > .is-style-eyebrow::after { scale: 1.8 1; }
+		}
+		.uh-motion[dir="rtl"] main .is-style-eyebrow::after, .uh-motion main .is-style-eyebrow:dir(rtl)::after { transform-origin: 100% 50%; }
 	}
 }
 @keyframes uh-accent-draw { from { transform: scaleX(0); } }
@@ -112,7 +124,7 @@
 /* ─── Header: steps aside while reading down (reveal.js), returns on the way up ── */
 @media (prefers-reduced-motion: no-preference) {
 	header.wp-block-template-part:has(> .unhurried-header) { transition: translate var(--uh-dur-panel) var(--uh-ease-out); }
-	.uh-header-away header.wp-block-template-part:has(> .unhurried-header) { translate: 0 calc(-100% - 24px); transition-duration: calc(var(--uh-dur-panel) * var(--uh-exit)); transition-timing-function: var(--uh-ease-in); }
+	header.wp-block-template-part.uh-header-away:has(> .unhurried-header) { translate: 0 calc(-100% - 24px); transition-duration: calc(var(--uh-dur-panel) * var(--uh-exit)); transition-timing-function: var(--uh-ease-in); }
 }
 
 /* ─── Quiet responses: things that do not lead anywhere ───────────────── */
@@ -145,29 +157,32 @@
 }
 
 /* ─── Natural controls ────────────────────────────────────────────────── */
-/* The marquee's pause button (unhurried_marquee_loop(), reveal.js). */
-.unhurried-marquee { position: relative; }
+/* The marquee's pause button (unhurried_marquee_loop(), reveal.js): 44 by
+   34px at the band's end, beside the moving line, not over it (a 44px hit
+   area on touch); the band's own colors, so it reads as part of it. */
 .unhurried-marquee.is-paused .unhurried-marquee__track { animation-play-state: paused; }
 .unhurried-marquee__pause {
-	position: absolute;
-	inset-block: 0;
-	inset-inline-end: 0;
-	display: inline-flex;
-	align-items: center;
-	gap: 3px;
-	padding: 0 clamp(10px, 2vw, 28px) 0 .75rem;
+	position: relative;
+	flex: none;
+	box-sizing: border-box;
+	inline-size: 44px;
+	block-size: 34px;
+	margin: 0;
+	padding: 0;
 	border: 0;
-	background: inherit;
+	border-inline-start: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+	background: no-repeat linear-gradient(currentColor, currentColor) calc(50% - 3.5px) 50% / 3px 11px, no-repeat linear-gradient(currentColor, currentColor) calc(50% + 3.5px) 50% / 3px 11px;
 	color: inherit;
 	cursor: pointer;
-	transition: color var(--uh-dur-quick) var(--uh-ease-out);
+	transition: background-color var(--uh-dur-quick) var(--uh-ease-out);
 }
-.unhurried-marquee__pause::before,
-.unhurried-marquee__pause::after { content: ""; width: 3px; height: 10px; background: currentColor; }
-.unhurried-marquee__pause[aria-pressed="true"]::before { width: 0; height: 0; border-block: 5px solid transparent; border-inline-start: 8px solid currentColor; background: none; }
-.unhurried-marquee__pause[aria-pressed="true"]::after { display: none; }
 .unhurried-marquee__pause[hidden] { display: none; }
-.unhurried-marquee__pause:focus-visible { outline-offset: -3px; }
+/* Touch: the hit area reaches 10px down into the gap under the band (44px tall). */
+.unhurried-marquee__pause::before { content: ""; position: absolute; inset: 0 0 -10px; }
+.unhurried-marquee__pause[aria-pressed="true"] { background-image: none; }
+.unhurried-marquee__pause[aria-pressed="true"]::after { content: ""; position: absolute; inset-block-start: calc(50% - 6px); inset-inline-start: calc(50% - 3px); border-block: 6px solid transparent; border-inline-start: 9px solid currentColor; }
+.unhurried-marquee__pause:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: -5px; }
+@media (hover: hover) { .unhurried-marquee__pause:hover { background-color: color-mix(in srgb, currentColor 16%, transparent); } }
 
 /* Forms: a field that was left wrong says so with its edge. */
 :where(.wp-site-blocks) :where(input:not([type="submit"], [type="checkbox"], [type="radio"]), textarea, select):user-invalid { border-color: var(--wp--preset--color--accent); }
@@ -175,18 +190,126 @@
 /* State changes that would otherwise pop. */
 @media (prefers-reduced-motion: no-preference) {
 	/* A variable product's new price fades in where the old one was (nothing moves). */
-	.single_variation_wrap .woocommerce-variation-price,
-	.single_variation_wrap .woocommerce-variation-availability { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
+	.uh-late .single_variation_wrap :is(.woocommerce-variation-price, .woocommerce-variation-availability):not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 	/* A row arriving in the cart or the mini-cart drawer. */
-	.wc-block-cart-items__row { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
+	.uh-late .wc-block-cart-items__row:not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 	/* An opened accordion's answer and a shown tab panel fade in from .4. */
-	.wp-block-details[open] > :not(summary),
-	.woocommerce-Tabs-panel { animation: uh-notice-in var(--uh-dur-panel) var(--uh-ease-out) both; }
+	.uh-late .wp-block-details[open] > :not(summary, [data-uh-seen]),
+	.uh-late .woocommerce-Tabs-panel:not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-panel) var(--uh-ease-out) both; }
 }
 
 /* Print shows everything, as it was before any of this moved. */
 @media print {
 	.uh-motion [data-uh] img,
 	.uh-motion .uh-w { opacity: 1 !important; clip-path: none !important; translate: none !important; scale: none !important; transition: none !important; }
-	.uh-header-away header.wp-block-template-part { translate: none !important; }
+	header.wp-block-template-part.uh-header-away { translate: none !important; }
+}
+
+/* ─── Header menu hover intent (f67; moved here in 1.2.1 f69: it is not needed for the first screen) ─── */
+/* Hover intent: open after --uh-intent-in, close after --uh-intent-out, the next dropdown swaps in one frame; not for the keyboard or touch. */
+@media (hover: hover) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition-delay: var(--uh-intent-out); }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition-delay: var(--uh-intent-in); }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon:focus-visible svg { transition-delay: 0s; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container:has(> .wp-block-navigation-submenu:hover) > .wp-block-navigation-submenu:not(:hover, :has(:focus-visible)) > .wp-block-navigation__submenu-container {
+		visibility: hidden !important;
+		opacity: 0 !important;
+		transition: opacity 0s linear var(--uh-intent-in), translate 0s linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important;
+	}
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-base) * var(--uh-exit)) !important; }
+	.unhurried-capsule .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-container,
+	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), translate var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), visibility 0s linear calc(var(--uh-dur-base) * var(--uh-exit)) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important; }
+	.unhurried-capsule .wp-block-navigation__container .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
+}
+/* !important: the reduced-motion rule below. */
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-quick)) !important; }
+	.unhurried-capsule .wp-block-navigation-submenu:hover > .wp-block-navigation__submenu-container,
+	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s linear var(--uh-dur-quick) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s !important; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition: transform 0s linear var(--uh-intent-out) !important; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition: transform 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation__submenu-icon svg { transition: none !important; }
+}
+
+/* ─── Gift card tilt and map pin (f66; moved here in 1.2.1 f69: the card's
+   resting angle stays in style.css, the pointer's tilt and glare and the pin's
+   ping arrive here) ─── */
+.unhurried-giftcard {
+	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
+}
+.unhurried-giftcard::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	background: radial-gradient(circle at var(--uh-glare-x, 30%) var(--uh-glare-y, 20%), rgba(246, 244, 239, .16), transparent 55%);
+	opacity: 0;
+	transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
+	pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-giftcard:hover { transition-duration: var(--uh-dur-quick), var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); box-shadow: 0 50px 80px -40px rgba(22, 20, 15, .6); }
+	.unhurried-giftcard:hover::after { opacity: 1; transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
+}
+
+.unhurried-map::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 14px;
+	height: 14px;
+	margin: -7px 0 0 -7px;
+	border-radius: 50%;
+	border: 2px solid var(--wp--preset--color--accent);
+	opacity: 0;
+	pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.unhurried-map::after { animation: uh-ping 1.6s var(--uh-ease-out) var(--uh-dur-slow) 3; }
+	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; }
+}
+@keyframes uh-ping {
+	0% { opacity: .55; scale: 1; }
+	80%, 100% { opacity: 0; scale: 4.2; }
+}
+
+/* ─── A head or cover photograph eases closer under the pointer (f69), as a framed photo does ─── */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.uh-motion main .wp-block-cover:is(.unhurried-hero-photo__stage, .alignfull:not([class*="unhurried-hero"])) > .wp-block-cover__image-background { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out); }
+	.uh-motion main .wp-block-cover:is(.unhurried-hero-photo__stage, .alignfull:not([class*="unhurried-hero"])):hover > .wp-block-cover__image-background { transform: scale(var(--uh-zoom)); }
+	/* An arch (a page head's picture) eases closer inside its own outline. */
+	.uh-motion main figure.is-style-arch:not(:has(figcaption)) { border-radius: 999px 999px 16px 16px; overflow: clip; }
+	.uh-motion main figure.is-style-arch:not(:has(figcaption)) img { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out); }
+	.uh-motion main figure.is-style-arch:not(:has(figcaption)):hover img { transform: scale(var(--uh-zoom)); }
+}
+
+/* ─── Presses and button hovers (f66; moved here in 1.2.1 f69: they answer the pointer, never the first paint) ─── */
+@media (hover: hover) {
+	:is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover,
+	:is(.unhurried-journal-search, .unhurried-footer-search) .wp-block-search__button:hover { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent); }
+	.wp-block-cover :is(.unhurried-hero-statue__stage, .unhurried-hero-photo__stage) .wp-block-button:not(.is-style-text-link) > .wp-block-button__link:hover:focus-visible,
+	.unhurried-hero-photo__stage .unhurried-journal-search .wp-block-search__button:hover:focus-visible { box-shadow: inset 0 0 0 100vmax color-mix(in srgb, currentColor 12%, transparent), 0 0 0 3px var(--uh-focus-in); }
+	.wp-block-button:not(.is-style-text-link) > .wp-block-button__link.has-background:hover { box-shadow: inset 0 0 0 100vmax rgb(from currentColor calc(255 - r) calc(255 - g) calc(255 - b) / 14%); }
+	
+	:is(.wp-block-post-terms, .wp-block-term-name, .wp-block-site-title, .wp-block-post-author-name) a:not(:is(.unhurried-capsule, .unhurried-wordmark, .unhurried-chip-terms, .unhurried-chip-links) *):hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+	.unhurried-text-link a:hover { border-bottom-color: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+	
+	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"])):active {
+		transform: translateY(var(--uh-press-y));
+		transition-duration: var(--uh-dur-press);
+	}
+	:is(.wp-element-button.has-icon, .unhurried-footer-social .wp-social-link):active {
+		transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale));
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	:is(.wp-block-navigation__responsive-container-open, .wp-block-navigation__responsive-container-close):active { transform: translateY(var(--uh-press-y)) scale(var(--uh-press-scale)); transition-duration: var(--uh-dur-press); }
 }

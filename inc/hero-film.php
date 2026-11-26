@@ -118,7 +118,7 @@ if ( ! function_exists( 'unhurried_hero_film_frame' ) ) :
 			)
 		);
 		$button = sprintf(
-			'<button type="button" class="unhurried-hero-film__toggle" aria-controls="%1$s" data-label-pause="%2$s" data-label-play="%3$s" hidden>'
+			'<button type="button" class="unhurried-hero-film__toggle" data-film="%1$s" data-label-pause="%2$s" data-label-play="%3$s" hidden>'
 				. '<svg class="unhurried-hero-film__pause" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5 3.5v9M11 3.5v9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>'
 				. '<svg class="unhurried-hero-film__play" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.5 3.6v8.8L12.5 8z" fill="currentColor"/></svg>'
 				. '<span class="unhurried-visually-hidden">%2$s</span></button>',
