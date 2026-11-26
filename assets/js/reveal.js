@@ -354,7 +354,17 @@
 			if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
 				return '';
 			}
-			return row.firstElementChild === col ? 'side-start' : 'side-end';
+			// Only with room to travel: a column that would pass the window's
+			// edge on its way in (it would widen the page) rises instead.
+			var room = 64; // --uh-dist-large (48px) and a margin for shadows and tilts
+			var box = col.getBoundingClientRect();
+			var start = row.firstElementChild === col;
+			var rtl = 'rtl' === window.getComputedStyle( row ).direction;
+			var fromLeft = start !== rtl;
+			if ( fromLeft ? box.left < room : document.documentElement.clientWidth - box.right < room ) {
+				return '';
+			}
+			return start ? 'side-start' : 'side-end';
 		}
 
 		// Headings arrive line by line (the fourth line on together).

@@ -237,10 +237,10 @@
 	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation__submenu-icon svg { transition: none !important; }
 }
 
-/* ─── Gift card tilt and map pin (f66; moved here in 1.2.1 f69: they answer a pointer or a scroll, never the first paint) ─── */
+/* ─── Gift card tilt and map pin (f66; moved here in 1.2.1 f69: the card's
+   resting angle stays in style.css, the pointer's tilt and glare and the pin's
+   ping arrive here) ─── */
 .unhurried-giftcard {
-	position: relative;
-	transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg));
 	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
 }
 .unhurried-giftcard::after {

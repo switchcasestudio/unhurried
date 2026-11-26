@@ -901,6 +901,8 @@ a:where(:not(.wp-element-button)) {
 	:where(.wc-block-components-notice-banner, .woocommerce-message, .woocommerce-info, .woocommerce-error, .wpcf7-response-output) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 }
 @keyframes uh-notice-in { from { opacity: .4; } }
+/* The gift card's resting angle (its tilt and glare: scroll.css). */
+.unhurried-giftcard { position: relative; transform: perspective(900px) rotate(-2deg) rotateX(var(--uh-tilt-x, 0deg)) rotateY(var(--uh-tilt-y, 0deg)); }
 
 /* 3. Depth (scroll-linked, where the browser supports it) */
 @supports (animation-timeline: view()) {
