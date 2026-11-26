@@ -96,6 +96,122 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_enqueue_assets' );
 
+if ( ! function_exists( 'unhurried_image_frame' ) ) :
+	/**
+	 * Gives a photo a frame of its own shape, for the scroll drift and the
+	 * pointer response (style.css and assets/css/scroll.css, 1.2.1).
+	 *
+	 * An Image block without a caption, a set size, a border or an unusual
+	 * shape gets the class unhurried-frame and its corner radius as
+	 * --uh-frame-r, so the figure can clip the picture as it drifts and eases
+	 * inside. Front end only; the saved block is unchanged.
+	 *
+	 * @since 1.2.1
+	 * @param string $block_content Rendered block.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_image_frame( $block_content, $block ) {
+		$attrs  = isset( $block['attrs'] ) ? (array) $block['attrs'] : array();
+		$class  = isset( $attrs['className'] ) ? (string) $attrs['className'] : '';
+		$border = isset( $attrs['style']['border'] ) ? (array) $attrs['style']['border'] : array();
+		$radius = isset( $border['radius'] ) ? $border['radius'] : '';
+		if ( ! class_exists( 'WP_HTML_Tag_Processor' )
+			|| false !== strpos( $block_content, '<figcaption' )
+			|| preg_match( '/is-style-(arch|rounded|circle)/', $class )
+			|| ! empty( $attrs['width'] ) || ! empty( $attrs['height'] )
+			|| ! empty( $border['width'] ) || ! empty( $border['color'] ) || ! empty( $border['style'] ) || ! empty( $attrs['borderColor'] )
+			|| ( '' !== $radius && ( ! is_string( $radius ) || ! preg_match( '/^[0-9.]+(px|rem|em|%)$/', $radius ) ) ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'figure' ) ) {
+			return $block_content;
+		}
+		$tags->add_class( 'unhurried-frame' );
+		if ( '' !== $radius ) {
+			$style = (string) $tags->get_attribute( 'style' );
+			$tags->set_attribute( 'style', trim( $style . ';--uh-frame-r:' . $radius, ';' ) );
+		}
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/image', 'unhurried_image_frame', 10, 2 );
+
+if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
+	/**
+	 * The scroll choreography and the quiet responses (assets/css/scroll.css).
+	 *
+	 * Loaded by assets/js/reveal.js once the page has loaded, so it never
+	 * competes with the first screen: all it styles is below the window or
+	 * answers a pointer. Without JavaScript a noscript link loads it for the
+	 * pointer responses (unhurried_scroll_styles_noscript()). Child themes
+	 * (Unhurried Pro among them) can tell this version has it by this
+	 * function.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_scroll_styles() {
+		wp_localize_script( 'unhurried-reveal', 'unhurriedScroll', array( 'css' => unhurried_scroll_styles_url() ) );
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_scroll_styles', 20 );
+
+if ( ! function_exists( 'unhurried_scroll_styles_url' ) ) :
+	/**
+	 * The address of assets/css/scroll.css, with the parent theme's version.
+	 *
+	 * @since 1.2.1
+	 * @return string
+	 */
+	function unhurried_scroll_styles_url() {
+		return add_query_arg( 'ver', rawurlencode( (string) wp_get_theme( get_template() )->get( 'Version' ) ), get_template_directory_uri() . '/assets/css/scroll.css' );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_scroll_styles_noscript' ) ) :
+	/**
+	 * Without JavaScript the pointer responses still load (nothing in the
+	 * stylesheet hides anything without the script).
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_scroll_styles_noscript() {
+		echo '<noscript><link rel="stylesheet" href="' . esc_url( unhurried_scroll_styles_url() ) . '"></noscript>' . "\n"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- only without JavaScript; with it, reveal.js loads the file after the page.
+	}
+endif;
+add_action( 'wp_footer', 'unhurried_scroll_styles_noscript', 1 );
+
+if ( ! function_exists( 'unhurried_page_head_names' ) ) :
+	/**
+	 * Names a post's or a product's head for the page-to-page transition.
+	 *
+	 * The script assets/js/reveal.js names the photo and title of the card that was
+	 * clicked; these name the head they become, so the two morph into each
+	 * other (style.css, Continuity). Printed only on those pages: it has to
+	 * be in place at the page's first paint.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_page_head_names() {
+		$product = function_exists( 'is_product' ) && is_product();
+		if ( ! is_singular( 'post' ) && ! $product ) {
+			return;
+		}
+		wp_add_inline_style(
+			'unhurried-style',
+			'@media (prefers-reduced-motion: no-preference){'
+			. '.single main .wp-block-post-featured-image:not(.wp-block-post *) img,.single-product main .woocommerce-product-gallery__image:first-child img.wp-post-image{view-transition-name:uh-photo}'
+			. '.single main h1.wp-block-post-title,.single-product main h1:is(.wp-block-post-title,.product_title){view-transition-name:uh-title}'
+			. '::view-transition-group(uh-photo),::view-transition-group(uh-title),::view-transition-old(uh-photo),::view-transition-new(uh-photo),::view-transition-old(uh-title),::view-transition-new(uh-title){animation-duration:480ms}}'
+		);
+	}
+endif;
+add_action( 'wp_enqueue_scripts', 'unhurried_page_head_names', 20 );
+
 if ( ! function_exists( 'unhurried_touch_button_rest' ) ) :
 	/**
 	 * Keeps a tapped button at its resting colors on a touch screen.
@@ -170,7 +286,7 @@ if ( ! function_exists( 'unhurried_motion_head' ) ) :
 		}
 		// A reload or a return through history shows the page as it was left:
 		// nothing rises again where the reader already is (1.2.1).
-		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement,p=w.performance,n=p&&p.getEntriesByType&&p.getEntriesByType('navigation')[0];if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches||(n&&(n.type==='reload'||n.type==='back_forward'))){return;}h.classList.add('uh-motion');})(document,window);" );
+		wp_print_inline_script_tag( "(function(d,w){var h=d.documentElement,p=w.performance,n=p&&p.getEntriesByType&&p.getEntriesByType('navigation')[0];if(!('IntersectionObserver' in w)||w.matchMedia('(prefers-reduced-motion: reduce)').matches||(n&&(n.type==='reload'||n.type==='back_forward'))){return;}h.classList.add('uh-motion');try{if(!d.referrer||new URL(d.referrer).origin!==w.location.origin){h.classList.add('uh-enter');}}catch(e){}})(document,window);" );
 	}
 endif;
 add_action( 'wp_head', 'unhurried_motion_head', 1 );
@@ -861,6 +977,9 @@ if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
 		return substr( $block_content, 0, $open + 1 )
 			. '<div class="unhurried-marquee__track"><div class="unhurried-marquee__set">' . $inner . '</div>'
 			. '<div class="unhurried-marquee__set" aria-hidden="true">' . $copy->get_updated_html() . '</div></div>'
+			// A pause control (1.2.1): the line moves for good, so it can be
+			// stopped (WCAG 2.2.2). Shown by assets/js/reveal.js, which runs it.
+			. '<button type="button" class="unhurried-marquee__pause" aria-pressed="false" hidden><span class="unhurried-visually-hidden">' . esc_html__( 'Pause the moving line', 'unhurried' ) . '</span></button>'
 			. substr( $block_content, $close );
 	}
 endif;

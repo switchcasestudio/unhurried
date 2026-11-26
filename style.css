@@ -699,9 +699,12 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 /* 1. Entrances */
 
 @media (prefers-reduced-motion: no-preference) {
-	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
-		animation: var(--uh-arrive, uh-arrive) var(--uh-dur-slow) var(--uh-ease-out) both;
+	.uh-motion :is(.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group) :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel):not(.unhurried-still, [data-uh], :is(h1, h2, h3, h4, h5, h6, p, figure, li, form, .wp-block-buttons, .wp-block-search, .wp-block-quote, .wp-block-query-total, .wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel, [data-uh], header, .unhurried-header, .wp-block-navigation, .unhurried-marquee, .unhurried-still, .unhurried-hero-spiral__disc) *, .single-product *, .single .wp-block-post-content > p, .single .wp-block-post-content > :is(ul, ol) > li) {
+		animation: var(--uh-arrive, uh-arrive) var(--uh-dur-slow) var(--uh-ease-out) var(--uh-arrive-delay, 0ms) both;
 	}
+	main :is(p, li) { --uh-arrive-delay: 120ms; }
+	main :is(figure, .wp-block-post) { --uh-arrive-delay: 160ms; }
+	main :is(.wp-block-buttons, .wp-block-search, form) { --uh-arrive-delay: 220ms; }
 	
 	.uh-motion :is(figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure) { --uh-arrive: uh-arrive-far; }
 	.uh-motion :is(.wp-block-post, .wp-block-details, .is-style-card, .is-style-section-card, .is-style-panel) { --uh-arrive: uh-arrive-card; }
@@ -1023,14 +1026,31 @@ a:where(:not(.wp-element-button)) {
 			animation-timeline: scroll(root);
 			animation-range: 0 320px;
 		}
+		.uh-enter .unhurried-capsule {
+			animation: uh-capsule-in var(--uh-dur-panel) var(--uh-ease-out) both, uh-capsule-lift linear both;
+			animation-timeline: auto, scroll(root);
+			animation-range: normal, 0 320px;
+		}
 	}
 }
+@keyframes uh-capsule-in { from { opacity: .4; translate: 0 -12px; } }
 @keyframes uh-drift { from { translate: 0 -6%; scale: 1.14; } to { translate: 0 6%; scale: 1.14; } }
 @keyframes uh-float-up { from { translate: 0 22px; } to { translate: 0 -22px; } }
 @keyframes uh-float-down { from { translate: 0 -14px; } to { translate: 0 30px; } }
 @keyframes uh-sink { to { translate: 0 16%; } }
 @keyframes uh-recede { to { opacity: .2; translate: 0 -40px; } }
 @keyframes uh-capsule-lift { to { box-shadow: 0 24px 50px -28px rgba(22, 20, 15, .55), 0 0 0 1px rgba(22, 20, 15, .05); } }
+figure.unhurried-frame:not(.unhurried-arch *) { border-radius: var(--uh-frame-r, var(--wp--custom--radius--media, 16px)); overflow: clip; }
+.wp-block-post .wp-block-post-featured-image:not(:has(img[style*="radius"])) { border-radius: var(--wp--custom--radius--media, 16px); overflow: clip; }
+figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.uh-motion figure.unhurried-frame:not(.unhurried-arch *) img,
+		.uh-motion .wp-block-post .wp-block-post-featured-image:not(:has(img[style*="radius"])) img { animation: uh-frame-drift linear both; animation-timeline: view(); }
+	}
+}
+:root { --uh-drift: 4%; --uh-drift-scale: 1.1; }
+@keyframes uh-frame-drift { from { translate: 0 calc(-1 * var(--uh-drift)); scale: var(--uh-drift-scale); } to { translate: 0 var(--uh-drift); scale: var(--uh-drift-scale); } }
 
 @media (prefers-reduced-motion: no-preference) {
 	@view-transition { navigation: auto; }
@@ -1215,10 +1235,13 @@ a:where(:not(.wp-element-button)) {
 }
 @media (prefers-reduced-motion: no-preference) {
 	.unhurried-hero-spiral__disc img {
-		animation: unhurried-emerge var(--uh-dur-slow) var(--uh-ease-out) both, unhurried-turn 240s linear infinite;
+		animation: unhurried-emerge var(--uh-dur-slow) var(--uh-ease-out) both;
 	}
-	.unhurried-hero-spiral__disc::after { animation: unhurried-turn 180s linear infinite reverse; }
-	.unhurried-hero-spiral__stage::before { animation: unhurried-light 20s ease-in-out infinite alternate; }
+	@supports (animation-timeline: scroll()) {
+		.unhurried-hero-spiral__disc img { animation: unhurried-emerge var(--uh-dur-slow) var(--uh-ease-out) both, uh-spiral-turn linear both; animation-timeline: auto, scroll(root); animation-range: normal, 0 100vh; }
+		.unhurried-hero-spiral__disc::after { animation: uh-spiral-turn linear both reverse; animation-timeline: scroll(root); animation-range: 0 100vh; }
+		.unhurried-hero-spiral__stage::before { animation: unhurried-light linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+	}
 }
 /* From 782px the giant word is placed against the stage. A heading with a
    translate in effect (the first screen's rise, filled to the end) becomes the
@@ -1232,6 +1255,7 @@ a:where(:not(.wp-element-button)) {
 @keyframes unhurried-emerge {
 	from { scale: 1.04; }
 }
+@keyframes uh-spiral-turn { to { rotate: 45deg; } }
 @keyframes unhurried-turn {
 	to { transform: rotate(360deg); }
 }
