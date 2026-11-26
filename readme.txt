@@ -213,7 +213,7 @@ License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
 assets/images/david-mono.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
 assets/images/david-mono-1200.webp and assets/images/david-mono-800.webp: smaller copies of david-mono.webp for phones. The print's sepia is taken out, processed like the rest of the set. Same source and license (CC0).
-assets/images/david-mono-portrait.webp: the part of david-mono.webp a phone held upright shows, at 1:2, for the statue hero on phones. Same source, process and license (CC0).
+assets/images/david-mono-portrait.webp and david-mono-portrait-500.webp: the part of david-mono.webp a phone held upright shows, at 1:2, for the statue hero on phones, and a smaller copy. Same source, process and license (CC0).
 assets/images/david-hero.webp, david-hero-800.webp, david-hero-square.webp and david-hero-square-660.webp: new crops of the same photograph for the framed hero (Hero, film): 4:5 and a smaller copy, and a square one for phones with a smaller copy. Same source, process and license (CC0).
 assets/images/lotus-dish.webp: Dish with Ducks in Lotus Pond, Ding ware (China, Jin dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1989.275
 assets/images/white-vase.webp: Vase (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1917.2
