@@ -1,0 +1,11 @@
+/* ─── Hero, film (1.2.1), in the editor only (add_editor_style, inc/hero-film.php) ───
+   The frame's film slot is an empty Video block until the site owner adds a
+   film; the page leaves an empty one out. In the editor it is a small "Video"
+   label at the foot of the picture and, selected, the Video block's own
+   upload and library buttons. */
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)) { inset: auto var(--wp--preset--spacing--30) var(--wp--preset--spacing--30); }
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)) .components-placeholder { min-height: 0; border-radius: var(--wp--custom--radius--card, 24px); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) { inset-inline-end: auto; }
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder { padding: .5rem 1rem; border-radius: var(--wp--custom--radius--pill, 999px); }
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder :is(.components-placeholder__illustration, .components-placeholder__instructions, .components-placeholder__fieldset) { display: none; }
+.unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder__label { margin: 0; opacity: 1; }
