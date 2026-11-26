@@ -124,7 +124,7 @@
 /* ─── Header: steps aside while reading down (reveal.js), returns on the way up ── */
 @media (prefers-reduced-motion: no-preference) {
 	header.wp-block-template-part:has(> .unhurried-header) { transition: translate var(--uh-dur-panel) var(--uh-ease-out); }
-	.uh-header-away header.wp-block-template-part:has(> .unhurried-header) { translate: 0 calc(-100% - 24px); transition-duration: calc(var(--uh-dur-panel) * var(--uh-exit)); transition-timing-function: var(--uh-ease-in); }
+	header.wp-block-template-part.uh-header-away:has(> .unhurried-header) { translate: 0 calc(-100% - 24px); transition-duration: calc(var(--uh-dur-panel) * var(--uh-exit)); transition-timing-function: var(--uh-ease-in); }
 }
 
 /* ─── Quiet responses: things that do not lead anywhere ───────────────── */
@@ -202,7 +202,7 @@
 @media print {
 	.uh-motion [data-uh] img,
 	.uh-motion .uh-w { opacity: 1 !important; clip-path: none !important; translate: none !important; scale: none !important; transition: none !important; }
-	.uh-header-away header.wp-block-template-part { translate: none !important; }
+	header.wp-block-template-part.uh-header-away { translate: none !important; }
 }
 
 /* ─── Header menu hover intent (f67; moved here in 1.2.1 f69: it is not needed for the first screen) ─── */

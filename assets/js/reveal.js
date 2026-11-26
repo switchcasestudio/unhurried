@@ -252,7 +252,9 @@
 				return;
 			}
 			var busy = headerPart.contains( document.activeElement ) || headerPart.querySelector( '[aria-expanded="true"], .is-menu-open' );
-			html.classList.toggle( 'uh-header-away', y > lastY && y > 320 && ! busy );
+			// On the header itself, not <html>: a class on the root restyled
+			// the whole page (a 60ms frame with the CPU 4x slower).
+			headerPart.classList.toggle( 'uh-header-away', y > lastY && y > 320 && ! busy );
 			lastY = y;
 		};
 		window.addEventListener( 'scroll', function () {
@@ -262,7 +264,7 @@
 			}
 		}, { passive: true } );
 		headerPart.addEventListener( 'focusin', function () {
-			html.classList.remove( 'uh-header-away' );
+			headerPart.classList.remove( 'uh-header-away' );
 		} );
 	}
 
