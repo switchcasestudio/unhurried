@@ -332,10 +332,10 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
    44 by 44px, through a layer that draws nothing. Each stays inside the room
    already around it, so no tap lands on a neighbor and nothing moves. On a
    phone the capsule leaves 8px after the 24px menu button, and 12px of its
-   layer reach back toward the title: the title's link and the logo stand
-   above that layer, so where a long or cut title comes closer than 12px the
-   title keeps its taps and the button takes what is left (40px wide at the
-   least, the 8px each side it always had). */
+   layer reach back toward the title: the site title (its ellipsis too) and
+   the logo stand above that layer, so where a long or cut title comes closer
+   than 12px the title keeps every tap and the button takes what is left
+   (40px wide at the least, the 8px each side it always had). */
 @media (any-pointer: coarse) {
 	.wp-block-navigation__responsive-container-open { position: relative; }
 	.wp-block-navigation__responsive-container-open::before,
@@ -346,7 +346,7 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 }
 @media (any-pointer: coarse) and (max-width: 480px) {
 	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -12px -8px; }
-	.unhurried-capsule :is(.wp-block-site-title, .wp-block-site-logo) a { position: relative; z-index: 1; }
+	.unhurried-capsule :is(.wp-block-site-title, .wp-block-site-logo) { position: relative; z-index: 1; }
 }
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
