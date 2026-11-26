@@ -95,6 +95,67 @@ if ( ! function_exists( 'unhurried_enqueue_assets' ) ) :
 endif;
 add_action( 'wp_enqueue_scripts', 'unhurried_enqueue_assets' );
 
+if ( ! function_exists( 'unhurried_image_frame' ) ) :
+	/**
+	 * Gives a photo a frame of its own shape, for the scroll drift and the
+	 * pointer response (style.css and assets/css/scroll.css, 1.2.1).
+	 *
+	 * An Image block without a caption, a set size, a border or an unusual
+	 * shape gets the class unhurried-frame and its corner radius as
+	 * --uh-frame-r, so the figure can clip the picture as it drifts and eases
+	 * inside. Front end only; the saved block is unchanged.
+	 *
+	 * @since 1.2.1
+	 * @param string $block_content Rendered block.
+	 * @param array  $block         Parsed block.
+	 * @return string
+	 */
+	function unhurried_image_frame( $block_content, $block ) {
+		$attrs  = isset( $block['attrs'] ) ? (array) $block['attrs'] : array();
+		$class  = isset( $attrs['className'] ) ? (string) $attrs['className'] : '';
+		$border = isset( $attrs['style']['border'] ) ? (array) $attrs['style']['border'] : array();
+		$radius = isset( $border['radius'] ) ? $border['radius'] : '';
+		if ( ! class_exists( 'WP_HTML_Tag_Processor' )
+			|| false !== strpos( $block_content, '<figcaption' )
+			|| preg_match( '/is-style-(arch|rounded|circle)/', $class )
+			|| ! empty( $attrs['width'] ) || ! empty( $attrs['height'] )
+			|| ! empty( $border['width'] ) || ! empty( $border['color'] ) || ! empty( $border['style'] ) || ! empty( $attrs['borderColor'] )
+			|| ( '' !== $radius && ( ! is_string( $radius ) || ! preg_match( '/^[0-9.]+(px|rem|em|%)$/', $radius ) ) ) ) {
+			return $block_content;
+		}
+		$tags = new WP_HTML_Tag_Processor( $block_content );
+		if ( ! $tags->next_tag( 'figure' ) ) {
+			return $block_content;
+		}
+		$tags->add_class( 'unhurried-frame' );
+		if ( '' !== $radius ) {
+			$style = (string) $tags->get_attribute( 'style' );
+			$tags->set_attribute( 'style', trim( $style . ';--uh-frame-r:' . $radius, ';' ) );
+		}
+		return $tags->get_updated_html();
+	}
+endif;
+add_filter( 'render_block_core/image', 'unhurried_image_frame', 10, 2 );
+
+if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
+	/**
+	 * The scroll choreography and the quiet responses (assets/css/scroll.css).
+	 *
+	 * Printed at the end of the page, so it never holds up the first screen:
+	 * all it styles is below the window or answers a pointer. Child themes
+	 * (Unhurried Pro among them) can tell this version has it by this
+	 * function.
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_scroll_styles() {
+		$version = wp_get_theme( get_template() )->get( 'Version' );
+		wp_enqueue_style( 'unhurried-scroll', get_template_directory_uri() . '/assets/css/scroll.css', array(), $version );
+	}
+endif;
+add_action( 'wp_footer', 'unhurried_scroll_styles', 1 );
+
 if ( ! function_exists( 'unhurried_touch_button_rest' ) ) :
 	/**
 	 * Keeps a tapped button at its resting colors on a touch screen.
@@ -860,6 +921,9 @@ if ( ! function_exists( 'unhurried_marquee_loop' ) ) :
 		return substr( $block_content, 0, $open + 1 )
 			. '<div class="unhurried-marquee__track"><div class="unhurried-marquee__set">' . $inner . '</div>'
 			. '<div class="unhurried-marquee__set" aria-hidden="true">' . $copy->get_updated_html() . '</div></div>'
+			// A pause control (1.2.1): the line moves for good, so it can be
+			// stopped (WCAG 2.2.2). Shown by assets/js/reveal.js, which runs it.
+			. '<button type="button" class="unhurried-marquee__pause" aria-pressed="false" hidden><span class="unhurried-visually-hidden">' . esc_html__( 'Pause the moving line', 'unhurried' ) . '</span></button>'
 			. substr( $block_content, $close );
 	}
 endif;

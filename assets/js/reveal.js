@@ -39,6 +39,9 @@
 	var STAGGER = token( '--uh-stagger', 40 ); // ms between items entering together.
 	var MAX_DELAY = token( '--uh-stagger-cap', 160 ); // the longest any item waits.
 	var ENTER = token( '--uh-dur-slow', 420 ); // ms an entrance takes.
+	// The larger moves (assets/css/scroll.css): text, photos, rules, counts.
+	var LONGEST = Math.max( token( '--uh-dur-large', 760 ), token( '--uh-dur-draw', 900 ), token( '--uh-dur-text', 560 ) + 3 * token( '--uh-line-stagger', 90 ) );
+	var COUNT = token( '--uh-dur-count', 1100 );
 	var auto = html.classList.contains( 'uh-motion' );
 
 	/* ── Legacy opt-in reveal ─────────────────────────────────────────── */
@@ -69,8 +72,75 @@
 		} );
 		html.classList.add( 'has-unhurried-reveal' );
 	}
+	/* ── Marquee: a pause button (1.2.1) ───────────────────────────────── */
+	// The moving line runs for good, so it gets a control to stop it (WCAG
+	// 2.2.2); the button is in the page from unhurried_marquee_loop() and
+	// shows only here, where it works.
+	document.querySelectorAll( '.unhurried-marquee__pause' ).forEach( function ( button ) {
+		var line = button.closest( '.unhurried-marquee' );
+		button.hidden = false;
+		button.addEventListener( 'click', function () {
+			var paused = 'true' !== button.getAttribute( 'aria-pressed' );
+			button.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
+			line.classList.toggle( 'is-paused', paused );
+		} );
+	} );
+
+	/* ── Page to page: the card you opened becomes the page's head ──────── */
+	// Cross-document view transitions (style.css, Continuity). The page being
+	// left names the photo and title of the card that was clicked; the post
+	// or product page names its own head (style.css), so the two morph into
+	// each other. Elsewhere the pages simply cross-fade.
+	var openedCard = null;
+	document.addEventListener( 'click', function ( event ) {
+		var link = event.target.closest ? event.target.closest( 'a[href]' ) : null;
+		openedCard = link ? link.closest( '.wp-block-post, .wc-block-product' ) : null;
+	}, true );
+	window.addEventListener( 'pageswap', function ( event ) {
+		if ( ! event.viewTransition || ! openedCard ) {
+			return;
+		}
+		var photo = openedCard.querySelector( '.wp-block-post-featured-image img, .wc-block-components-product-image img' );
+		var title = openedCard.querySelector( '.wp-block-post-title' );
+		if ( photo ) {
+			photo.style.viewTransitionName = 'uh-photo';
+		}
+		if ( title ) {
+			title.style.viewTransitionName = 'uh-title';
+		}
+	} );
+
 	if ( ! auto ) {
 		return;
+	}
+
+	/* ── Header: steps aside while reading down, returns on the way up ──── */
+	// A translate of the sticky header only (no layout shift). It never
+	// hides while it holds keyboard focus or an open menu, and comes back as
+	// soon as focus goes into it.
+	var headerPart = document.querySelector( 'header.wp-block-template-part' );
+	if ( headerPart && headerPart.querySelector( '.unhurried-header' ) ) {
+		var lastY = window.pageYOffset;
+		var ticking = false;
+		var update = function () {
+			ticking = false;
+			var y = window.pageYOffset;
+			if ( Math.abs( y - lastY ) < 6 ) {
+				return;
+			}
+			var busy = headerPart.contains( document.activeElement ) || headerPart.querySelector( '[aria-expanded="true"], .is-menu-open' );
+			html.classList.toggle( 'uh-header-away', y > lastY && y > 320 && ! busy );
+			lastY = y;
+		};
+		window.addEventListener( 'scroll', function () {
+			if ( ! ticking ) {
+				ticking = true;
+				window.requestAnimationFrame( update );
+			}
+		}, { passive: true } );
+		headerPart.addEventListener( 'focusin', function () {
+			html.classList.remove( 'uh-header-away' );
+		} );
 	}
 
 	/* ── Automatic reveal ─────────────────────────────────────────────── */
@@ -78,10 +148,13 @@
 	// card moves as one piece rather than as a pile of parts.
 	var KINDS = [
 		[ 'words', '.unhurried-wordmark' ],
-		[ 'image', 'figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure' ],
-		[ 'card', '.wp-block-post, .is-style-card, .is-style-section-card, .is-style-panel, .unhurried-giftcard, .unhurried-map, .wp-block-term, .wp-block-details, .wp-block-pullquote, .unhurried-author-box' ],
+		[ 'image', 'figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure, .wp-block-cover' ],
+		[ 'card', '.wp-block-post, .wc-block-product, .wc-block-grid__product, .is-style-card, .is-style-section-card, .is-style-panel, .unhurried-giftcard, .unhurried-map, .wp-block-term, .wp-block-details, .wp-block-pullquote, .unhurried-author-box' ],
+		[ 'side', '.wp-block-columns > .wp-block-column' ],
 		[ 'draw', 'hr.wp-block-separator' ],
 		[ 'count', '.unhurried-stat' ],
+		[ 'tick', '.unhurried-numeral' ],
+		[ 'line', 'h1, h2, h3' ],
 		[ 'rise', 'h1, h2, h3, h4, h5, h6, p, .wp-block-buttons, .wp-block-search, .wp-block-social-links, .wp-block-quote, li, .wp-block-table, form, .wp-block-post-terms, .wp-block-post-date, .wp-block-post-time-to-read, .wp-block-post-author-name, .wp-block-query-total, .wp-block-breadcrumbs, .wp-block-query-pagination, .wp-block-post-navigation-link, .wp-block-comments, .wp-block-term-description' ]
 	];
 	// Never moved: chrome that is already on screen, things with motion of
@@ -102,6 +175,85 @@
 		'.single .wp-block-post-content > ul > li',
 		'.single .wp-block-post-content > ol > li'
 	].join( ',' );
+	// A product's buy area holds still (the columns that hold its form).
+	var BUY = '.wp-block-columns:has(form.cart, .wp-block-add-to-cart-form, .wp-block-woocommerce-add-to-cart-form, .wp-block-add-to-cart-with-options)';
+	try {
+		document.querySelector( BUY );
+		SKIP += ',' + BUY;
+	} catch ( e ) {
+		BUY = '';
+	}
+
+	// Split layouts (two columns side by side): each side arrives from its own side.
+	function sideOf( col ) {
+		var row = col.parentElement;
+		if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
+			return '';
+		}
+		return row.firstElementChild === col ? 'side-start' : 'side-end';
+	}
+
+	// Headings arrive line by line (the fourth line on together).
+	// The words are wrapped in place; the heading reads the same to screen
+	// readers. If wrapping would change the heading's size at all, it is undone
+	// and the heading rises as one piece.
+	function splitWords( el ) {
+		var text = el.textContent.trim();
+		if ( ! text || text.split( /\s+/ ).length > 16 ) {
+			return false;
+		}
+		var before = el.getBoundingClientRect();
+		var saved = Array.prototype.slice.call( el.childNodes );
+		var units = [];
+		saved.forEach( function ( n ) {
+			if ( 3 === n.nodeType ) {
+				var frag = document.createDocumentFragment();
+				n.textContent.split( /(\s+)/ ).forEach( function ( part ) {
+					if ( ! part ) {
+						return;
+					}
+					if ( /^\s+$/.test( part ) ) {
+						frag.appendChild( document.createTextNode( part ) );
+						return;
+					}
+					var w = document.createElement( 'span' );
+					w.className = 'uh-w';
+					w.textContent = part;
+					frag.appendChild( w );
+					units.push( w );
+				} );
+				n.parentNode.replaceChild( frag, n );
+			} else if ( 1 === n.nodeType && 'BR' !== n.tagName ) {
+				n.classList.add( 'uh-w' );
+				units.push( n );
+			}
+		} );
+		var after = el.getBoundingClientRect();
+		if ( Math.abs( after.height - before.height ) > 0.5 || Math.abs( after.width - before.width ) > 0.5 ) {
+			while ( el.firstChild ) {
+				el.removeChild( el.firstChild );
+			}
+			saved.forEach( function ( n ) {
+				if ( 1 === n.nodeType ) {
+					n.classList.remove( 'uh-w' );
+				}
+				el.appendChild( n );
+			} );
+			return false;
+		}
+		// Words on the same line set off together, a line at a time.
+		var line = -1;
+		var lastTop = null;
+		units.forEach( function ( u ) {
+			var top = Math.round( u.getBoundingClientRect().top );
+			if ( null === lastTop || Math.abs( top - lastTop ) > 4 ) {
+				line++;
+				lastTop = top;
+			}
+			u.style.setProperty( '--uh-w', Math.min( line, 3 ) );
+		} );
+		return true;
+	}
 
 	var scopes = document.querySelectorAll( '.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group' );
 	var selector = KINDS.map( function ( k ) {
@@ -126,7 +278,9 @@
 				return;
 			}
 			var parent = el.parentElement && el.parentElement.closest( '[data-uh]' );
-			if ( parent ) {
+			// Inside a column arriving from its side, or a cover lifting its
+			// curtain, a heading still arrives word by word.
+			if ( parent && ! ( /^(side-|image)/.test( parent.getAttribute( 'data-uh' ) ) && el.matches( 'h1, h2, h3' ) ) ) {
 				return;
 			}
 			for ( var i = 0; i < KINDS.length; i++ ) {
@@ -141,7 +295,17 @@
 					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && ( el.getBoundingClientRect().top < fold || el.getBoundingClientRect().top + window.pageYOffset < shownTo ) ) {
 						break;
 					}
-					el.setAttribute( 'data-uh', KINDS[ i ][ 0 ] );
+					var kind = KINDS[ i ][ 0 ];
+					if ( 'side' === kind ) {
+						kind = sideOf( el );
+						if ( ! kind ) {
+							continue;
+						}
+					}
+					el.setAttribute( 'data-uh', kind );
+					if ( 'line' === kind && ! splitWords( el ) ) {
+						el.setAttribute( 'data-uh', 'rise' );
+					}
 					targets.push( el );
 					break;
 				}
@@ -218,7 +382,7 @@
 		el.appendChild( shown );
 		el.appendChild( real );
 		var start = null;
-		var duration = ENTER + MAX_DELAY; // a count is over when its batch has settled.
+		var duration = COUNT;
 		function frame( now ) {
 			if ( null === start ) {
 				start = now;
@@ -239,7 +403,7 @@
 
 	function finish( el, delay ) {
 		// The wordmark's letters set off up to MAX_DELAY after one another.
-		var long = ENTER + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
+		var long = Math.max( ENTER, LONGEST ) + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
 		window.setTimeout( function () {
 			el.classList.add( 'is-done' );
 			el.style.removeProperty( '--uh-delay' );

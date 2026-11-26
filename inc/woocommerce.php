@@ -13,8 +13,9 @@
  * - Two small stylesheets cover what the flag does not reach:
  *   assets/css/woocommerce.css in every look, assets/css/woocommerce-dark.css
  *   in a dark one.
- * - The purchase pages (a product, the cart, the checkout, the account)
- *   hold still: no scroll-in entrances, no page cross-fade (since 1.2.1).
+ * - The purchase pages (the cart, the checkout, the account) hold still:
+ *   no scroll-in entrances, no page cross-fade (since 1.2.1); a product
+ *   page holds its first screen and buy area still.
  *
  * Nothing here runs without WooCommerce. The dark flag and the stylesheets
  * are skipped under Unhurried Pro, which brings its own.
@@ -146,13 +147,15 @@ add_action( 'wp_enqueue_scripts', 'unhurried_woocommerce_styles', 11 );
 
 if ( ! function_exists( 'unhurried_woocommerce_is_purchase_page' ) ) :
 	/**
-	 * Whether this is a step of buying: a product, the cart, the checkout
-	 * (with its order received page) or the customer's account.
+	 * Whether this is a step of buying: the cart, the checkout (with its
+	 * order received page) or the customer's account.
 	 *
 	 * These pages hold still: nothing enters as it scrolls and the pages do
 	 * not cross-fade, so nothing stands between a buyer and the next step.
 	 * Controls still answer the pointer and the keyboard as everywhere else.
-	 * Unhurried Pro holds the rest of its shop still as well.
+	 * A product page moves below its buy area only (since 1.2.1 f68: the
+	 * first screen and the columns holding the form stay still; style.css
+	 * and assets/js/reveal.js).
 	 *
 	 * @since 1.2.1
 	 * @return bool
@@ -161,7 +164,7 @@ if ( ! function_exists( 'unhurried_woocommerce_is_purchase_page' ) ) :
 		if ( ! function_exists( 'is_cart' ) || ! function_exists( 'is_checkout' ) || ! function_exists( 'is_account_page' ) || ! function_exists( 'is_product' ) ) {
 			return false;
 		}
-		return is_cart() || is_checkout() || is_account_page() || is_product();
+		return is_cart() || is_checkout() || is_account_page();
 	}
 endif;
 
@@ -211,7 +214,7 @@ if ( ! function_exists( 'unhurried_woocommerce_still_scripts' ) ) :
 	 * @return void
 	 */
 	function unhurried_woocommerce_still_scripts() {
-		if ( unhurried_woocommerce_is_purchase_page() && wp_script_is( 'jquery-core', 'registered' ) ) {
+		if ( ( unhurried_woocommerce_is_purchase_page() || is_product() ) && wp_script_is( 'jquery-core', 'registered' ) ) {
 			wp_add_inline_script( 'jquery-core', 'jQuery.fx.off = true;' );
 		}
 	}
