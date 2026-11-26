@@ -1,10 +1,11 @@
-/* ─── Hero, film (1.2.1): words beside a short silent loop in a frame ─────
+/* ─── Hero, film (1.2.1): words beside a framed picture that can play a film ───
    Loaded only with the pattern (inc/hero-film.php), and in the editor. The
    frame is the theme's card radius at 4:5, never edge to edge and never
    taller than the window leaves room for; the words sit beside it (above it
-   on a phone) and never over it. The picture fills the frame from the first
-   paint and stays under the film, which fades in only once it is playing
-   (class has-film from PHP, is-playing from assets/js/hero-film.js). */
+   on a phone) and never over it. The picture (Michelangelo's David) fills
+   the frame from the first paint. A film, when the site owner adds one,
+   stays under it until it is playing, then fades in (class has-film from
+   PHP, is-playing from assets/js/hero-film.js). */
 .unhurried-hero-film { --uh-under: 0px; }
 /* A panel rising over the hero (the homepage's process panel) reaches up into it: the hero keeps that much more room below. */
 .unhurried-hero-film:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap, -120px)); }
@@ -19,6 +20,8 @@
 .unhurried-hero-film__media > * { grid-column: 1 / -1; margin: 0 !important; } /* !important: the column's own block gap */
 .unhurried-hero-film__media > .unhurried-hero-film__caption { grid-column: 1; }
 .unhurried-hero-film__media > .unhurried-hero-film__toggle { grid-column: 2; grid-row: 2; }
+/* The caption's row is as tall as the film's button, with a film or without one: the hero is laid out the same either way. */
+.unhurried-hero-film__media:has(> .unhurried-hero-film__caption) { grid-template-rows: auto minmax(2.5rem, auto); }
 
 .unhurried-hero-film__frame {
 	position: relative;
@@ -36,6 +39,7 @@
 }
 .unhurried-hero-film__frame > * { margin: 0 !important; } /* !important: the group's own block gap */
 .unhurried-hero-film__frame > :is(.wp-block-image, .wp-block-video) { position: absolute; inset: 0; }
+.unhurried-hero-film__frame picture { display: block; width: 100%; height: 100%; }
 .unhurried-hero-film__frame :is(img, video) {
 	display: block;
 	width: 100%;

@@ -3,9 +3,9 @@
  * Title: Hero, film
  * Slug: unhurried/hero-film
  * Categories: unhurried_hero, featured
- * Keywords: hero, header, intro, headline, video, film, loop, sculpture, framed
+ * Keywords: hero, header, intro, headline, david, michelangelo, statue, sculpture, framed, video, film, loop
  * Viewport width: 1400
- * Description: An oversized headline, a short lede and one button beside a short silent film in a rounded frame, with a caption under it. The picture under the film shows first, and stays whenever the film cannot play. Replace both in the List View.
+ * Description: An oversized headline, a short lede and one button beside Michelangelo's David in a rounded frame, with a caption under it. The frame can also play a short silent film: select the Video block in the frame ("Film (optional)" in the List View) and upload or choose a video. The picture shows first, and stays whenever the film cannot play.
  *
  * @package Unhurried
  * @author  Moses Atia Poston, Switch Case Studio
@@ -47,18 +47,18 @@ $unhurried_heading_tags = array(
 		<!-- /wp:column -->
 		<!-- wp:column {"verticalAlignment":"bottom","width":"42%","className":"unhurried-hero-film__media"} -->
 		<div class="wp-block-column is-vertically-aligned-bottom unhurried-hero-film__media" style="flex-basis:42%">
-			<!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Film', 'Pattern block name', 'unhurried' ); ?>"},"className":"unhurried-hero-film__frame unhurried-mono unhurried-still","layout":{"type":"default"}} -->
+			<!-- wp:group {"metadata":{"name":"<?php echo esc_attr_x( 'Frame', 'Pattern block name', 'unhurried' ); ?>"},"className":"unhurried-hero-film__frame unhurried-mono unhurried-still","layout":{"type":"default"}} -->
 			<div class="wp-block-group unhurried-hero-film__frame unhurried-mono unhurried-still">
 				<!-- wp:image {"sizeSlug":"full","linkDestination":"none","className":"unhurried-hero-film__poster"} -->
-				<figure class="wp-block-image size-full unhurried-hero-film__poster"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/marble-head-film.webp' ) ); ?>" alt=""/></figure>
+				<figure class="wp-block-image size-full unhurried-hero-film__poster"><img src="<?php echo esc_url( get_theme_file_uri( 'assets/images/david-hero.webp' ) ); ?>" alt=""/></figure>
 				<!-- /wp:image -->
-				<!-- wp:video {"className":"unhurried-hero-film__film"} -->
-				<figure class="wp-block-video unhurried-hero-film__film"><video loop muted preload="none" src="<?php echo esc_url( get_theme_file_uri( 'assets/video/marble-head-film.mp4' ) ); ?>" playsinline></video></figure>
+				<!-- wp:video {"metadata":{"name":"<?php echo esc_attr_x( 'Film (optional)', 'Pattern block name', 'unhurried' ); ?>"},"className":"unhurried-hero-film__film"} -->
+				<figure class="wp-block-video unhurried-hero-film__film"></figure>
 				<!-- /wp:video -->
 			</div>
 			<!-- /wp:group -->
 			<!-- wp:paragraph {"className":"unhurried-hero-film__caption","textColor":"contrast-2","fontSize":"x-small"} -->
-			<p class="unhurried-hero-film__caption has-contrast-2-color has-text-color has-x-small-font-size"><?php echo wp_kses( __( '<em>Head of a Woman</em>, Greece, 300–200 BCE', 'unhurried' ), array( 'em' => array() ) ); ?></p>
+			<p class="unhurried-hero-film__caption has-contrast-2-color has-text-color has-x-small-font-size"><?php echo wp_kses( __( 'Michelangelo, <em>David</em>, Florence. Photograph: Edizione Brogi, Rijksmuseum', 'unhurried' ), array( 'em' => array() ) ); ?></p>
 			<!-- /wp:paragraph -->
 		</div>
 		<!-- /wp:column -->

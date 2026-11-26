@@ -18,7 +18,7 @@ Write an italic word inside any heading and it turns into the Fraunces accent fa
 The theme includes:
 
 * Full-page patterns for a homepage, about, services and contact page.
-* Heroes (a short silent film in a rounded frame beside the headline, with a pause button and a picture shown first, a full-screen image in an inset frame, a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
+* Heroes (Michelangelo's David in a rounded frame beside the headline, which can also play a short silent film of your own, with a pause button, a full-screen image in an inset frame, a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep color images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
@@ -53,6 +53,10 @@ Install the free Newsletter plugin (wordpress.org/plugins/newsletter), which kee
 = How do I add my social profiles? =
 
 Open the footer in the Site Editor, select each icon and paste your profile address. An icon without an address stays hidden from visitors, so you can leave the ones you don't use.
+
+= How do I put a film in the hero? =
+
+The framed hero on the homepage (the Hero, film pattern) shows Michelangelo's David and can also play a short silent film. Open the page in the editor, click the small Video label at the foot of the picture (the Film (optional) block in the List View), and choose Upload or Media Library. A loop of 6 to 12 seconds in a 4:5 frame, at most about 1.5 MB, in black and white, suits the photographs. The theme plays it muted and looping, only after the page has loaded and while the hero is in view, with a pause button beside the caption; visitors who prefer reduced motion or save data see the picture instead. To go back to the picture alone, delete the video block.
 
 = How do I keep an image in color? =
 
@@ -209,6 +213,7 @@ License: CC0 1.0 Universal, https://creativecommons.org/publicdomain/zero/1.0/
 
 assets/images/david-mono.webp: Edizione Brogi, Particolare del David di Michelangelo (Florence, about 1880), Rijksmuseum, https://commons.wikimedia.org/w/index.php?curid=85189300
 assets/images/david-mono-1200.webp and assets/images/david-mono-800.webp: smaller copies of david-mono.webp for phones. The print's sepia is taken out, processed like the rest of the set. Same source and license (CC0).
+assets/images/david-hero.webp, david-hero-800.webp, david-hero-square.webp and david-hero-square-660.webp: new crops of the same photograph for the framed hero (Hero, film): 4:5 and a smaller copy, and a square one for phones with a smaller copy. Same source, process and license (CC0).
 assets/images/lotus-dish.webp: Dish with Ducks in Lotus Pond, Ding ware (China, Jin dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1989.275
 assets/images/white-vase.webp: Vase (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1917.2
 assets/images/marble-head.webp: Head of a Woman (Greece, Hellenistic period, 300-200 BCE), Cleveland Museum of Art, https://clevelandart.org/art/1916.831
@@ -225,8 +230,6 @@ assets/images/white-basin.webp: Basin, Ding ware (China, Jin dynasty, 1100s-1200
 assets/images/celadon-bottle.webp: Bottle, celadon ware (Korea, Goryeo dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1918.436
 assets/images/double-gourd.webp: Double Gourd-shaped Bottle, Ding ware (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1915.361
 assets/images/moon-jar-wide.webp, resting-head-wide.webp, lotus-bowl-wide.webp, marble-face-wide.webp and white-basin-wide.webp: wide crops of moon-jar, resting-head, lotus-bowl, marble-face and white-basin above (the same objects, sources and license) for the heroes on a photograph. Each has two smaller copies for phones, named with -1200 and -800.
-assets/video/marble-head-film.mp4: a slow camera move with a soft drift of light over Head of a Woman (Greece, Hellenistic period, 300-200 BCE), Cleveland Museum of Art, https://clevelandart.org/art/1916.831, made for this theme from the museum's CC0 photograph (the one marble-head.webp is cut from) and processed like the rest of the set. Same license (CC0).
-assets/images/marble-head-film.webp and assets/images/marble-head-film-800.webp: the film's first frame, shown before and instead of the film, and a smaller copy for phones. Same source and license (CC0).
 
 assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp: the pictures of Unhurried 1.1.1, kept for pages made with it.
 Created for this theme by the theme author, generated from original code.
