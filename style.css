@@ -1114,6 +1114,14 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 .unhurried-hero-statue__title { margin-block: .3em clamp(1.5rem, 5vh, 3.5rem) !important; }
 .unhurried-hero-statue__body p { color: color-mix(in srgb, currentColor 80%, transparent); }
 .unhurried-hero-statue__caption { margin: 0; opacity: .7; letter-spacing: .04em; }
+/* A stage with a film (inc/hero-film.php). Its stylesheet, assets/css/hero-film.css,
+   loads only for a window where the film can play; in every window the film's
+   layer is left out until then, and the caption stands beside the film
+   button's place, kept while the button is hidden, a little stronger. */
+.wp-block-cover.has-film > .unhurried-hero-film__film { display: none; }
+.unhurried-hero-film__aside { display: flex; align-items: center; gap: var(--wp--preset--spacing--30); }
+.unhurried-hero-film__aside > .unhurried-hero-film__toggle[hidden] { display: inline-flex; visibility: hidden; box-sizing: border-box; width: 2.5rem; height: 2.5rem; margin: 0; padding: 0; color: inherit; }
+.wp-block-cover.has-film .unhurried-hero-statue__caption { opacity: .85; }
 @media (max-width: 781px) {
 	.unhurried-hero-statue__stage.wp-block-cover { min-height: max(560px, calc(100svh - 80px + var(--uh-under))) !important; }
 	:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background { object-position: 72% 30% !important; }
