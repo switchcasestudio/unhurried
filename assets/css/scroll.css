@@ -44,9 +44,6 @@
    CPU; this costs none.) */
 .uh-motion [data-uh="image"]:not(.is-done) { transition-duration: var(--uh-dur-large); }
 .uh-motion [data-uh="image"]:not(.is-in) { translate: 0 var(--uh-dist-large); }
-/* While things arrive from below and from the sides, nothing may widen the
-   page: the body clips sideways (clip, not hidden, so sticky still works). */
-.uh-motion-live body { overflow-x: clip; }
 .uh-motion .wp-block-cover[data-uh="image"] { overflow: clip; }
 /* The picture settles only inside a frame that clips it (a framed photo, a
    cover): elsewhere a picture at 114% reached past its box and the page

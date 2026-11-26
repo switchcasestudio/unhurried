@@ -30,30 +30,62 @@
 	var scrollCss = window.unhurriedScroll && window.unhurriedScroll.css;
 	var scrollCssReady = [];
 	var STATE_FADES = '.single_variation_wrap .woocommerce-variation-price, .single_variation_wrap .woocommerce-variation-availability, .wc-block-cart-items__row, .wp-block-details > :not(summary), .woocommerce-Tabs-panel';
-	// An accordion opened or a tab chosen later fades its content in.
-	document.addEventListener( 'toggle', function ( event ) {
-		if ( event.target.matches && event.target.matches( '.wp-block-details' ) && event.target.open ) {
-			Array.prototype.forEach.call( event.target.children, function ( el ) {
+	// State fades (scroll.css) play only on a change the reader made: an
+	// accordion opened, a tab chosen, an option picked, a row put back. What
+	// is on the page at load, and anything a script redraws on its own (the
+	// cart block re-renders its rows), is marked seen and never fades.
+	var actedAt = -1e5;
+	function acted() {
+		actedAt = Date.now();
+	}
+	document.addEventListener( 'pointerdown', acted, true );
+	document.addEventListener( 'keydown', acted, true );
+	document.addEventListener( 'click', function ( event ) {
+		var target = event.target.closest ? event.target : null;
+		var summary = target && target.closest( '.wp-block-details > summary' );
+		if ( summary && ! summary.parentNode.open ) {
+			Array.prototype.forEach.call( summary.parentNode.children, function ( el ) {
 				el.removeAttribute( 'data-uh-seen' );
 			} );
 		}
-	}, true );
-	document.addEventListener( 'click', function ( event ) {
-		if ( event.target.closest && event.target.closest( '.woocommerce-tabs .tabs a' ) ) {
+		if ( target && target.closest( '.woocommerce-tabs .tabs a' ) ) {
 			document.querySelectorAll( '.woocommerce-Tabs-panel[data-uh-seen]' ).forEach( function ( el ) {
 				el.removeAttribute( 'data-uh-seen' );
 			} );
 		}
 	}, true );
+	function markSeen( root ) {
+		if ( root.matches && root.matches( STATE_FADES ) ) {
+			root.setAttribute( 'data-uh-seen', '' );
+		}
+		if ( root.querySelectorAll ) {
+			root.querySelectorAll( STATE_FADES ).forEach( function ( el ) {
+				el.setAttribute( 'data-uh-seen', '' );
+			} );
+		}
+	}
+	// Only where such things can appear later (a cart, a variable product).
+	if ( window.MutationObserver && document.querySelector( '.wc-block-cart, .wc-block-mini-cart, .variations_form' ) ) {
+		new window.MutationObserver( function ( records ) {
+			if ( Date.now() - actedAt < 1500 ) {
+				return;
+			}
+			records.forEach( function ( record ) {
+				Array.prototype.forEach.call( record.addedNodes, function ( node ) {
+					if ( 1 === node.nodeType ) {
+						markSeen( node );
+					}
+				} );
+			} );
+		} ).observe( document.body, { childList: true, subtree: true } );
+	}
 	function loadScrollCss() {
 		if ( ! scrollCss || document.getElementById( 'unhurried-scroll-css' ) ) {
 			return;
 		}
 		// What is already showing never fades in again when the stylesheet
 		// arrives: its state animations are for changes after load only.
-		document.querySelectorAll( STATE_FADES ).forEach( function ( el ) {
-			el.setAttribute( 'data-uh-seen', '' );
-		} );
+		markSeen( document );
 		html.classList.add( 'uh-late' );
 		// The accent rule is for the sections below the first screen.
 		document.querySelectorAll( 'main .is-style-eyebrow' ).forEach( function ( el ) {
