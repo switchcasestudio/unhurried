@@ -1520,6 +1520,41 @@ html { scroll-padding-top: 96px; }
    pages that are published are listed; with none, there is no list. */
 .unhurried-legal-links { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin: 0; padding: 0; list-style: none; }
 .unhurried-legal-links > li { margin: 0; }
+/* Policy page (pattern unhurried/page-policy): when it was last updated, an
+   introduction, then a contents list beside numbered sections. Core prints
+   no modified date until the page changes after it is published: the
+   published date stands in until then. */
+.unhurried-policy__updated .is-modified ~ .is-published { display: none; }
+.unhurried-policy__intro { max-width: 40ch; }
+/* Contents: numbered like the sections, ruled like the footer's lists. */
+.unhurried-policy__toc { max-width: 34rem; margin: 0; padding: 0; list-style: none; counter-reset: uh-policy-toc; border-top: 1px solid var(--wp--preset--color--hairline); }
+.unhurried-policy__toc > li { counter-increment: uh-policy-toc; position: relative; display: flex; align-items: baseline; gap: .75rem; margin: 0; padding-block: .6rem; border-bottom: 1px solid var(--wp--preset--color--hairline); }
+.unhurried-policy__toc > li::before,
+.unhurried-policy__section > h2::before { font-family: var(--wp--preset--font-family--accent); font-style: italic; font-weight: 400; letter-spacing: 0; color: var(--wp--preset--color--contrast-2); }
+/* The numerals are drawn, not read: "/ ''" gives them no text where the browser knows it. */
+.unhurried-policy__toc > li::before { content: counter(uh-policy-toc, decimal-leading-zero); content: counter(uh-policy-toc, decimal-leading-zero) / ""; flex: none; min-width: 1.5rem; }
+.unhurried-policy__toc a { min-width: 0; text-decoration: none; }
+/* A row is one link: it takes a click or a tap across its whole width and height. */
+.unhurried-policy__toc a::after { content: ""; position: absolute; inset: 0; }
+.unhurried-policy__toc a:focus-visible { text-decoration: underline; text-underline-offset: .2em; }
+/* Hover only where there is a pointer that hovers: on a touch screen the line stayed on the tapped link. */
+@media (hover: hover) {
+	.unhurried-policy__toc a:hover { text-decoration: underline; text-underline-offset: .2em; }
+}
+/* Sections: an accent numeral over each heading, the text at a reading measure. */
+.unhurried-policy__body { counter-reset: uh-policy; }
+.unhurried-policy__section > h2 { counter-increment: uh-policy; }
+.unhurried-policy__section > h2::before { content: counter(uh-policy, decimal-leading-zero); content: counter(uh-policy, decimal-leading-zero) / ""; display: block; margin-bottom: .75rem; font-size: 1.5rem; line-height: 1; }
+.unhurried-policy__section > :is(p, ul, ol),
+.unhurried-policy__close { max-width: 52ch; }
+.unhurried-policy__close { padding-top: var(--wp--preset--spacing--50); border-top: 1px solid var(--wp--preset--color--hairline); }
+/* Wide windows: the contents stay in view beside the text, as the Essay's aside
+   does. On screen only (a printed page lists them once, in place), and not in
+   the editor, whose block wrapper is position: relative: there the offset
+   would only push the column down. */
+@media screen and (min-width: 782px) and (min-height: 560px) {
+	.unhurried-policy__aside:not(.block-editor-block-list__block) { position: sticky; top: 110px; align-self: flex-start; }
+}
 
 /* ─── Journal: breadcrumbs, chips, toolbar, card meta, directory ─────────── */
 .unhurried-breadcrumbs { font-size: var(--wp--preset--font-size--x-small); letter-spacing: .02em; color: var(--wp--preset--color--contrast-2); }
