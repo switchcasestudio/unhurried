@@ -177,7 +177,8 @@
 	transition: background-color var(--uh-dur-quick) var(--uh-ease-out);
 }
 .unhurried-marquee__pause[hidden] { display: none; }
-.unhurried-marquee__pause::before { content: ""; position: absolute; inset: -5px 0; }
+/* Touch: the hit area reaches 10px down into the gap under the band (44px tall). */
+.unhurried-marquee__pause::before { content: ""; position: absolute; inset: 0 0 -10px; }
 .unhurried-marquee__pause[aria-pressed="true"] { background-image: none; }
 .unhurried-marquee__pause[aria-pressed="true"]::after { content: ""; position: absolute; inset-block-start: calc(50% - 6px); inset-inline-start: calc(50% - 3px); border-block: 6px solid transparent; border-inline-start: 9px solid currentColor; }
 .unhurried-marquee__pause:focus-visible { outline: 2px solid var(--uh-focus); outline-offset: -5px; }

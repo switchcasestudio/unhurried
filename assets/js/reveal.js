@@ -40,6 +40,7 @@
 	}
 	document.addEventListener( 'pointerdown', acted, true );
 	document.addEventListener( 'keydown', acted, true );
+	document.addEventListener( 'change', acted, true );
 	document.addEventListener( 'click', function ( event ) {
 		var target = event.target.closest ? event.target : null;
 		var summary = target && target.closest( '.wp-block-details > summary' );
@@ -268,7 +269,7 @@
 	// Whatever a reader scrolls past before the page has loaded has been seen:
 	// it is never hidden again for an entrance (startReveal() skips it).
 	var early = false;
-	function markSeen() {
+	function markEarly() {
 		early = false;
 		document.querySelectorAll( 'main :is(h1, h2, h3, h4, h5, h6, p, li, figure, form, .wp-block-buttons, .wp-block-post, .wc-block-product, .wp-block-columns, .wp-block-cover)' ).forEach( function ( el ) {
 			var r = el.getBoundingClientRect();
@@ -280,7 +281,7 @@
 	function onEarlyScroll() {
 		if ( ! early ) {
 			early = true;
-			window.requestAnimationFrame( markSeen );
+			window.requestAnimationFrame( markEarly );
 		}
 	}
 	if ( 'complete' !== document.readyState ) {
