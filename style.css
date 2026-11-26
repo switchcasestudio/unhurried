@@ -286,6 +286,36 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.unhurried-capsule > .wp-block-group { gap: .5rem !important; }
 	.unhurried-header .wp-block-button__link { padding: .55rem .95rem; font-size: .8125rem; }
 }
+/* Narrower than a phone held upright (1.2.1): a phone's page zoom at 200%
+   gives a window 195px wide. The site title shows whole and nothing runs
+   past the screen. The header button that goes to Contact steps aside when
+   the menu holds a Contact link (the open phone menu shows it, above); what
+   still does not fit beside the title moves to a second row, at the end, and
+   the capsule's ends round to its first row so a second row sits inside
+   them. A title wider than the whole capsule still ends in an ellipsis.
+   From 320px the capsule is as it was, pixel for pixel. */
+@media (max-width: 319.98px) {
+	.unhurried-header .unhurried-capsule { flex-wrap: wrap; border-radius: 30px !important; } /* !important: the block's own radius is an inline style */
+	.unhurried-header .unhurried-capsule > * { max-width: 100%; }
+	.unhurried-header .unhurried-capsule > .wp-block-group:has(> .wp-block-site-title) { flex: 0 0 auto; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) { justify-content: flex-end; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) > .wp-block-group:has(> .wp-block-site-title) { margin-inline-end: auto; }
+	.unhurried-header .unhurried-capsule:not(.is-centered) > .wp-block-group:has(> .wp-block-site-title) + * { margin-inline-start: auto; }
+	.unhurried-header .unhurried-capsule > .wp-block-group:not(:has(> .wp-block-site-title)) { flex-wrap: wrap; justify-content: flex-end; }
+	/* Centered title: the title keeps the middle of its row, the button's side its end. */
+	.unhurried-header .unhurried-capsule.is-centered > * { flex-grow: 0; }
+	.unhurried-header .unhurried-capsule.is-centered > .wp-block-group:has(> .wp-block-site-title) { margin-inline: auto; }
+	.unhurried-header .unhurried-capsule.is-centered > :last-child:not(:has(> .wp-block-site-title)) { margin-inline-start: auto; }
+	.unhurried-header .unhurried-capsule:has(.wp-block-navigation .unhurried-nav-contact) .wp-block-buttons:not(:has(.wp-block-button__link:not(.unhurried-button-contact))) { display: none; }
+	html { scroll-padding-top: 140px; }
+	/* The page itself: a word or an address wider than its column breaks (a
+	   40px "commodo", a topic's name, the privacy policy's links), and the
+	   journal's search gives way to the window (the topics grid: below). */
+	body { overflow-wrap: break-word; }
+	.unhurried-toolbar > * { min-width: 0; max-width: 100%; }
+	.unhurried-journal-search,
+	.unhurried-journal-search .wp-block-search__input { min-width: 0; }
+}
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
 .unhurried-rise {
@@ -1473,6 +1503,10 @@ html { scroll-padding-top: 96px; }
 }
 @media (max-width: 781px) {
 	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: 1fr; }
+}
+/* Narrower than a phone held upright (1.2.1, page zoom): the column gives way to the window, and a topic's name breaks instead. */
+@media (max-width: 319.98px) {
+	.unhurried-topic-cards .wp-block-term-template.is-layout-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Single post: author box and the reading progress bar (scroll-linked, no script). */
