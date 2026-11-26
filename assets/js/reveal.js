@@ -173,333 +173,344 @@
 		} );
 	}
 
-	/* ── Automatic reveal ─────────────────────────────────────────────── */
-	// First match wins; a marked element's descendants stay still, so a
-	// card moves as one piece rather than as a pile of parts.
-	var KINDS = [
-		[ 'words', '.unhurried-wordmark' ],
-		[ 'image', 'figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure, .wp-block-cover' ],
-		[ 'card', '.wp-block-post, .wc-block-product, .wc-block-grid__product, .is-style-card, .is-style-section-card, .is-style-panel, .unhurried-giftcard, .unhurried-map, .wp-block-term, .wp-block-details, .wp-block-pullquote, .unhurried-author-box' ],
-		[ 'side', '.wp-block-columns > .wp-block-column' ],
-		[ 'draw', 'hr.wp-block-separator' ],
-		[ 'count', '.unhurried-stat' ],
-		[ 'tick', '.unhurried-numeral' ],
-		[ 'line', 'h1, h2, h3' ],
-		[ 'rise', 'h1, h2, h3, h4, h5, h6, p, .wp-block-buttons, .wp-block-search, .wp-block-social-links, .wp-block-quote, li, .wp-block-table, form, .wp-block-post-terms, .wp-block-post-date, .wp-block-post-time-to-read, .wp-block-post-author-name, .wp-block-query-total, .wp-block-breadcrumbs, .wp-block-query-pagination, .wp-block-post-navigation-link, .wp-block-comments, .wp-block-term-description' ]
-	];
-	// Never moved: chrome that is already on screen, things with motion of
-	// their own, and the body of an article (motion beside a paragraph
-	// someone is reading pulls their eye away from it).
-	var SKIP = [
-		'header',
-		'.unhurried-header',
-		'.wp-block-navigation',
-		'.unhurried-marquee',
-		'.unhurried-still',
-		'.unhurried-hero-spiral__disc',
-		'.wp-block-button',
-		'.screen-reader-text',
-		'.unhurried-visually-hidden',
-		'#wpadminbar',
-		'.single .wp-block-post-content > p',
-		'.single .wp-block-post-content > ul > li',
-		'.single .wp-block-post-content > ol > li'
-	].join( ',' );
-	// A product's buy area holds still (the columns that hold its form).
-	var BUY = '.wp-block-columns:has(form.cart, .wp-block-add-to-cart-form, .wp-block-woocommerce-add-to-cart-form, .wp-block-add-to-cart-with-options)';
-	try {
-		document.querySelector( BUY );
-		SKIP += ',' + BUY;
-	} catch ( e ) {
-		BUY = '';
-	}
-
-	// Split layouts (two columns side by side): each side arrives from its own side.
-	function sideOf( col ) {
-		var row = col.parentElement;
-		if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
-			return '';
+	/* The entrances are set up once the page has loaded: the work of marking
+	   every element never competes with the first screen. What is still below
+	   the window then waits for its entrance; anything a quick reader already
+	   reached simply shows. */
+	function startReveal() {
+		/* ── Automatic reveal ─────────────────────────────────────────────── */
+		// First match wins; a marked element's descendants stay still, so a
+		// card moves as one piece rather than as a pile of parts.
+		var KINDS = [
+			[ 'words', '.unhurried-wordmark' ],
+			[ 'image', 'figure.wp-block-image, .wp-block-post-featured-image, .wp-block-gallery > figure, .wp-block-cover' ],
+			[ 'card', '.wp-block-post, .wc-block-product, .wc-block-grid__product, .is-style-card, .is-style-section-card, .is-style-panel, .unhurried-giftcard, .unhurried-map, .wp-block-term, .wp-block-details, .wp-block-pullquote, .unhurried-author-box' ],
+			[ 'side', '.wp-block-columns > .wp-block-column' ],
+			[ 'draw', 'hr.wp-block-separator' ],
+			[ 'count', '.unhurried-stat' ],
+			[ 'tick', '.unhurried-numeral' ],
+			[ 'line', 'h1, h2, h3' ],
+			[ 'rise', 'h1, h2, h3, h4, h5, h6, p, .wp-block-buttons, .wp-block-search, .wp-block-social-links, .wp-block-quote, li, .wp-block-table, form, .wp-block-post-terms, .wp-block-post-date, .wp-block-post-time-to-read, .wp-block-post-author-name, .wp-block-query-total, .wp-block-breadcrumbs, .wp-block-query-pagination, .wp-block-post-navigation-link, .wp-block-comments, .wp-block-term-description' ]
+		];
+		// Never moved: chrome that is already on screen, things with motion of
+		// their own, and the body of an article (motion beside a paragraph
+		// someone is reading pulls their eye away from it).
+		var SKIP = [
+			'header',
+			'.unhurried-header',
+			'.wp-block-navigation',
+			'.unhurried-marquee',
+			'.unhurried-still',
+			'.unhurried-hero-spiral__disc',
+			'.wp-block-button',
+			'.screen-reader-text',
+			'.unhurried-visually-hidden',
+			'#wpadminbar',
+			'.single .wp-block-post-content > p',
+			'.single .wp-block-post-content > ul > li',
+			'.single .wp-block-post-content > ol > li'
+		].join( ',' );
+		// A product's buy area holds still (the columns that hold its form).
+		var BUY = '.wp-block-columns:has(form.cart, .wp-block-add-to-cart-form, .wp-block-woocommerce-add-to-cart-form, .wp-block-add-to-cart-with-options)';
+		try {
+			document.querySelector( BUY );
+			SKIP += ',' + BUY;
+		} catch ( e ) {
+			BUY = '';
 		}
-		return row.firstElementChild === col ? 'side-start' : 'side-end';
-	}
 
-	// Headings arrive line by line (the fourth line on together).
-	// The words are wrapped in place; the heading reads the same to screen
-	// readers. If wrapping would change the heading's size at all, it is undone
-	// and the heading rises as one piece.
-	function splitWords( el ) {
-		var text = el.textContent.trim();
-		if ( ! text || text.split( /\s+/ ).length > 16 ) {
-			return false;
+		// Split layouts (two columns side by side): each side arrives from its own side.
+		function sideOf( col ) {
+			var row = col.parentElement;
+			if ( window.innerWidth < 782 || ! row || 2 !== row.children.length ) {
+				return '';
+			}
+			return row.firstElementChild === col ? 'side-start' : 'side-end';
 		}
-		var before = el.getBoundingClientRect();
-		var saved = Array.prototype.slice.call( el.childNodes );
-		var units = [];
-		saved.forEach( function ( n ) {
-			if ( 3 === n.nodeType ) {
-				var frag = document.createDocumentFragment();
-				n.textContent.split( /(\s+)/ ).forEach( function ( part ) {
-					if ( ! part ) {
-						return;
-					}
-					if ( /^\s+$/.test( part ) ) {
-						frag.appendChild( document.createTextNode( part ) );
-						return;
-					}
-					var w = document.createElement( 'span' );
-					w.className = 'uh-w';
-					w.style.display = 'inline-block';
-					w.textContent = part;
-					frag.appendChild( w );
-					units.push( w );
-				} );
-				n.parentNode.replaceChild( frag, n );
-			} else if ( 1 === n.nodeType && 'BR' !== n.tagName ) {
-				n.classList.add( 'uh-w' );
-				n.style.display = 'inline-block';
-				units.push( n );
+
+		// Headings arrive line by line (the fourth line on together).
+		// The words are wrapped in place; the heading reads the same to screen
+		// readers. If wrapping would change the heading's size at all, it is undone
+		// and the heading rises as one piece.
+		function splitWords( el ) {
+			var text = el.textContent.trim();
+			if ( ! text || text.split( /\s+/ ).length > 16 ) {
+				return false;
 			}
-		} );
-		var after = el.getBoundingClientRect();
-		if ( Math.abs( after.height - before.height ) > 0.5 || Math.abs( after.width - before.width ) > 0.5 ) {
-			while ( el.firstChild ) {
-				el.removeChild( el.firstChild );
-			}
+			var before = el.getBoundingClientRect();
+			var saved = Array.prototype.slice.call( el.childNodes );
+			var units = [];
 			saved.forEach( function ( n ) {
-				if ( 1 === n.nodeType ) {
-					n.classList.remove( 'uh-w' );
-					n.style.removeProperty( 'display' );
+				if ( 3 === n.nodeType ) {
+					var frag = document.createDocumentFragment();
+					n.textContent.split( /(\s+)/ ).forEach( function ( part ) {
+						if ( ! part ) {
+							return;
+						}
+						if ( /^\s+$/.test( part ) ) {
+							frag.appendChild( document.createTextNode( part ) );
+							return;
+						}
+						var w = document.createElement( 'span' );
+						w.className = 'uh-w';
+						w.style.display = 'inline-block';
+						w.textContent = part;
+						frag.appendChild( w );
+						units.push( w );
+					} );
+					n.parentNode.replaceChild( frag, n );
+				} else if ( 1 === n.nodeType && 'BR' !== n.tagName ) {
+					n.classList.add( 'uh-w' );
+					n.style.display = 'inline-block';
+					units.push( n );
 				}
-				el.appendChild( n );
 			} );
-			return false;
+			var after = el.getBoundingClientRect();
+			if ( Math.abs( after.height - before.height ) > 0.5 || Math.abs( after.width - before.width ) > 0.5 ) {
+				while ( el.firstChild ) {
+					el.removeChild( el.firstChild );
+				}
+				saved.forEach( function ( n ) {
+					if ( 1 === n.nodeType ) {
+						n.classList.remove( 'uh-w' );
+						n.style.removeProperty( 'display' );
+					}
+					el.appendChild( n );
+				} );
+				return false;
+			}
+			// Words on the same line set off together, a line at a time.
+			var line = -1;
+			var lastTop = null;
+			units.forEach( function ( u ) {
+				var top = Math.round( u.getBoundingClientRect().top );
+				if ( null === lastTop || Math.abs( top - lastTop ) > 4 ) {
+					line++;
+					lastTop = top;
+				}
+				u.style.setProperty( '--uh-w', Math.min( line, 3 ) );
+			} );
+			return true;
 		}
-		// Words on the same line set off together, a line at a time.
-		var line = -1;
-		var lastTop = null;
-		units.forEach( function ( u ) {
-			var top = Math.round( u.getBoundingClientRect().top );
-			if ( null === lastTop || Math.abs( top - lastTop ) > 4 ) {
-				line++;
-				lastTop = top;
-			}
-			u.style.setProperty( '--uh-w', Math.min( line, 3 ) );
-		} );
-		return true;
-	}
 
-	var scopes = document.querySelectorAll( '.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group' );
-	var selector = KINDS.map( function ( k ) {
-		return k[ 1 ];
-	} ).join( ',' );
-	var targets = [];
-	var fold = window.innerHeight;
-	// Arriving at #anchor from another page: what is above the target and the
-	// target's own screen show at once, so the page never opens on (or
-	// scrolls past) sections still waiting to enter.
-	var hashTarget = null;
-	try {
-		hashTarget = window.location.hash ? document.getElementById( decodeURIComponent( window.location.hash.slice( 1 ) ) ) : null;
-	} catch ( e ) {
-		hashTarget = null;
-	}
-	var shownTo = hashTarget ? hashTarget.getBoundingClientRect().top + window.pageYOffset + fold : 0;
+		var scopes = document.querySelectorAll( '.wp-site-blocks > main, .wp-site-blocks > footer, main.wp-block-group' );
+		var selector = KINDS.map( function ( k ) {
+			return k[ 1 ];
+		} ).join( ',' );
+		var targets = [];
+		var fold = window.innerHeight;
+		// Arriving at #anchor from another page: what is above the target and the
+		// target's own screen show at once, so the page never opens on (or
+		// scrolls past) sections still waiting to enter.
+		var hashTarget = null;
+		try {
+			hashTarget = window.location.hash ? document.getElementById( decodeURIComponent( window.location.hash.slice( 1 ) ) ) : null;
+		} catch ( e ) {
+			hashTarget = null;
+		}
+		var shownTo = hashTarget ? hashTarget.getBoundingClientRect().top + window.pageYOffset + fold : 0;
 
-	scopes.forEach( function ( scope ) {
-		scope.querySelectorAll( selector ).forEach( function ( el ) {
-			if ( el.hasAttribute( 'data-uh' ) || el.closest( SKIP ) ) {
-				return;
-			}
-			var parent = el.parentElement && el.parentElement.closest( '[data-uh]' );
-			// Inside a column arriving from its side, or a cover lifting its
-			// curtain, a heading still arrives word by word.
-			if ( parent && ! ( /^(side-|image)/.test( parent.getAttribute( 'data-uh' ) ) && el.matches( 'h1, h2, h3' ) ) ) {
-				return;
-			}
-			for ( var i = 0; i < KINDS.length; i++ ) {
-				if ( el.matches( KINDS[ i ][ 1 ] ) ) {
-					// On screen already, or scrolled past: it entered with the
-					// page (style.css) and is left to finish. A divider and the
-					// wordmark were not part of that, so they still draw in. A
-					// figure that counts up shows its final value here: the
-					// first screen must read at once (DESIGN-GUIDE section 6),
-					// and counting now would turn the figure already on screen
-					// back to 0. Below the window it counts up as it enters.
-					if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && ( el.getBoundingClientRect().top < fold || el.getBoundingClientRect().top + window.pageYOffset < shownTo ) ) {
+		scopes.forEach( function ( scope ) {
+			scope.querySelectorAll( selector ).forEach( function ( el ) {
+				if ( el.hasAttribute( 'data-uh' ) || el.closest( SKIP ) ) {
+					return;
+				}
+				var parent = el.parentElement && el.parentElement.closest( '[data-uh]' );
+				// Inside a column arriving from its side, or a cover lifting its
+				// curtain, a heading still arrives word by word.
+				if ( parent && ! ( /^(side-|image)/.test( parent.getAttribute( 'data-uh' ) ) && el.matches( 'h1, h2, h3' ) ) ) {
+					return;
+				}
+				for ( var i = 0; i < KINDS.length; i++ ) {
+					if ( el.matches( KINDS[ i ][ 1 ] ) ) {
+						// On screen already, or scrolled past: it entered with the
+						// page (style.css) and is left to finish. A divider and the
+						// wordmark were not part of that, so they still draw in. A
+						// figure that counts up shows its final value here: the
+						// first screen must read at once (DESIGN-GUIDE section 6),
+						// and counting now would turn the figure already on screen
+						// back to 0. Below the window it counts up as it enters.
+						if ( 'draw' !== KINDS[ i ][ 0 ] && 'words' !== KINDS[ i ][ 0 ] && ( el.getBoundingClientRect().top < fold || el.getBoundingClientRect().top + window.pageYOffset < shownTo ) ) {
+							break;
+						}
+						var kind = KINDS[ i ][ 0 ];
+						if ( 'side' === kind ) {
+							kind = sideOf( el );
+							if ( ! kind ) {
+								continue;
+							}
+						}
+						el.setAttribute( 'data-uh', kind );
+						if ( 'line' === kind && ! splitWords( el ) ) {
+							el.setAttribute( 'data-uh', 'rise' );
+						}
+						targets.push( el );
 						break;
 					}
-					var kind = KINDS[ i ][ 0 ];
-					if ( 'side' === kind ) {
-						kind = sideOf( el );
-						if ( ! kind ) {
-							continue;
-						}
-					}
-					el.setAttribute( 'data-uh', kind );
-					if ( 'line' === kind && ! splitWords( el ) ) {
-						el.setAttribute( 'data-uh', 'rise' );
-					}
-					targets.push( el );
-					break;
 				}
-			}
+			} );
 		} );
-	} );
 
-	/* Figures count up from zero to their printed value, in the author's own
-	   format ("1,200", "12,5", "1.200.000"), and end as exactly what the
-	   author wrote. While they count, the real value stays in the page for
-	   screen readers and the moving digits are hidden from them. */
-	function countUp( el ) {
-		var text = el.textContent.trim();
-		var match = text.match( /^(\D*)(\d[\d,.]*)(.*)$/ );
-		if ( ! match ) {
-			return;
-		}
-		// A full stop or comma that ends the figure is punctuation, not part of it.
-		var figure = match[ 2 ].replace( /[.,]+$/, '' );
-		var after = match[ 2 ].slice( figure.length ) + match[ 3 ];
-		// Which mark is the decimal one? With both, the last. With one kind,
-		// used once and not followed by exactly three digits ("12,5", "0.75"),
-		// that one; otherwise it groups thousands ("1,200", "1.200.000").
-		var dot = figure.lastIndexOf( '.' );
-		var comma = figure.lastIndexOf( ',' );
-		var decimalMark = '';
-		if ( dot > -1 && comma > -1 ) {
-			decimalMark = dot > comma ? '.' : ',';
-		} else if ( dot > -1 || comma > -1 ) {
-			var mark = dot > -1 ? '.' : ',';
-			var pieces = figure.split( mark );
-			if ( 2 === pieces.length && ( 3 !== pieces[ 1 ].length || '0' === pieces[ 0 ] ) ) {
-				decimalMark = mark;
-			}
-		}
-		var groupMark = '';
-		if ( '.' !== decimalMark && dot > -1 ) {
-			groupMark = '.';
-		} else if ( ',' !== decimalMark && comma > -1 ) {
-			groupMark = ',';
-		}
-		var whole = decimalMark ? figure.slice( 0, figure.lastIndexOf( decimalMark ) ) : figure;
-		var decimals = decimalMark ? figure.length - figure.lastIndexOf( decimalMark ) - 1 : 0;
-		var digits = whole.replace( /\D/g, '' );
-		var target = parseFloat( digits + ( decimals ? '.' + figure.slice( -decimals ) : '' ) );
-		if ( ! isFinite( target ) ) {
-			return;
-		}
-		// A year (four digits, nothing after) counts up from a nearby year.
-		var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
-		// "007" keeps its width.
-		var width = /^0\d/.test( digits ) ? digits.length : 0;
-		function format( value ) {
-			var parts = value.toFixed( decimals ).split( '.' );
-			while ( parts[ 0 ].length < width ) {
-				parts[ 0 ] = '0' + parts[ 0 ];
-			}
-			if ( groupMark ) {
-				parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, groupMark );
-			}
-			return parts[ 0 ] + ( decimals ? decimalMark + parts[ 1 ] : '' );
-		}
-		// Set the author's own nodes aside (the text, and any markup such as
-		// an accent word) and put them back when the count is over.
-		var written = document.createDocumentFragment();
-		while ( el.firstChild ) {
-			written.appendChild( el.firstChild );
-		}
-		var shown = document.createElement( 'span' );
-		shown.setAttribute( 'aria-hidden', 'true' );
-		var real = document.createElement( 'span' );
-		real.className = 'unhurried-visually-hidden';
-		real.textContent = text;
-		el.appendChild( shown );
-		el.appendChild( real );
-		var start = null;
-		var duration = COUNT;
-		function frame( now ) {
-			if ( null === start ) {
-				start = now;
-			}
-			var t = Math.min( 1, ( now - start ) / duration );
-			var eased = 1 - Math.pow( 1 - t, 4 );
-			var value = from + ( target - from ) * eased;
-			if ( t < 1 ) {
-				shown.textContent = match[ 1 ] + format( value ) + after;
-				window.requestAnimationFrame( frame );
+		/* Figures count up from zero to their printed value, in the author's own
+		   format ("1,200", "12,5", "1.200.000"), and end as exactly what the
+		   author wrote. While they count, the real value stays in the page for
+		   screen readers and the moving digits are hidden from them. */
+		function countUp( el ) {
+			var text = el.textContent.trim();
+			var match = text.match( /^(\D*)(\d[\d,.]*)(.*)$/ );
+			if ( ! match ) {
 				return;
 			}
-			el.textContent = '';
-			el.appendChild( written );
+			// A full stop or comma that ends the figure is punctuation, not part of it.
+			var figure = match[ 2 ].replace( /[.,]+$/, '' );
+			var after = match[ 2 ].slice( figure.length ) + match[ 3 ];
+			// Which mark is the decimal one? With both, the last. With one kind,
+			// used once and not followed by exactly three digits ("12,5", "0.75"),
+			// that one; otherwise it groups thousands ("1,200", "1.200.000").
+			var dot = figure.lastIndexOf( '.' );
+			var comma = figure.lastIndexOf( ',' );
+			var decimalMark = '';
+			if ( dot > -1 && comma > -1 ) {
+				decimalMark = dot > comma ? '.' : ',';
+			} else if ( dot > -1 || comma > -1 ) {
+				var mark = dot > -1 ? '.' : ',';
+				var pieces = figure.split( mark );
+				if ( 2 === pieces.length && ( 3 !== pieces[ 1 ].length || '0' === pieces[ 0 ] ) ) {
+					decimalMark = mark;
+				}
+			}
+			var groupMark = '';
+			if ( '.' !== decimalMark && dot > -1 ) {
+				groupMark = '.';
+			} else if ( ',' !== decimalMark && comma > -1 ) {
+				groupMark = ',';
+			}
+			var whole = decimalMark ? figure.slice( 0, figure.lastIndexOf( decimalMark ) ) : figure;
+			var decimals = decimalMark ? figure.length - figure.lastIndexOf( decimalMark ) - 1 : 0;
+			var digits = whole.replace( /\D/g, '' );
+			var target = parseFloat( digits + ( decimals ? '.' + figure.slice( -decimals ) : '' ) );
+			if ( ! isFinite( target ) ) {
+				return;
+			}
+			// A year (four digits, nothing after) counts up from a nearby year.
+			var from = ( /^\d{4}$/.test( match[ 2 ] ) && ! match[ 3 ] ) ? target - 24 : 0;
+			// "007" keeps its width.
+			var width = /^0\d/.test( digits ) ? digits.length : 0;
+			function format( value ) {
+				var parts = value.toFixed( decimals ).split( '.' );
+				while ( parts[ 0 ].length < width ) {
+					parts[ 0 ] = '0' + parts[ 0 ];
+				}
+				if ( groupMark ) {
+					parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, groupMark );
+				}
+				return parts[ 0 ] + ( decimals ? decimalMark + parts[ 1 ] : '' );
+			}
+			// Set the author's own nodes aside (the text, and any markup such as
+			// an accent word) and put them back when the count is over.
+			var written = document.createDocumentFragment();
+			while ( el.firstChild ) {
+				written.appendChild( el.firstChild );
+			}
+			var shown = document.createElement( 'span' );
+			shown.setAttribute( 'aria-hidden', 'true' );
+			var real = document.createElement( 'span' );
+			real.className = 'unhurried-visually-hidden';
+			real.textContent = text;
+			el.appendChild( shown );
+			el.appendChild( real );
+			var start = null;
+			var duration = COUNT;
+			function frame( now ) {
+				if ( null === start ) {
+					start = now;
+				}
+				var t = Math.min( 1, ( now - start ) / duration );
+				var eased = 1 - Math.pow( 1 - t, 4 );
+				var value = from + ( target - from ) * eased;
+				if ( t < 1 ) {
+					shown.textContent = match[ 1 ] + format( value ) + after;
+					window.requestAnimationFrame( frame );
+					return;
+				}
+				el.textContent = '';
+				el.appendChild( written );
+			}
+			window.requestAnimationFrame( frame );
 		}
-		window.requestAnimationFrame( frame );
-	}
 
-	function finish( el, delay ) {
-		// The wordmark's letters set off up to MAX_DELAY after one another.
-		var long = Math.max( ENTER, LONGEST ) + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
-		window.setTimeout( function () {
-			el.classList.add( 'is-done' );
-			el.style.removeProperty( '--uh-delay' );
-		}, delay + long );
-	}
-
-	var observer;
-	var tallObserver;
-
-	function enter( el, step ) {
-		var delay = Math.min( step * STAGGER, MAX_DELAY );
-		el.style.setProperty( '--uh-delay', delay + 'ms' );
-		el.classList.add( 'is-in' );
-		observer.unobserve( el );
-		tallObserver.unobserve( el );
-		if ( el.getAttribute( 'data-uh' ) === 'count' ) {
+		function finish( el, delay ) {
+			// The wordmark's letters set off up to MAX_DELAY after one another.
+			var long = Math.max( ENTER, LONGEST ) + ( el.getAttribute( 'data-uh' ) === 'words' ? MAX_DELAY : 0 ) + 50;
 			window.setTimeout( function () {
-				countUp( el );
-			}, delay );
+				el.classList.add( 'is-done' );
+				el.style.removeProperty( '--uh-delay' );
+			}, delay + long );
 		}
-		finish( el, delay );
-		// What waits inside it (a heading in a cover or a column) follows,
-		// a step later: under a curtain the observer cannot see it yet.
-		el.querySelectorAll( '[data-uh]:not(.is-in)' ).forEach( function ( inner ) {
-			enter( inner, step + 2 );
+
+		var observer;
+		var tallObserver;
+
+		function enter( el, step ) {
+			var delay = Math.min( step * STAGGER, MAX_DELAY );
+			el.style.setProperty( '--uh-delay', delay + 'ms' );
+			el.classList.add( 'is-in' );
+			observer.unobserve( el );
+			tallObserver.unobserve( el );
+			if ( el.getAttribute( 'data-uh' ) === 'count' ) {
+				window.setTimeout( function () {
+					countUp( el );
+				}, delay );
+			}
+			finish( el, delay );
+			// What waits inside it (a heading in a cover or a column) follows,
+			// a step later: under a curtain the observer cannot see it yet.
+			el.querySelectorAll( '[data-uh]:not(.is-in)' ).forEach( function ( inner ) {
+				enter( inner, step + 2 );
+			} );
+		}
+
+		// An element enters once 15% of it is in view.
+		observer = new IntersectionObserver(
+			function ( entries ) {
+				var step = 0;
+				entries.forEach( function ( entry ) {
+					if ( entry.isIntersecting && ! entry.target.classList.contains( 'is-in' ) ) {
+						enter( entry.target, step++ );
+					}
+				} );
+			},
+			{ rootMargin: '0px', threshold: 0.15 }
+		);
+		// Something taller than the window may never show 15% of itself (past
+		// about 6.7 screens it cannot: a long form on a phone stayed hidden), so
+		// it enters once it fills 15% of the window instead.
+		tallObserver = new IntersectionObserver(
+			function ( entries ) {
+				var step = 0;
+				entries.forEach( function ( entry ) {
+					if ( entry.isIntersecting && entry.boundingClientRect.height > window.innerHeight && ! entry.target.classList.contains( 'is-in' ) ) {
+						enter( entry.target, step++ );
+					}
+				} );
+			},
+			{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
+		);
+		// Switch to the per-element states, and make the browser compute them
+		// now, so a divider or wordmark already on screen draws in from its
+		// starting state rather than jumping straight to its end.
+		html.classList.add( 'uh-motion-live' );
+		void document.body.offsetWidth;
+		targets.forEach( function ( el ) {
+			observer.observe( el );
+			tallObserver.observe( el );
 		} );
 	}
-
-	// An element enters once 15% of it is in view.
-	observer = new IntersectionObserver(
-		function ( entries ) {
-			var step = 0;
-			entries.forEach( function ( entry ) {
-				if ( entry.isIntersecting && ! entry.target.classList.contains( 'is-in' ) ) {
-					enter( entry.target, step++ );
-				}
-			} );
-		},
-		{ rootMargin: '0px', threshold: 0.15 }
-	);
-	// Something taller than the window may never show 15% of itself (past
-	// about 6.7 screens it cannot: a long form on a phone stayed hidden), so
-	// it enters once it fills 15% of the window instead.
-	tallObserver = new IntersectionObserver(
-		function ( entries ) {
-			var step = 0;
-			entries.forEach( function ( entry ) {
-				if ( entry.isIntersecting && entry.boundingClientRect.height > window.innerHeight && ! entry.target.classList.contains( 'is-in' ) ) {
-					enter( entry.target, step++ );
-				}
-			} );
-		},
-		{ rootMargin: '0px 0px -15% 0px', threshold: 0 }
-	);
-	// Switch to the per-element states, and make the browser compute them
-	// now, so a divider or wordmark already on screen draws in from its
-	// starting state rather than jumping straight to its end.
-	html.classList.add( 'uh-motion-live' );
-	void document.body.offsetWidth;
-	targets.forEach( function ( el ) {
-		observer.observe( el );
-		tallObserver.observe( el );
-	} );
+	if ( 'complete' === document.readyState ) {
+		startReveal();
+	} else {
+		window.addEventListener( 'load', startReveal );
+	}
 
 	/* ── Gift card: tilts toward the pointer, like a card in the hand ── */
 	if ( window.matchMedia( '(hover: hover) and (pointer: fine)' ).matches ) {

@@ -173,6 +173,18 @@
 /* Forms: a field that was left wrong says so with its edge. */
 :where(.wp-site-blocks) :where(input:not([type="submit"], [type="checkbox"], [type="radio"]), textarea, select):user-invalid { border-color: var(--wp--preset--color--accent); }
 
+/* State changes that would otherwise pop. */
+@media (prefers-reduced-motion: no-preference) {
+	/* A variable product's new price fades in where the old one was (nothing moves). */
+	.single_variation_wrap .woocommerce-variation-price,
+	.single_variation_wrap .woocommerce-variation-availability { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
+	/* A row arriving in the cart or the mini-cart drawer. */
+	.wc-block-cart-items__row { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
+	/* An opened accordion's answer and a shown tab panel fade in from .4. */
+	.wp-block-details[open] > :not(summary),
+	.woocommerce-Tabs-panel { animation: uh-notice-in var(--uh-dur-panel) var(--uh-ease-out) both; }
+}
+
 /* Print shows everything, as it was before any of this moved. */
 @media print {
 	.uh-motion [data-uh] > *,
