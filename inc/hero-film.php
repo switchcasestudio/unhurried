@@ -163,6 +163,11 @@ if ( ! function_exists( 'unhurried_hero_film_stage' ) ) :
 		// Out of the words, whether it holds a film or not.
 		$html = substr_replace( $html, '', $slot[0][1], strlen( $slot[0][0] ) );
 		$film = new WP_HTML_Tag_Processor( $slot[0][0] );
+		if ( ! $film->next_tag( 'figure' ) ) {
+			return $html;
+		}
+		// The film is part of the stage, which holds still: no entrance of its own (f69's first screen, reveal.js).
+		$film->add_class( 'unhurried-still' );
 		if ( ! $film->next_tag( 'video' ) ) {
 			return $html;
 		}
