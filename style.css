@@ -1099,6 +1099,18 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	background-color: transparent !important;
 	opacity: 1 !important;
 }
+/* Right to left the words stand at the right, over the face: the shade
+   follows them, mirrored (1.2.1), and the caption, now at the lower left
+   over brighter marble, gets a little more in its corner. Phones and a
+   phone held sideways have their own shades below. */
+@media (min-width: 782px) {
+	[dir="rtl"] .unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background:
+			linear-gradient(270deg, rgba(22, 20, 15, .82) 0%, rgba(22, 20, 15, .56) 36%, rgba(22, 20, 15, 0) 72%),
+			linear-gradient(to top, rgba(22, 20, 15, .55), rgba(22, 20, 15, 0) 45%),
+			radial-gradient(ellipse at 0% 100%, rgba(22, 20, 15, .6) 0%, rgba(22, 20, 15, 0) 50%);
+	}
+}
 /* Core sizes a positioned cover's content to fit; this one spans the frame. */
 .unhurried-hero-statue__stage > .wp-block-cover__inner-container,
 .unhurried-hero-statue__foot { width: 100% !important; max-width: none !important; }

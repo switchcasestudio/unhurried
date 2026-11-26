@@ -148,6 +148,8 @@
 		linear-gradient(to top, rgba(22, 20, 15, .45) 0%, rgba(22, 20, 15, 0) 55%),
 		radial-gradient(ellipse at 100% 100%, rgba(22, 20, 15, .35) 0%, rgba(22, 20, 15, 0) 40%);
 }
+/* Right to left the words stand at the right: the shade, mirrored. */
+[dir="rtl"] .wp-block-cover.has-film > .unhurried-hero-film__film::after { scale: -1 1; }
 .wp-block-cover .unhurried-hero-film__toggle { color: inherit; }
 @media (hover: hover) {
 	.wp-block-cover .unhurried-hero-film__toggle:hover { border-color: rgb(246, 244, 239); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }
