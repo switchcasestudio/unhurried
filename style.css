@@ -1525,7 +1525,7 @@ html { scroll-padding-top: 96px; }
    no modified date until the page changes after it is published: the
    published date stands in until then. */
 .unhurried-policy__updated .is-modified ~ .is-published { display: none; }
-.unhurried-policy__intro { max-width: 40ch; }
+.unhurried-policy__intro { max-width: 25em; }
 /* Contents: numbered like the sections, ruled like the footer's lists. */
 .unhurried-policy__toc { max-width: 34rem; margin: 0; padding: 0; list-style: none; counter-reset: uh-policy-toc; border-top: 1px solid var(--wp--preset--color--hairline); }
 .unhurried-policy__toc > li { counter-increment: uh-policy-toc; position: relative; display: flex; align-items: baseline; gap: .75rem; margin: 0; padding-block: .6rem; border-bottom: 1px solid var(--wp--preset--color--hairline); }
@@ -1541,12 +1541,14 @@ html { scroll-padding-top: 96px; }
 @media (hover: hover) {
 	.unhurried-policy__toc a:hover { text-decoration: underline; text-underline-offset: .2em; }
 }
-/* Sections: an accent numeral over each heading, the text at a reading measure. */
+/* Sections: an accent numeral over each heading, the text at a reading measure
+   (66 to 72 characters a line; in em, not ch, so the measure stays put when
+   the web font replaces its fallback). */
 .unhurried-policy__body { counter-reset: uh-policy; }
 .unhurried-policy__section > h2 { counter-increment: uh-policy; }
 .unhurried-policy__section > h2::before { content: counter(uh-policy, decimal-leading-zero); content: counter(uh-policy, decimal-leading-zero) / ""; display: block; margin-bottom: .75rem; font-size: 1.5rem; line-height: 1; }
 .unhurried-policy__section > :is(p, ul, ol),
-.unhurried-policy__close { max-width: 52ch; }
+.unhurried-policy__close { max-width: 33em; }
 .unhurried-policy__close { padding-top: var(--wp--preset--spacing--50); border-top: 1px solid var(--wp--preset--color--hairline); }
 /* Wide windows: the contents stay in view beside the text, as the Essay's aside
    does. On screen only (a printed page lists them once, in place), and not in
