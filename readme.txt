@@ -18,6 +18,7 @@ Write an italic word inside any heading and it turns into the Fraunces accent fa
 The theme includes:
 
 * Full-page patterns for a homepage, about, services and contact page.
+* A Policy page pattern for your Privacy, Terms and Returns pages: the date it was last updated, a contents list beside six numbered sections and a link to Contact, in placeholder text for your own words. Once those pages are published, the footer links to each one.
 * Heroes (Michelangelo's David filling a rounded, inset stage, which can also play a short silent film of your own behind the words, with a pause button; the same David in a rounded frame beside the headline, which can play one too; a full-screen image in an inset frame; a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep color images.
@@ -49,6 +50,10 @@ Forms are plugin territory, so the theme works with the free ones you already kn
 = How do I add a newsletter signup? =
 
 Install the free Newsletter plugin (wordpress.org/plugins/newsletter), which keeps subscribers in your own WordPress. Its email form then appears in the footer and in the Newsletter band pattern with no setup; run the plugin's short setup wizard to get its thank-you page and confirmation emails. Jetpack's Subscribe block works the same way. Without either, those spots offer your site's RSS feed. Developers can supply any other form through the `unhurried_newsletter_block` filter.
+
+= How do I add Privacy, Terms and Returns pages? =
+
+Create a page called Privacy, keep the default template, and pick the Policy page pattern when WordPress offers page patterns (or add it from the Patterns tab, under Pages). Put your own policy in place of the placeholder text, publish the page and choose it under Settings > Privacy. Make Terms and Returns the same way, at the addresses /terms/ and /returns/. The footer lists each page once it is published, and leaves out any you do not have.
 
 = How do I add my social profiles? =
 
