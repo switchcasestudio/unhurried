@@ -276,8 +276,8 @@
 	
 	:is(.wp-block-post-terms, .wp-block-term-name, .wp-block-site-title, .wp-block-post-author-name) a:not(:is(.unhurried-capsule, .unhurried-wordmark, .unhurried-chip-terms, .unhurried-chip-links) *):hover { text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
 	.unhurried-text-link a:hover { border-bottom-color: transparent; }
+}
 @media (prefers-reduced-motion: no-preference) {
-	
 	:is(.wp-block-button__link, .wp-element-button, :where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"])):active {
 		transform: translateY(var(--uh-press-y));
 		transition-duration: var(--uh-dur-press);

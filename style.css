@@ -831,7 +831,6 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 	.wp-block-button.is-style-text-link > .wp-block-button__link:hover { text-underline-offset: 9px; }
 }
 
-}
 .unhurried-text-link a { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
 
 :where(a, button, summary, label, [role="button"]) { -webkit-tap-highlight-color: color-mix(in srgb, currentColor 12%, transparent); }
