@@ -159,7 +159,7 @@
 /* ─── Natural controls ────────────────────────────────────────────────── */
 /* The marquee's pause button (unhurried_marquee_loop(), reveal.js): 44 by
    34px at the band's end, beside the moving line, not over it (a 44px hit
-   area on touch); the band's own colours, so it reads as part of it. */
+   area on touch); the band's own colors, so it reads as part of it. */
 .unhurried-marquee.is-paused .unhurried-marquee__track { animation-play-state: paused; }
 .unhurried-marquee__pause {
 	position: relative;
