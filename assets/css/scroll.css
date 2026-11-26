@@ -12,24 +12,8 @@
  * @package Unhurried
  */
 
-/* Tokens for the larger moves (1.2.1, f68). The f66 tokens stay for
-   controls; these are for things the size of a photo, a heading, a section. */
-:root {
-	--uh-dur-text: 420ms;     /* text arriving (1.2.1 f69: was 560ms, read a beat late) */
-	--uh-dur-card: 560ms;     /* cards and split columns arriving */
-	--uh-dur-large: 760ms;    /* a photo's curtain, a cover */
-	--uh-dur-draw: 900ms;     /* a rule drawing across */
-	--uh-dur-count: 1100ms;   /* a figure counting up */
-	--uh-dur-morph: 480ms;    /* a card becoming the next page's head */
-	--uh-line-stagger: 90ms;  /* between the lines of a heading */
-	--uh-dist-text: 24px;     /* how far text rises */
-	--uh-dist-large: 48px;    /* how far a photo or a card travels */
-	--uh-settle: 1.14;        /* a photo settles from 114% */
-	--uh-zoom-photo: 1.06;    /* a photo eases forward under the pointer */
-}
-@media (prefers-reduced-motion: reduce) {
-	:root { --uh-dur-card: 0ms; --uh-dur-text: 0ms; --uh-dur-large: 0ms; --uh-dur-draw: 0ms; --uh-dur-count: 0ms; --uh-dur-morph: 0ms; --uh-line-stagger: 0ms; --uh-dist-text: 0px; --uh-dist-large: 0px; --uh-settle: 1; --uh-zoom-photo: 1; }
-}
+/* Tokens for the larger moves (--uh-dur-text, --uh-dist-large and the rest): style.css, Motion system
+   (on the root here, they restyled the whole page when this sheet arrived). */
 
 /* ─── Entrances, once ─────────────────────────────────────────────────── */
 /* Text and cards: a longer, plainly visible rise. */
@@ -53,7 +37,10 @@
 
 /* Headings: line by line, each line rising out of nothing. */
 .uh-motion [data-uh="line"] .uh-w { display: inline-block; }
-.uh-motion [data-uh="line"]:not(.is-in) { opacity: 1; translate: none; }
+/* Wrapped into words shortly before it enters (reveal-late.js); until then it
+   waits like any rising text. */
+.uh-motion [data-uh="line"]:not(.uh-split):not(.is-in) { translate: 0 var(--uh-dist-text); }
+.uh-motion [data-uh="line"].uh-split:not(.is-in) { opacity: 1; translate: none; }
 .uh-motion [data-uh="line"]:not(.is-done) .uh-w {
 	transition:
 		opacity var(--uh-dur-text) var(--uh-ease-out) calc(var(--uh-delay, 0ms) + var(--uh-w, 0) * var(--uh-line-stagger)),
@@ -191,8 +178,10 @@
 @media (prefers-reduced-motion: no-preference) {
 	/* A variable product's new price fades in where the old one was (nothing moves). */
 	.uh-late .single_variation_wrap :is(.woocommerce-variation-price, .woocommerce-variation-availability):not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
-	/* A row arriving in the cart or the mini-cart drawer. */
-	.uh-late .wc-block-cart-items__row:not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
+	/* A row arriving in the cart, or in the mini-cart drawer once the drawer
+	   shows it (reveal-late.js then marks it seen). */
+	.uh-late .wc-block-cart-items__row:not([data-uh-seen], .wc-block-mini-cart__drawer *),
+	.uh-late .wc-block-components-drawer__screen-overlay:not(.wc-block-components-drawer__screen-overlay--is-hidden) .wc-block-mini-cart__drawer .wc-block-cart-items__row:not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-base) var(--uh-ease-out) both; }
 	/* An opened accordion's answer and a shown tab panel fade in from .4. */
 	.uh-late .wp-block-details[open] > :not(summary, [data-uh-seen]),
 	.uh-late .woocommerce-Tabs-panel:not([data-uh-seen]) { animation: uh-notice-in var(--uh-dur-panel) var(--uh-ease-out) both; }
@@ -237,9 +226,8 @@
 	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation__submenu-icon svg { transition: none !important; }
 }
 
-/* ─── Gift card tilt and map pin (f66; moved here in 1.2.1 f69: the card's
-   resting angle stays in style.css, the pointer's tilt and glare and the pin's
-   ping arrive here) ─── */
+/* ─── Gift card tilt (f66; moved here in 1.2.1 f69: the card's resting
+   angle stays in style.css, the pointer's tilt and glare arrive here) ─── */
 .unhurried-giftcard {
 	transition: transform calc(var(--uh-dur-slow) * var(--uh-exit)) var(--uh-ease-out), box-shadow calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-out);
 }
@@ -258,27 +246,6 @@
 	.unhurried-giftcard:hover::after { opacity: 1; transition-duration: var(--uh-dur-base); transition-timing-function: var(--uh-ease-out); }
 }
 
-.unhurried-map::after {
-	content: "";
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 14px;
-	height: 14px;
-	margin: -7px 0 0 -7px;
-	border-radius: 50%;
-	border: 2px solid var(--wp--preset--color--accent);
-	opacity: 0;
-	pointer-events: none;
-}
-@media (prefers-reduced-motion: no-preference) {
-	.unhurried-map::after { animation: uh-ping 1.6s var(--uh-ease-out) var(--uh-dur-slow) 3; }
-	.uh-motion .unhurried-map[data-uh]:not(.is-in)::after { animation-play-state: paused; }
-}
-@keyframes uh-ping {
-	0% { opacity: .55; scale: 1; }
-	80%, 100% { opacity: 0; scale: 4.2; }
-}
 
 /* ─── A head or cover photograph eases closer under the pointer (f69), as a framed photo does ─── */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -288,6 +255,15 @@
 	.uh-motion main figure.is-style-arch:not(:has(figcaption)) { border-radius: 999px 999px 16px 16px; overflow: clip; }
 	.uh-motion main figure.is-style-arch:not(:has(figcaption)) img { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out); }
 	.uh-motion main figure.is-style-arch:not(:has(figcaption)):hover img { transform: scale(var(--uh-zoom)); }
+}
+
+/* ─── A section's own photograph (one not in a frame, as in the closing call
+   to action) gains a little depth under the pointer, and where the browser
+   can, eases closer inside its own corners (f73) ─── */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.uh-motion main .alignfull figure.wp-block-image:not(.unhurried-frame, .is-style-arch) img { transition: filter calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out), object-view-box calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out); }
+	.uh-motion main .alignfull:hover figure.wp-block-image:not(.unhurried-frame, .is-style-arch) img { object-view-box: inset(2.5%); }
+	.uh-motion main .alignfull:hover .unhurried-mono figure.wp-block-image:not(.unhurried-frame, .is-style-arch) img { filter: grayscale(1) contrast(1.1); }
 }
 
 /* ─── Presses and button hovers (f66; moved here in 1.2.1 f69: they answer the pointer, never the first paint) ─── */

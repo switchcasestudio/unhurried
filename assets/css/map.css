@@ -61,3 +61,5 @@
 	0% { opacity: .7; scale: .3; }
 	100% { opacity: 0; scale: 2.6; }
 }
+/* The narrowest phones: a square drawn map, so the note stays clear of the pin's tip. */
+@media (max-width: 480px) { .unhurried-map { aspect-ratio: 1; } }

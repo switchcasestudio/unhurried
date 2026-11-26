@@ -193,12 +193,20 @@ if ( ! function_exists( 'unhurried_map_frame' ) ) :
 		if ( '' === $title || preg_match( '/^-?\d+(\.\d+)?\s*,\s*-?\d+(\.\d+)?$/', $title ) ) {
 			$tags->set_attribute( 'title', __( 'Map', 'unhurried' ) );
 		}
+		// The address waits in data-src until map.js sees the map within
+		// about a screen of the window (the browser's own lazy loading reached
+		// Google two to four screens ahead). Without JavaScript the copy in
+		// <noscript> loads as before, lazily (map-live.css hides the other).
+		preg_match( '#<iframe\b[^>]*>.*?</iframe>#is', $tags->get_updated_html(), $original );
+		$tags->set_attribute( 'data-src', $src );
+		$tags->remove_attribute( 'src' );
+		$noscript = isset( $original[0] ) ? '<noscript>' . $original[0] . '</noscript>' : '';
 		unhurried_map_assets( true );
 		$pin = unhurried_map_centered( $src );
 		// The button comes first: it sits at the map's top, and the keyboard reaches it before the map.
 		return '<div class="unhurried-map-frame' . ( $pin ? ' has-pin' : '' ) . '">'
 			. ( $pin ? '<button type="button" class="unhurried-map-frame__use" hidden>' . esc_html__( 'Pan and zoom', 'unhurried' ) . '</button>' : '' )
-			. '<div class="unhurried-map-frame__map">' . $tags->get_updated_html() . '</div>'
+			. '<div class="unhurried-map-frame__map">' . $tags->get_updated_html() . $noscript . '</div>'
 			. ( $pin ? '<span class="unhurried-map-frame__pin" aria-hidden="true"></span>' : '' )
 			. '</div>';
 	}
