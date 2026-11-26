@@ -18,7 +18,7 @@ Write an italic word inside any heading and it turns into the Fraunces accent fa
 The theme includes:
 
 * Full-page patterns for a homepage, about, services and contact page.
-* Heroes (a full-screen image in an inset frame, a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
+* Heroes (a short silent film in a rounded frame beside the headline, with a pause button and a picture shown first, a full-screen image in an inset frame, a full-height stage with a slowly turning round image, staggered type, split with an arched image, type only), a rising "your visit" panel, services on an image with a frosted accordion, a staggered gallery, a values statement, a stories grid, a testimonial, a call to action, a price list, membership tiers, questions and answers, contact details and a team feature.
 * Section styles for any Group: Panel, Card, Ink, Ground and Glass.
 * Block styles: Eyebrow and Statement paragraphs, Hairline and Text link buttons, and Arch and Keep color images.
 * A blog with a staggered stories grid, category and tag archives, and split-hero single posts with comments.
@@ -205,6 +205,8 @@ assets/images/white-basin.webp: Basin, Ding ware (China, Jin dynasty, 1100s-1200
 assets/images/celadon-bottle.webp: Bottle, celadon ware (Korea, Goryeo dynasty, 1100s), Cleveland Museum of Art, https://clevelandart.org/art/1918.436
 assets/images/double-gourd.webp: Double Gourd-shaped Bottle, Ding ware (China, Ming dynasty, 1368-1644), Cleveland Museum of Art, https://clevelandart.org/art/1915.361
 assets/images/moon-jar-wide.webp, resting-head-wide.webp, lotus-bowl-wide.webp, marble-face-wide.webp and white-basin-wide.webp: wide crops of moon-jar, resting-head, lotus-bowl, marble-face and white-basin above (the same objects, sources and license) for the heroes on a photograph. Each has two smaller copies for phones, named with -1200 and -800.
+assets/video/marble-head-film.mp4: a slow camera move with a soft drift of light over Head of a Woman (Greece, Hellenistic period, 300-200 BCE), Cleveland Museum of Art, https://clevelandart.org/art/1916.831, made for this theme from the museum's CC0 photograph (the one marble-head.webp is cut from) and processed like the rest of the set. Same license (CC0).
+assets/images/marble-head-film.webp and assets/images/marble-head-film-800.webp: the film's first frame, shown before and instead of the film, and a smaller copy for phones. Same source and license (CC0).
 
 assets/images/arch.webp, branch-shadow.webp, drape.webp, light-window.webp, orb.webp, pedestal.webp, vessel.webp: the pictures of Unhurried 1.1.1, kept for pages made with it.
 Created for this theme by the theme author, generated from original code.
