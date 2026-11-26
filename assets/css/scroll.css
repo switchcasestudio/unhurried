@@ -36,15 +36,14 @@
 .uh-motion :is([data-uh="rise"], [data-uh="count"]):not(.is-in) { translate: 0 var(--uh-dist-text); }
 .uh-motion [data-uh="card"]:not(.is-in) { translate: 0 var(--uh-dist-large); scale: .96; }
 
-/* Photos and covers: a curtain lifts from the bottom edge while the picture
-   inside settles from 114%. The curtain is drawn on the photo's layers, not
-   on the observed element: a clip on that would hide it from the observer. */
+/* Photos and covers: they rise 48px out of nothing while the picture settles
+   from 114%. (A clip-path curtain was tried first: repainting it under the
+   scroll-linked drift cost 4 to 5 frames over 50ms per page at a 4x slower
+   CPU; this costs none.) */
 .uh-motion [data-uh="image"]:not(.is-done) { transition-duration: var(--uh-dur-large); }
-.uh-motion [data-uh="image"]:not(.is-in) { opacity: 1; translate: 0 var(--uh-dist-text); }
-.uh-motion [data-uh="image"]:not(.is-done) > * { clip-path: inset(0); transition: clip-path var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms); }
-.uh-motion [data-uh="image"]:not(.is-in) > * { clip-path: inset(100% 0 0 0); }
-.uh-motion [data-uh="image"]:not(.is-done) img { transition: clip-path var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms), scale calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
-.uh-motion [data-uh="image"]:not(.is-in) img { scale: var(--uh-settle); }
+.uh-motion [data-uh="image"]:not(.is-in) { translate: 0 var(--uh-dist-large); }
+.uh-motion [data-uh="image"]:not(.is-done) img { transition: transform calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
+.uh-motion [data-uh="image"]:not(.is-in) img { transform: scale(var(--uh-settle)); }
 
 /* Headings: line by line, each line rising out of nothing. */
 .uh-motion [data-uh="line"] .uh-w { display: inline-block; }
@@ -187,7 +186,6 @@
 
 /* Print shows everything, as it was before any of this moved. */
 @media print {
-	.uh-motion [data-uh] > *,
 	.uh-motion [data-uh] img,
 	.uh-motion .uh-w { opacity: 1 !important; clip-path: none !important; translate: none !important; scale: none !important; transition: none !important; }
 	.uh-header-away header.wp-block-template-part { translate: none !important; }
