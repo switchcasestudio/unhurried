@@ -23,6 +23,33 @@
 	'use strict';
 
 	var html = document.documentElement;
+
+	// The scroll choreography's stylesheet (assets/css/scroll.css) loads once
+	// the page has: it styles only what is below the window or answers a
+	// pointer, so it never competes with the first screen.
+	var scrollCss = window.unhurriedScroll && window.unhurriedScroll.css;
+	var scrollCssReady = [];
+	function loadScrollCss() {
+		if ( ! scrollCss || document.getElementById( 'unhurried-scroll-css' ) ) {
+			return;
+		}
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.id = 'unhurried-scroll-css';
+		link.href = scrollCss;
+		link.onload = function () {
+			scrollCssReady.forEach( function ( fn ) {
+				fn();
+			} );
+		};
+		document.head.appendChild( link );
+	}
+	if ( 'complete' === document.readyState ) {
+		loadScrollCss();
+	} else {
+		window.addEventListener( 'load', loadScrollCss );
+	}
+
 	if ( ! ( 'IntersectionObserver' in window ) || window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ) {
 		html.classList.remove( 'uh-motion' );
 		return;
@@ -78,7 +105,10 @@
 	// shows only here, where it works.
 	document.querySelectorAll( '.unhurried-marquee__pause' ).forEach( function ( button ) {
 		var line = button.closest( '.unhurried-marquee' );
-		button.hidden = false;
+		// Shown once its styles are in.
+		scrollCssReady.push( function () {
+			button.hidden = false;
+		} );
 		button.addEventListener( 'click', function () {
 			var paused = 'true' !== button.getAttribute( 'aria-pressed' );
 			button.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
@@ -218,6 +248,7 @@
 					}
 					var w = document.createElement( 'span' );
 					w.className = 'uh-w';
+					w.style.display = 'inline-block';
 					w.textContent = part;
 					frag.appendChild( w );
 					units.push( w );
@@ -225,6 +256,7 @@
 				n.parentNode.replaceChild( frag, n );
 			} else if ( 1 === n.nodeType && 'BR' !== n.tagName ) {
 				n.classList.add( 'uh-w' );
+				n.style.display = 'inline-block';
 				units.push( n );
 			}
 		} );
@@ -236,6 +268,7 @@
 			saved.forEach( function ( n ) {
 				if ( 1 === n.nodeType ) {
 					n.classList.remove( 'uh-w' );
+					n.style.removeProperty( 'display' );
 				}
 				el.appendChild( n );
 			} );

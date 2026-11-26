@@ -141,8 +141,10 @@ if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
 	/**
 	 * The scroll choreography and the quiet responses (assets/css/scroll.css).
 	 *
-	 * Printed at the end of the page, so it never holds up the first screen:
-	 * all it styles is below the window or answers a pointer. Child themes
+	 * Loaded by assets/js/reveal.js once the page has loaded, so it never
+	 * competes with the first screen: all it styles is below the window or
+	 * answers a pointer. Without JavaScript a noscript link loads it for the
+	 * pointer responses (unhurried_scroll_styles_noscript()). Child themes
 	 * (Unhurried Pro among them) can tell this version has it by this
 	 * function.
 	 *
@@ -150,11 +152,36 @@ if ( ! function_exists( 'unhurried_scroll_styles' ) ) :
 	 * @return void
 	 */
 	function unhurried_scroll_styles() {
-		$version = wp_get_theme( get_template() )->get( 'Version' );
-		wp_enqueue_style( 'unhurried-scroll', get_template_directory_uri() . '/assets/css/scroll.css', array(), $version );
+		wp_localize_script( 'unhurried-reveal', 'unhurriedScroll', array( 'css' => unhurried_scroll_styles_url() ) );
 	}
 endif;
-add_action( 'wp_footer', 'unhurried_scroll_styles', 1 );
+add_action( 'wp_enqueue_scripts', 'unhurried_scroll_styles', 20 );
+
+if ( ! function_exists( 'unhurried_scroll_styles_url' ) ) :
+	/**
+	 * The address of assets/css/scroll.css, with the parent theme's version.
+	 *
+	 * @since 1.2.1
+	 * @return string
+	 */
+	function unhurried_scroll_styles_url() {
+		return add_query_arg( 'ver', rawurlencode( (string) wp_get_theme( get_template() )->get( 'Version' ) ), get_template_directory_uri() . '/assets/css/scroll.css' );
+	}
+endif;
+
+if ( ! function_exists( 'unhurried_scroll_styles_noscript' ) ) :
+	/**
+	 * Without JavaScript the pointer responses still load (nothing in the
+	 * stylesheet hides anything without the script).
+	 *
+	 * @since 1.2.1
+	 * @return void
+	 */
+	function unhurried_scroll_styles_noscript() {
+		echo '<noscript><link rel="stylesheet" href="' . esc_url( unhurried_scroll_styles_url() ) . '"></noscript>' . "\n"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- only without JavaScript; with it, reveal.js loads the file after the page.
+	}
+endif;
+add_action( 'wp_footer', 'unhurried_scroll_styles_noscript', 1 );
 
 if ( ! function_exists( 'unhurried_page_head_names' ) ) :
 	/**
