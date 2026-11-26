@@ -1,0 +1,88 @@
+/* ─── Hero, film (1.2.1): words beside a short silent loop in a frame ─────
+   Loaded only with the pattern (inc/hero-film.php), and in the editor. The
+   frame is the theme's card radius at 4:5, never edge to edge and never
+   taller than the window leaves room for; the words sit beside it (above it
+   on a phone) and never over it. The picture fills the frame from the first
+   paint and stays under the film, which fades in only once it is playing
+   (class has-film from PHP, is-playing from assets/js/hero-film.js). */
+.unhurried-hero-film { --uh-under: 0px; }
+/* A panel rising over the hero (the homepage's process panel) reaches up into it: the hero keeps that much more room below. */
+.unhurried-hero-film:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap, -120px)); }
+.unhurried-hero-film.wp-block-group { padding-bottom: calc(var(--wp--preset--spacing--70) + var(--uh-under)) !important; } /* !important: the block's own padding is inline */
+
+.unhurried-hero-film__media {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
+}
+.unhurried-hero-film__media > * { grid-column: 1 / -1; margin: 0 !important; } /* !important: the column's own block gap */
+.unhurried-hero-film__media > .unhurried-hero-film__caption { grid-column: 1; }
+.unhurried-hero-film__media > .unhurried-hero-film__toggle { grid-column: 2; grid-row: 2; }
+
+.unhurried-hero-film__frame {
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+	/* As tall as the window allows under the header, with the caption in view too. */
+	max-width: max(17rem, calc((100svh - 13rem - var(--wp-admin--admin-bar--height, 0px)) * .8));
+	aspect-ratio: 4 / 5;
+	margin-inline-start: auto !important; /* !important: the frame's own margin reset above */
+	overflow: hidden;
+	border-radius: var(--wp--custom--radius--card, 24px);
+}
+.unhurried-hero-film__frame > * { margin: 0 !important; } /* !important: the group's own block gap */
+.unhurried-hero-film__frame > :is(.wp-block-image, .wp-block-video) { position: absolute; inset: 0; }
+.unhurried-hero-film__frame :is(img, video) {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+}
+.unhurried-hero-film__frame.has-film > .wp-block-video {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity calc(var(--uh-dur-slow, 420ms) * var(--uh-exit, .65)) var(--uh-ease-out, ease-out);
+}
+.unhurried-hero-film__frame.has-film.is-playing > .wp-block-video {
+	opacity: 1;
+	transition-duration: var(--uh-dur-slow, 420ms);
+}
+
+/* The caption's row keeps the button's height, so the button appears without moving anything. */
+.unhurried-hero-film__toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 2.5rem;
+	height: 2.5rem;
+	margin: 0;
+	padding: 0;
+	border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
+	border-radius: var(--wp--custom--radius--pill, 999px);
+	background: transparent;
+	color: var(--wp--preset--color--contrast);
+	cursor: pointer;
+	transition: background-color var(--uh-dur-quick, 160ms) var(--uh-ease-out, ease-out), color var(--uh-dur-quick, 160ms) var(--uh-ease-out, ease-out), border-color var(--uh-dur-quick, 160ms) var(--uh-ease-out, ease-out);
+}
+.unhurried-hero-film__toggle[hidden] { visibility: hidden; }
+.unhurried-hero-film__toggle svg { display: block; }
+.unhurried-hero-film__toggle .unhurried-hero-film__play,
+.unhurried-hero-film__toggle.is-paused .unhurried-hero-film__pause { display: none; }
+.unhurried-hero-film__toggle.is-paused .unhurried-hero-film__play { display: block; }
+@media (hover: hover) {
+	.unhurried-hero-film__toggle:hover { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
+}
+
+/* Narrow windows: the words, then the frame, square and at most 30rem, so the whole frame fits on the first screen under them; the picture keeps the head in view. */
+@media (max-width: 781px) {
+	.unhurried-hero-film__media { max-width: 30rem; }
+	.unhurried-hero-film__frame {
+		max-width: none;
+		aspect-ratio: 1;
+		margin-inline-start: 0 !important; /* !important: as above */
+	}
+	.unhurried-hero-film__frame :is(img, video) { object-position: 50% 30%; }
+}
