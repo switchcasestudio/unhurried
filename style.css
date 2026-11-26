@@ -803,6 +803,8 @@ a:where(:not(.wp-element-button)) {
 }
 /* Label switches in one step (dark looks: dark-covers.css). */
 :root { --uh-pill-switch-in: 39ms; --uh-pill-switch-out: 9ms; }
+/* Hover intent (also read by Pro's mega menu); an arrow item's pill: more room before the label. */
+:root { --uh-intent-in: 100ms; --uh-intent-out: 250ms; --uh-pill-lead: var(--wp--preset--spacing--10); --uh-pill-trail: calc(var(--wp--preset--spacing--10) / 2); }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-item > .wp-block-navigation-item__content,
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu > .wp-block-navigation__submenu-icon {
 	transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color 0s linear var(--uh-pill-switch-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
@@ -833,8 +835,8 @@ a:where(:not(.wp-element-button)) {
 
 /* A dropdown's item: the pill covers its arrow and stays while open. */
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:has(> .wp-block-navigation__submenu-icon) > .wp-block-navigation-item__content {
-	padding-inline-end: calc(.75rem + 13px);
-	margin-inline-end: calc(-.75rem - 13px);
+	padding-inline: calc(.75rem + var(--uh-pill-lead)) calc(.75rem + 13px - var(--uh-pill-trail));
+	margin-inline: calc(-.75rem - var(--uh-pill-lead)) calc(-.75rem - 13px + var(--uh-pill-trail));
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container > .wp-block-navigation-submenu:hover > .wp-block-navigation-item__content {
 	background-color: var(--uh-pill);
@@ -865,6 +867,36 @@ a:where(:not(.wp-element-button)) {
 		animation-duration: var(--uh-dur-press);
 		animation-timing-function: var(--uh-ease-out);
 	}
+}
+/* Hover intent: open after --uh-intent-in, close after --uh-intent-out, the next dropdown swaps in one frame; not for the keyboard or touch. */
+@media (hover: hover) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition-delay: var(--uh-intent-out); }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition-delay: var(--uh-intent-in); }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon:focus-visible svg { transition-delay: 0s; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__container:has(> .wp-block-navigation-submenu:hover) > .wp-block-navigation-submenu:not(:hover, :has(:focus-visible)) > .wp-block-navigation__submenu-container {
+		visibility: hidden !important;
+		opacity: 0 !important;
+		transition: opacity 0s linear var(--uh-intent-in), translate 0s linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important;
+	}
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in) var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-base) * var(--uh-exit)) !important; }
+	.unhurried-capsule .wp-block-navigation-submenu:is(:hover, :focus-within) > .wp-block-navigation__submenu-container,
+	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), translate var(--uh-dur-base) var(--uh-ease-out) var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), translate calc(var(--uh-dur-base) * var(--uh-exit)) var(--uh-ease-in), visibility 0s linear calc(var(--uh-dur-base) * var(--uh-exit)) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-base) var(--uh-ease-out), translate var(--uh-dur-base) var(--uh-ease-out), visibility 0s !important; }
+	.unhurried-capsule .wp-block-navigation__container .wp-block-navigation-submenu > .wp-block-navigation__submenu-container:has(:focus-visible) { transition: none !important; }
+}
+/* !important: the reduced-motion rule below. */
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-out), visibility 0s linear calc(var(--uh-intent-out) + var(--uh-dur-quick)) !important; }
+	.unhurried-capsule .wp-block-navigation-submenu:hover > .wp-block-navigation__submenu-container,
+	.unhurried-capsule .wp-block-navigation-submenu .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear var(--uh-intent-in), visibility 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s linear var(--uh-dur-quick) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation-submenu > .wp-block-navigation-submenu__toggle[aria-expanded="true"] ~ .wp-block-navigation__submenu-container { transition: opacity var(--uh-dur-quick) linear, visibility 0s !important; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon svg { transition: transform 0s linear var(--uh-intent-out) !important; }
+	.unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-icon[aria-expanded="true"] svg { transition: transform 0s linear var(--uh-intent-in) !important; }
+	.unhurried-capsule .wp-block-navigation__container:has(:focus-visible) .wp-block-navigation__submenu-icon svg { transition: none !important; }
 }
 .unhurried-capsule .wp-block-navigation__responsive-container:not(.is-menu-open) .wp-block-navigation__submenu-container .wp-block-navigation-item__content { transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out); }
 

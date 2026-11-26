@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once get_template_directory() . '/inc/about-page.php';
+require_once get_template_directory() . '/inc/hero-film.php';
 require_once get_template_directory() . '/inc/recommended.php';
 require_once get_template_directory() . '/inc/setup.php';
 require_once get_template_directory() . '/inc/woocommerce.php';
