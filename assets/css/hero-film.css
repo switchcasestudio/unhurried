@@ -84,6 +84,11 @@
 @media (hover: hover) {
 	.unhurried-hero-film__toggle:hover { background: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--contrast); color: var(--wp--preset--color--base); }
 }
+/* Touch screens: a tap across 44px, through a layer that draws nothing. */
+@media (any-pointer: coarse) {
+	.unhurried-hero-film__toggle { position: relative; }
+	.unhurried-hero-film__toggle::before { content: ""; position: absolute; inset: -3px; }
+}
 
 /* Tablets held upright: words and frame side by side, as on wider screens. !important: core stacks columns below 782px. */
 @media (min-width: 600px) and (max-width: 781px) {

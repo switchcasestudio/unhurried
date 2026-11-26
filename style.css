@@ -331,8 +331,11 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
    the header button and an accordion's question take a tap across at least
    44 by 44px, through a layer that draws nothing. Each stays inside the room
    already around it, so no tap lands on a neighbor and nothing moves. On a
-   phone the capsule leaves 8px each side of the 24px menu button, and a cut
-   title can stand right beside it: there it takes 40 by 44px. */
+   phone the capsule leaves 8px after the 24px menu button, and 12px of its
+   layer reach back toward the title: the title's link and the logo stand
+   above that layer, so where a long or cut title comes closer than 12px the
+   title keeps its taps and the button takes what is left (40px wide at the
+   least, the 8px each side it always had). */
 @media (any-pointer: coarse) {
 	.wp-block-navigation__responsive-container-open { position: relative; }
 	.wp-block-navigation__responsive-container-open::before,
@@ -342,7 +345,8 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	.wp-block-details summary { position: relative; }
 }
 @media (any-pointer: coarse) and (max-width: 480px) {
-	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -8px; }
+	.unhurried-capsule .wp-block-navigation__responsive-container-open::before { inset-inline: -12px -8px; }
+	.unhurried-capsule :is(.wp-block-site-title, .wp-block-site-logo) a { position: relative; z-index: 1; }
 }
 
 /* ─── Rise: a section pulled up over the one above it ────────────────────── */
@@ -1567,12 +1571,16 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-terms .wp-block-term-name a::after { content: ""; position: absolute; inset: 0; border-radius: 999px; }
 .unhurried-chip-terms .wp-block-term:has(a:focus-visible) { outline: 2px solid var(--uh-focus); outline-offset: 3px; }
 .unhurried-chip-terms .wp-block-term a:focus-visible { outline: none; }
-/* Touch targets (1.2.1): a chip takes a tap 4px above and below its pill,
-   half the 8px between two rows of chips, so no tap lands on the next row. */
+/* Touch targets (1.2.1): a chip takes a tap across 44px, centered on its
+   33px pill. Rows of chips stand that much further apart on a touch screen
+   (11px instead of 8px between rows; the pill is 1rem of padding, the small
+   size and its edge), so the layers of two rows meet and never overlap; a
+   pointer that hovers keeps the 8px. */
 @media (any-pointer: coarse) {
 	.unhurried-chip a { position: relative; }
-	.unhurried-chip a::before { content: ""; position: absolute; inset: -4px 0; }
-	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: -4px; }
+	.unhurried-chip a::before { content: ""; position: absolute; inset-inline: 0; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	.unhurried-chip-terms .wp-block-term-name a::after { inset-block: auto; top: 50%; height: max(100%, 44px); translate: 0 -50%; }
+	:is(.wp-block-group.unhurried-chips, .unhurried-chip-terms .wp-block-term-template) { row-gap: max(.5rem, calc(42px - 1rem - var(--wp--preset--font-size--small))); }
 }
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }
