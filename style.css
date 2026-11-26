@@ -915,7 +915,7 @@ a:where(:not(.wp-element-button)) {
 		.unhurried-stagger > .wp-block-image:nth-child(odd) img { animation: uh-float-up linear both; animation-timeline: view(); }
 		.unhurried-stagger > .wp-block-image:nth-child(even) img { animation: uh-float-down linear both; animation-timeline: view(); }
 		/* As the hero scrolls away, the photo sinks and the words fade first. */
-		.unhurried-hero-statue__stage > .wp-block-cover__image-background {
+		:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background {
 			animation: unhurried-unveil var(--uh-dur-slow) var(--uh-ease-out) both, uh-sink linear both;
 			animation-timeline: auto, view();
 			animation-range: normal, exit 0% exit 100%;
@@ -1039,7 +1039,7 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 .unhurried-hero-statue__caption { margin: 0; opacity: .7; letter-spacing: .04em; }
 @media (max-width: 781px) {
 	.unhurried-hero-statue__stage.wp-block-cover { min-height: max(560px, calc(100svh - 80px + var(--uh-under))) !important; }
-	.unhurried-hero-statue__stage > .wp-block-cover__image-background { object-position: 72% 30% !important; }
+	:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background { object-position: 72% 30% !important; }
 	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
 		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
 	}
@@ -1047,7 +1047,7 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 @media (prefers-reduced-motion: no-preference) {
 	/* Browsers with scroll-linked animation get this plus the sink (Motion system, Depth). */
 	@supports not (animation-timeline: view()) {
-		.unhurried-hero-statue__stage > .wp-block-cover__image-background {
+		:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background {
 			animation: unhurried-unveil var(--uh-dur-slow) var(--uh-ease-out) both;
 		}
 	}

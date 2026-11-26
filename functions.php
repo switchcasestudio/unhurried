@@ -569,6 +569,11 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	 * WordPress also keeps it from adding "auto" to these sizes on a lazy
 	 * picture: "auto" would measure the Cover's box, not the cropped photo.
 	 *
+	 * Since 1.2.1, a copy named -portrait beside the picture (david-mono-
+	 * portrait.webp: the part a phone held upright shows, at 1:2) is what
+	 * such a phone loads, through a picture element: it shows the same view
+	 * as the Cover's crop of the whole photograph, in a fraction of the bytes.
+	 *
 	 * @since 1.2.0
 	 * @param string $image An img tag in the page.
 	 * @return string
@@ -611,11 +616,20 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 					}
 				}
 			}
-			if ( $copies ) {
+			$portrait = null;
+			if ( isset( $info['extension'] ) ) {
+				$tall = $info['dirname'] . '/' . $info['filename'] . '-portrait.' . $info['extension'];
+				$dims = is_file( $tall ) ? wp_getimagesize( $tall ) : false;
+				if ( $dims && (int) $dims[1] > (int) $dims[0] ) {
+					$portrait = array( basename( $tall ), (int) $dims[0], (int) $dims[1] );
+				}
+			}
+			if ( $copies || $portrait ) {
 				asort( $copies );
 				$sets[ $file ] = array(
-					'copies' => $copies,
-					'width'  => (int) $size[0],
+					'copies'   => $copies,
+					'width'    => (int) $size[0],
+					'portrait' => $portrait,
 				);
 			}
 		}
@@ -628,10 +642,23 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 		foreach ( $sets[ $file ]['copies'] as $name => $width ) {
 			$srcset[] = esc_url_raw( $folder . $name ) . ' ' . $width . 'w';
 		}
-		$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
-		$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
-		$tags->set_attribute( 'sizes', '(max-width: 781px) max(100vw, 80vh), ' . $sets[ $file ]['width'] . 'px' );
-		return $tags->get_updated_html();
+		if ( $srcset ) {
+			$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
+			$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
+			$tags->set_attribute( 'sizes', '(max-width: 781px) max(100vw, 80vh), ' . $sets[ $file ]['width'] . 'px' );
+		}
+		$image = $tags->get_updated_html();
+		$tall  = $sets[ $file ]['portrait'];
+		if ( $tall ) {
+			$image = sprintf(
+				'<picture><source media="(max-width: 781px) and (orientation: portrait)" srcset="%1$s" width="%2$d" height="%3$d">%4$s</picture>',
+				esc_url( $folder . $tall[0] ),
+				$tall[1],
+				$tall[2],
+				$image
+			);
+		}
+		return $image;
 	}
 endif;
 add_filter( 'wp_content_img_tag', 'unhurried_theme_image_srcset' );
