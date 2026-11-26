@@ -198,20 +198,30 @@
 	/* ── Header: steps aside while reading down, returns on the way up ──── */
 	// A translate of the sticky header only (no layout shift). It never
 	// hides while it holds keyboard focus or an open menu, comes back as soon
-	// as focus goes into it, and otherwise returns only after about 120px of
-	// reading back up (or near the top), not on any small nudge of the wheel.
+	// as keyboard focus goes into it, and otherwise returns only after about
+	// 120px of reading back up (or near the top), not on any small nudge of
+	// the wheel. Focus a tap or a click leaves in it (the menu button, once
+	// the menu closes) does not hold it: only focus the browser shows a ring
+	// for (:focus-visible).
 	var headerPart = document.querySelector( 'header.wp-block-template-part' );
 	if ( headerPart && headerPart.querySelector( '.unhurried-header' ) ) {
 		var lastY = window.pageYOffset;
 		var turnY = lastY;
 		var away = false;
 		var ticking = false;
+		var keyFocus = function () {
+			try {
+				return !! headerPart.querySelector( ':focus-visible' );
+			} catch ( e ) {
+				return headerPart.contains( document.activeElement );
+			}
+		};
 		var update = function () {
 			ticking = false;
 			var y = window.pageYOffset;
 			if ( y > lastY ) {
 				turnY = y;
-				if ( ! away && y > 320 && ! ( headerPart.contains( document.activeElement ) || headerPart.querySelector( '[aria-expanded="true"], .is-menu-open' ) ) ) {
+				if ( ! away && y > 320 && ! ( keyFocus() || headerPart.querySelector( '[aria-expanded="true"], .is-menu-open' ) ) ) {
 					away = true;
 					// On the header itself, not <html>: a class on the root
 					// restyled the whole page.
@@ -230,8 +240,10 @@
 			}
 		}, { passive: true } );
 		headerPart.addEventListener( 'focusin', function () {
-			away = false;
-			headerPart.classList.remove( 'uh-header-away' );
+			if ( keyFocus() ) {
+				away = false;
+				headerPart.classList.remove( 'uh-header-away' );
+			}
 		} );
 	}
 
