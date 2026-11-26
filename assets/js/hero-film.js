@@ -1,14 +1,18 @@
 /**
- * Unhurried hero film (patterns/hero-film.php, inc/hero-film.php).
+ * Unhurried hero films (inc/hero-film.php): a film a site owner adds to the
+ * statue hero's stage (patterns/hero-statue.php) or to the framed picture
+ * (patterns/hero-film.php).
  *
- * The frame shows its picture until the film can play. The film starts
+ * The hero shows its picture until the film can play. The film starts
  * only when motion is allowed (no reduced motion), the visitor has not asked
  * for less data, the page has finished loading (so the film never competes
- * with the page itself), and the frame is in view; it pauses when the frame
- * leaves the view and goes on when it returns. It is always muted and plays
- * inline on phones. The button beside the caption pauses and plays it, and
- * the choice is kept for this visitor (localStorage, when the browser
- * allows it), so a paused film stays paused, here and on the next visit.
+ * with the page itself), the film is in view and, where the button names a
+ * media query (data-media: the stage's film needs a wide window), the window
+ * matches it; it pauses when it leaves the view and goes on when it
+ * returns. It is always muted and plays inline on phones. The button beside
+ * the caption pauses and plays it, and the choice is kept for this visitor
+ * (localStorage, when the browser allows it), so a paused film stays
+ * paused, here and on the next visit.
  *
  * Plain JavaScript, no dependencies.
  *
@@ -51,7 +55,9 @@
 
 	function setUp( button ) {
 		var video = document.getElementById( button.getAttribute( 'data-film' ) );
-		var frame = video && video.closest( '.unhurried-hero-film__frame' );
+		var frame = video && video.closest( '.has-film' );
+		var media = button.getAttribute( 'data-media' );
+		var fits = media && window.matchMedia ? window.matchMedia( media ) : null;
 		if ( ! frame || 'function' !== typeof video.play || ! ( 'IntersectionObserver' in window ) ) {
 			return;
 		}
@@ -59,7 +65,7 @@
 		var state = { inView: false, ready: false, userPaused: remembered(), broken: false };
 
 		function allowed() {
-			return state.ready && ! state.broken && ! reduce.matches && ! saveData();
+			return state.ready && ! state.broken && ! reduce.matches && ! saveData() && ( ! fits || fits.matches );
 		}
 		function show( paused ) {
 			var text = button.getAttribute( paused ? 'data-label-play' : 'data-label-pause' );
@@ -130,8 +136,8 @@
 			state.inView = entries[ entries.length - 1 ].isIntersecting;
 			update();
 		}, { threshold: 0.25 } ).observe( frame );
-		[ reduce, lessData ].forEach( function ( query ) {
-			if ( query.addEventListener ) {
+		[ reduce, lessData, fits ].forEach( function ( query ) {
+			if ( query && query.addEventListener ) {
 				query.addEventListener( 'change', update );
 			}
 		} );

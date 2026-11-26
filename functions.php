@@ -569,6 +569,14 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 	 * WordPress also keeps it from adding "auto" to these sizes on a lazy
 	 * picture: "auto" would measure the Cover's box, not the cropped photo.
 	 *
+	 * Since 1.2.1, a copy named -portrait beside the picture (david-mono-
+	 * portrait.webp: the part a phone held upright shows, at 1:2) is what
+	 * such a phone loads, through a picture element: the same view as the
+	 * Cover's crop of the whole photograph, in a fraction of the bytes. A
+	 * smaller copy beside it, named -portrait-<width> (david-mono-portrait-
+	 * 500.webp), is for screens up to 1.75x, where it shows as sharp as
+	 * they can tell; denser screens take the -portrait picture.
+	 *
 	 * @since 1.2.0
 	 * @param string $image An img tag in the page.
 	 * @return string
@@ -611,11 +619,31 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 					}
 				}
 			}
-			if ( $copies ) {
+			$portrait = null;
+			if ( isset( $info['extension'] ) ) {
+				$tall = $info['dirname'] . '/' . $info['filename'] . '-portrait.' . $info['extension'];
+				$dims = is_file( $tall ) ? wp_getimagesize( $tall ) : false;
+				if ( $dims && (int) $dims[1] > (int) $dims[0] ) {
+					$portrait = array(
+						'files'  => array( basename( $tall ) => (int) $dims[0] ),
+						'width'  => (int) $dims[0],
+						'height' => (int) $dims[1],
+					);
+					foreach ( (array) glob( $info['dirname'] . '/' . $info['filename'] . '-portrait-*.' . $info['extension'] ) as $copy ) {
+						$copy_size = preg_match( '/-portrait-([0-9]+)\.[a-z0-9]+$/i', basename( (string) $copy ), $match ) ? wp_getimagesize( $copy ) : false;
+						if ( $copy_size && (int) $copy_size[0] === (int) $match[1] && (int) $copy_size[0] < (int) $dims[0] ) {
+							$portrait['files'][ basename( $copy ) ] = (int) $copy_size[0];
+						}
+					}
+					asort( $portrait['files'] );
+				}
+			}
+			if ( $copies || $portrait ) {
 				asort( $copies );
 				$sets[ $file ] = array(
-					'copies' => $copies,
-					'width'  => (int) $size[0],
+					'copies'   => $copies,
+					'width'    => (int) $size[0],
+					'portrait' => $portrait,
 				);
 			}
 		}
@@ -628,10 +656,29 @@ if ( ! function_exists( 'unhurried_theme_image_srcset' ) ) :
 		foreach ( $sets[ $file ]['copies'] as $name => $width ) {
 			$srcset[] = esc_url_raw( $folder . $name ) . ' ' . $width . 'w';
 		}
-		$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
-		$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
-		$tags->set_attribute( 'sizes', '(max-width: 781px) max(100vw, 80vh), ' . $sets[ $file ]['width'] . 'px' );
-		return $tags->get_updated_html();
+		if ( $srcset ) {
+			$srcset[] = esc_url_raw( $src ) . ' ' . $sets[ $file ]['width'] . 'w';
+			$tags->set_attribute( 'srcset', implode( ', ', $srcset ) );
+			$tags->set_attribute( 'sizes', '(max-width: 781px) max(100vw, 80vh), ' . $sets[ $file ]['width'] . 'px' );
+		}
+		$image = $tags->get_updated_html();
+		$tall  = $sets[ $file ]['portrait'];
+		if ( $tall ) {
+			// The -portrait picture for dense screens, its largest smaller copy up to 1.75x.
+			$names = array_keys( $tall['files'] );
+			$set   = array( esc_url_raw( $folder . end( $names ) ) . ' 3x' );
+			if ( count( $names ) > 1 ) {
+				array_unshift( $set, esc_url_raw( $folder . $names[ count( $names ) - 2 ] ) . ' 1.75x' );
+			}
+			$image = sprintf(
+				'<picture><source media="(max-width: 599px) and (orientation: portrait)" srcset="%1$s" width="%2$d" height="%3$d">%4$s</picture>',
+				esc_attr( implode( ', ', $set ) ),
+				$tall['width'],
+				$tall['height'],
+				$image
+			);
+		}
+		return $image;
 	}
 endif;
 add_filter( 'wp_content_img_tag', 'unhurried_theme_image_srcset' );
