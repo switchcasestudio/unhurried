@@ -1,11 +1,23 @@
-/* ─── Hero, film (1.2.1), in the editor only (add_editor_style, inc/hero-film.php) ───
-   The frame's film slot is an empty Video block until the site owner adds a
+/* ─── Hero films (1.2.1), in the editor only (add_editor_style, inc/hero-film.php) ───
+   A hero's film slot is an empty Video block until the site owner adds a
    film; the page leaves an empty one out. In the editor it is a small "Video"
-   label at the foot of the picture and, selected, the Video block's own
-   upload and library buttons. */
+   label (at the foot of the framed picture, or above the statue hero's
+   eyebrow) and, selected, the Video block's own upload and library buttons.
+   A film set in the statue hero shows there as a small picture of it (the
+   page plays it behind the words). */
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)) { inset: auto var(--wp--preset--spacing--30) var(--wp--preset--spacing--30); }
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)) .components-placeholder { min-height: 0; border-radius: var(--wp--custom--radius--card, 24px); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) { inset-inline-end: auto; }
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder { padding: .5rem 1rem; border-radius: var(--wp--custom--radius--pill, 999px); }
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder :is(.components-placeholder__illustration, .components-placeholder__instructions, .components-placeholder__fieldset) { display: none; }
 .unhurried-hero-film__frame > .wp-block-video:not(:has(video)):not(.is-selected) .components-placeholder__label { margin: 0; opacity: 1; }
+/* The statue hero (Hero, statue): the slot is the first of the stage's words. */
+.wp-block-cover__inner-container > .unhurried-hero-film__film { margin-block: 0 var(--wp--preset--spacing--40) !important; } /* !important: the words' own block gap */
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)) .components-placeholder { min-height: 0; border-radius: var(--wp--custom--radius--card, 24px); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)):not(.is-selected) { width: max-content; }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)):not(.is-selected) .components-placeholder { padding: .5rem 1rem; border-radius: var(--wp--custom--radius--pill, 999px); }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)):not(.is-selected) .components-placeholder :is(.components-placeholder__illustration, .components-placeholder__instructions, .components-placeholder__fieldset) { display: none; }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)):not(.is-selected) .components-placeholder__label { margin: 0; opacity: 1; }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:not(:has(video)).is-selected { max-width: 24rem; }
+.wp-block-cover__inner-container > .unhurried-hero-film__film:has(video) { max-width: 14rem; }
+.wp-block-cover__inner-container > .unhurried-hero-film__film video { aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; }

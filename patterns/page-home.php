@@ -7,7 +7,7 @@
  * Block Types: core/post-content
  * Post Types: page, wp_template
  * Viewport width: 1400
- * Description: A complete homepage: a framed film beside the headline, rising visit panel, rituals on image, gallery, an essay, values statement, journal, a map with directions and a call to action. Use it with the Ground artboard template.
+ * Description: A complete homepage: a full-screen hero on Michelangelo's David (it can also play a film of your own behind the words), rising visit panel, rituals on image, gallery, an essay, values statement, journal, a map with directions and a call to action. Use it with the Ground artboard template.
  *
  * @package Unhurried
  * @author  Switch Case Studio
@@ -15,7 +15,7 @@
  */
 
 ?>
-<!-- wp:pattern {"slug":"unhurried/hero-film"} /-->
+<!-- wp:pattern {"slug":"unhurried/hero-statue"} /-->
 <!-- wp:pattern {"slug":"unhurried/process-panel"} /-->
 <!-- wp:pattern {"slug":"unhurried/services-accordion"} /-->
 <!-- wp:pattern {"slug":"unhurried/gallery-staggered"} /-->

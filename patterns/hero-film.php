@@ -1,6 +1,6 @@
 <?php
 /**
- * Title: Hero, film
+ * Title: Hero, framed picture
  * Slug: unhurried/hero-film
  * Categories: unhurried_hero, featured
  * Keywords: hero, header, intro, headline, david, michelangelo, statue, sculpture, framed, video, film, loop

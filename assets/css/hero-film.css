@@ -1,11 +1,12 @@
-/* ─── Hero, film (1.2.1): words beside a framed picture that can play a film ───
-   Loaded only with the pattern (inc/hero-film.php), and in the editor. The
+/* ─── Hero films (1.2.1): the framed picture (Hero, framed picture), and a film over a hero's stage ───
+   Loaded with the framed picture's frame, and on a page whose statue hero
+   (Hero, statue) holds a film (inc/hero-film.php); and in the editor. The
    frame is the theme's card radius at 4:5, never edge to edge and never
    taller than the window leaves room for; the words sit beside it (above it
-   on a phone) and never over it. The picture (Michelangelo's David) fills
-   the frame from the first paint. A film, when the site owner adds one,
-   stays under it until it is playing, then fades in (class has-film from
-   PHP, is-playing from assets/js/hero-film.js). */
+   on a phone) and never over it. The picture fills the frame (or the stage)
+   from the first paint. A film, when the site owner adds one, stays under it
+   until it is playing, then fades in (class has-film from PHP, is-playing
+   from assets/js/hero-film.js). */
 .unhurried-hero-film { --uh-under: 0px; }
 /* A panel rising over the hero (the homepage's process panel) reaches up into it: the hero keeps that much more room below. */
 .unhurried-hero-film:has(+ * .unhurried-rise, + .unhurried-rise) { --uh-under: calc(-1 * var(--wp--custom--seam--overlap, -120px)); }
@@ -99,4 +100,51 @@
 		margin-inline-start: 0 !important; /* !important: as above */
 	}
 	.unhurried-hero-film__frame :is(img, video) { object-position: 50% 30%; }
+}
+
+/* The statue hero's stage with a film: the film covers the whole stage, over its photograph and
+   under the shade and the words (z-index as the Cover's own picture). It plays only where the
+   stage is wide (data-media on its button); elsewhere the photograph stays. */
+.wp-block-cover.has-film > .unhurried-hero-film__film {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	margin: 0;
+	overflow: hidden;
+	/* The stage's 28px corners: a playing video is drawn on a layer of its own, which a rounded overflow alone left square. */
+	border-radius: inherit;
+	clip-path: inset(0 round 28px);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity calc(var(--uh-dur-slow, 420ms) * var(--uh-exit, .65)) var(--uh-ease-out, ease-out);
+}
+.wp-block-cover.has-film > .unhurried-hero-film__film video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	/* The face, at the right of a landscape film, stays in a narrower stage; a wider one trims the top first. */
+	object-position: 70% 30%;
+}
+.wp-block-cover.has-film.is-playing > .unhurried-hero-film__film { opacity: 1; transition-duration: var(--uh-dur-slow, 420ms); }
+/* The film moves bright marble behind the words: it brings a shade of its own, under the stage's
+   (which the photograph keeps as in 1.2.0) and fading in and out with it. Darkest where the words
+   sit, at the lower left, and a little at the lower right behind the caption; the right of the
+   stage, where the face turns, stays lit. */
+.wp-block-cover.has-film > .unhurried-hero-film__film::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(90deg, rgba(22, 20, 15, .58) 0%, rgba(22, 20, 15, .52) 45%, rgba(22, 20, 15, .18) 70%, rgba(22, 20, 15, 0) 86%),
+		linear-gradient(to top, rgba(22, 20, 15, .45) 0%, rgba(22, 20, 15, 0) 55%),
+		radial-gradient(ellipse at 100% 100%, rgba(22, 20, 15, .35) 0%, rgba(22, 20, 15, 0) 40%);
+}
+/* The caption, small, at the lower right where the film is brightest: a little more of its color. */
+.wp-block-cover.has-film .unhurried-hero-statue__caption { opacity: .85; }
+/* The button beside the caption, never on the words: the two side by side, the button's place kept. */
+.unhurried-hero-film__aside { display: flex; align-items: center; gap: var(--wp--preset--spacing--30); }
+.wp-block-cover .unhurried-hero-film__toggle { color: inherit; }
+@media (hover: hover) {
+	.wp-block-cover .unhurried-hero-film__toggle:hover { border-color: rgb(246, 244, 239); background: rgb(246, 244, 239); color: rgb(22, 20, 15); }
 }

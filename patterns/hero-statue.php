@@ -3,9 +3,9 @@
  * Title: Hero, statue
  * Slug: unhurried/hero-statue
  * Categories: unhurried_hero, featured
- * Keywords: hero, header, intro, headline, image, cover, statue, sculpture, full screen
+ * Keywords: hero, header, intro, headline, image, cover, statue, sculpture, full screen, video, film, background
  * Viewport width: 1400
- * Description: A full-screen image inside a rounded, inset frame, with an oversized headline, a short lede and two buttons in the lower left and a small caption in the lower right. Swap the image in the Cover block's toolbar.
+ * Description: A full-screen image inside a rounded, inset frame, with an oversized headline, a short lede and two buttons in the lower left and a small caption in the lower right. The stage can also play a short silent film behind the words: select the Video block in the stage ("Film (optional)" in the List View) and upload or choose a landscape video. The image shows first, and stays whenever the film cannot play. Swap the image in the Cover block's toolbar.
  *
  * @package Unhurried
  * @author  Switch Case Studio
@@ -24,6 +24,9 @@ $unhurried_heading_tags = array(
 <div class="wp-block-group alignfull unhurried-hero-statue" style="margin-top:0;margin-bottom:0;padding-top:10px;padding-right:clamp(10px, 2vw, 28px);padding-bottom:0;padding-left:clamp(10px, 2vw, 28px)">
 	<!-- wp:cover {"url":"<?php echo esc_url( $unhurried_img ); ?>","dimRatio":50,"overlayColor":"contrast","focalPoint":{"x":0.62,"y":0.4},"minHeight":100,"minHeightUnit":"vh","contentPosition":"bottom left","className":"unhurried-hero-statue__stage","style":{"border":{"radius":"28px"},"spacing":{"padding":{"top":"var:preset|spacing|80","right":"clamp(1.25rem, 4vw, 4.5rem)","bottom":"var:preset|spacing|70","left":"clamp(1.25rem, 4vw, 4.5rem)"}}},"layout":{"type":"default"}} -->
 	<div class="wp-block-cover has-custom-content-position is-position-bottom-left unhurried-hero-statue__stage" style="border-radius:28px;padding-top:var(--wp--preset--spacing--80);padding-right:clamp(1.25rem, 4vw, 4.5rem);padding-bottom:var(--wp--preset--spacing--70);padding-left:clamp(1.25rem, 4vw, 4.5rem);min-height:100vh"><img class="wp-block-cover__image-background" alt="" src="<?php echo esc_url( $unhurried_img ); ?>" style="object-position:62% 40%" data-object-fit="cover" data-object-position="62% 40%"/><span aria-hidden="true" class="wp-block-cover__background has-contrast-background-color has-background-dim"></span><div class="wp-block-cover__inner-container">
+		<!-- wp:video {"metadata":{"name":"<?php echo esc_attr_x( 'Film (optional)', 'Pattern block name', 'unhurried' ); ?>"},"className":"unhurried-hero-film__film"} -->
+		<figure class="wp-block-video unhurried-hero-film__film"></figure>
+		<!-- /wp:video -->
 		<!-- wp:paragraph {"className":"is-style-eyebrow"} -->
 		<p class="is-style-eyebrow"><?php esc_html_e( 'Lorem ipsum dolor sit amet', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
