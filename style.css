@@ -1141,8 +1141,19 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 @media (max-width: 781px) {
 	.unhurried-hero-statue__stage.wp-block-cover { min-height: max(560px, calc(100svh - 80px + var(--uh-under))) !important; }
 	:is(.unhurried-hero-statue__stage, .unhurried-hero-statue__stage > picture) > .wp-block-cover__image-background { object-position: 72% 30% !important; }
+	/* The shade holds .62 Ink up to 620px above the stage's foot, past the
+	   eyebrow at every phone width (1.2.1): the portrait copy puts brighter
+	   marble behind it, and a shade that faded out from 45% of the stage's
+	   height left the eyebrow at 1.8 to 3.3:1 there. The face above stays lit. */
 	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
-		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0%, rgba(22, 20, 15, .6) 45%, rgba(22, 20, 15, .1) 75%);
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0, rgba(22, 20, 15, .66) 380px, rgba(22, 20, 15, .62) 620px, rgba(22, 20, 15, .1) 780px);
+	}
+}
+/* Narrower than a phone held upright (page zoom): the words reach nearly to
+   the stage's top, and the shade holds behind all of them. */
+@media (max-width: 319.98px) {
+	.unhurried-hero-statue__stage > .wp-block-cover__background.wp-block-cover__background {
+		background: linear-gradient(to top, rgba(22, 20, 15, .9) 0, rgba(22, 20, 15, .66) 380px, rgba(22, 20, 15, .62) 100%);
 	}
 }
 /* A phone held sideways (1.2.1): a window wider than it is tall and under
