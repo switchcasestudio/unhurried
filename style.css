@@ -337,10 +337,18 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 
 /* Hairline buttons on Ink surfaces: the hover fills Bone, not Ink-on-Ink
    (the block style's own hover would make the pill vanish into the section) */
-.is-style-section-ink .wp-block-button.is-style-hairline .wp-block-button__link:hover {
-	background: var(--wp--preset--color--base);
-	color: var(--wp--preset--color--contrast);
-	border-color: var(--wp--preset--color--base);
+@media (hover: hover) {
+	.is-style-section-ink .wp-block-button.is-style-hairline .wp-block-button__link:hover {
+		background: var(--wp--preset--color--base);
+		color: var(--wp--preset--color--contrast);
+		border-color: var(--wp--preset--color--base);
+	}
+}
+/* On a touch screen a tapped Hairline button keeps its resting look (1.2.1):
+   the tap leaves the hover state on it, and its fill read as pressed until
+   the reader tapped elsewhere. A pointer that hovers still fills it. */
+@media (hover: none) {
+	.wp-block-button[class*="is-style-hairline"] > .wp-block-button__link:hover { background-color: transparent; color: inherit; border-color: currentColor; }
 }
 
 /* ─── Display helpers ────────────────────────────────────────────────────── */
@@ -473,9 +481,13 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 .wp-block-details > :not(summary) { max-width: 60ch; }
 .is-style-glass > .wp-block-details:first-child { border-top: 0; padding-top: 0; }
 
-/* Navigation links: underline on hover and keyboard focus; vertical menus get taller touch targets */
-.wp-block-navigation a:hover,
+/* Navigation links: underline on hover and keyboard focus; vertical menus get taller touch targets.
+   The underline also marks the current page, so a tap (which leaves a touch
+   screen's hover on the link) does not draw it (1.2.1). */
 .wp-block-navigation a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+@media (hover: hover) {
+	.wp-block-navigation a:hover { text-decoration: underline; text-underline-offset: 5px; }
+}
 .wp-block-navigation.is-vertical .wp-block-navigation-item__content { padding-block: .35rem; }
 
 /* Giant wordmark in the footer. It keeps its 15vw size until the site title
@@ -817,7 +829,10 @@ a:where(:not(.wp-element-button)) {
 	text-underline-offset: 11px;
 	transition: text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out), background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out);
 }
-.wp-block-navigation .wp-block-navigation-item__content:is(:hover, :focus-visible) { text-decoration-color: currentColor; text-underline-offset: 5px; }
+.wp-block-navigation .wp-block-navigation-item__content:focus-visible { text-decoration-color: currentColor; text-underline-offset: 5px; }
+@media (hover: hover) {
+	.wp-block-navigation .wp-block-navigation-item__content:hover { text-decoration-color: currentColor; text-underline-offset: 5px; }
+}
 .wp-block-navigation .wp-block-navigation-item__content[aria-current] { text-decoration-color: currentColor; text-underline-offset: 5px; }
 
 /* Header menu pill (1.2.1): its padding is there at rest, so nothing moves. */
@@ -1374,7 +1389,10 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	font-weight: 500;
 	cursor: pointer;
 }
-:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:is(:hover, :focus-visible) { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:focus-visible { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+@media (hover: hover) {
+	:is(.unhurried-footer-newsletter, .unhurried-signup) .tnp-subscription-minimal input.tnp-submit:hover { background: var(--wp--preset--color--accent) !important; color: var(--wp--preset--color--base) !important; }
+}
 /* Social icons: hairline circles that fill on hover. */
 .unhurried-footer-social.wp-block-social-links { margin-inline: 0; margin-bottom: 0; }
 .unhurried-footer-social .wp-social-link {
@@ -1385,7 +1403,16 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 }
 .unhurried-footer-social .wp-social-link a { padding: .55rem; }
 .unhurried-footer-social .wp-social-link svg { width: 18px; height: 18px; }
-.unhurried-footer-social .wp-social-link:is(:hover, :focus-within) { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+/* Filled under a pointer that hovers and for the keyboard, not after a tap
+   (a touch screen keeps its hover, and a browser its focus, on the tapped
+   icon, which then read as pressed; 1.2.1). */
+.unhurried-footer-social .wp-social-link:has(:focus-visible) { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+@supports not selector(:has(a)) {
+	.unhurried-footer-social .wp-social-link:focus-within { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+}
+@media (hover: hover) {
+	.unhurried-footer-social .wp-social-link:hover { background: var(--wp--preset--color--base); color: var(--wp--preset--color--contrast); border-color: var(--wp--preset--color--base); }
+}
 
 /* ─── Forms from any plugin (Contact Form 7, WPForms, Jetpack, comments) ─── */
 /* :where() keeps these at zero specificity, so a block's or a plugin's own
@@ -1422,7 +1449,9 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 	cursor: pointer;
 	transition: background-color var(--uh-dur-quick) var(--uh-ease-out), color var(--uh-dur-quick) var(--uh-ease-out), transform var(--uh-dur-quick) var(--uh-ease-out);
 }
-:where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]):where(:not(.wp-element-button, .wp-block-search__button)):hover { background: var(--wp--preset--color--accent); }
+@media (hover: hover) {
+	:where(.wp-site-blocks) :where(input[type="submit"], button[type="submit"]):where(:not(.wp-element-button, .wp-block-search__button)):hover { background: var(--wp--preset--color--accent); }
+}
 /* Contact Form 7: labels above fields, one gap between rows. */
 .wpcf7 form > p { margin: 0 0 1rem; }
 .wpcf7 label { display: block; font-size: var(--wp--preset--font-size--small); color: var(--wp--preset--color--contrast-2); }
@@ -1479,7 +1508,9 @@ html { scroll-padding-top: 96px; }
 .unhurried-chip-links { display: flex; flex-wrap: wrap; gap: .4rem; }
 .unhurried-chip-links .wp-block-post-terms__separator { display: none; }
 .unhurried-chip-links a { display: inline-block; padding: .3rem .7rem; border: 1px solid var(--wp--preset--color--hairline); border-radius: 999px; font-size: var(--wp--preset--font-size--x-small); line-height: 1.1; text-decoration: none; color: var(--wp--preset--color--contrast); }
-.unhurried-chip-links a:hover { border-color: var(--wp--preset--color--contrast); }
+@media (hover: hover) {
+	.unhurried-chip-links a:hover { border-color: var(--wp--preset--color--contrast); }
+}
 
 /* Search boxes in the journal: a pill with the icon button inside. */
 .unhurried-journal-search { min-width: min(22rem, 100%); }
