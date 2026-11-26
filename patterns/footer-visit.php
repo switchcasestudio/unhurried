@@ -12,6 +12,8 @@
  * @since 1.1.2
  */
 
+// Privacy, Terms and Returns beside the closing line, once those pages are published (inc/legal.php).
+$unhurried_legal = function_exists( 'unhurried_legal_links_block' ) ? unhurried_legal_links_block() : '';
 ?>
 <!-- wp:group {"className":"is-style-section-ink","style":{"spacing":{"padding":{"top":"var:preset|spacing|90","bottom":"var:preset|spacing|60"},"blockGap":"var:preset|spacing|80","margin":{"top":"0"}}},"layout":{"type":"constrained","contentSize":"1360px"}} -->
 <div class="wp-block-group is-style-section-ink" style="margin-top:0;padding-top:var(--wp--preset--spacing--90);padding-bottom:var(--wp--preset--spacing--60)">
@@ -51,9 +53,18 @@
 	<!-- wp:site-title {"level":0,"className":"unhurried-wordmark","style":{"typography":{"fontSize":"clamp(3.5rem, 15vw, 17rem)","fontWeight":"500"}}} /-->
 	<!-- wp:group {"style":{"spacing":{"padding":{"top":"var:preset|spacing|40"}},"border":{"top":{"color":"#f6f4ef2e","width":"1px","style":"solid"}}},"fontSize":"x-small","layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
 	<div class="wp-block-group has-x-small-font-size" style="border-top-color:#f6f4ef2e;border-top-style:solid;border-top-width:1px;padding-top:var(--wp--preset--spacing--40)">
+		<?php if ( '' !== $unhurried_legal ) : ?>
+		<!-- wp:group {"className":"unhurried-footer-start","style":{"spacing":{"blockGap":"var:preset|spacing|50"}},"layout":{"type":"flex","flexWrap":"wrap"}} -->
+		<div class="wp-block-group unhurried-footer-start">
+		<?php endif; ?>
 		<!-- wp:paragraph -->
 		<p><?php esc_html_e( 'Lorem ipsum, dolor sit.', 'unhurried' ); ?></p>
 		<!-- /wp:paragraph -->
+		<?php if ( '' !== $unhurried_legal ) : ?>
+			<?php echo $unhurried_legal; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Block markup from unhurried_legal_links_block(), which escapes each address and label. ?>
+		</div>
+		<!-- /wp:group -->
+		<?php endif; ?>
 		<!-- wp:paragraph -->
 		<p>
 		<?php
