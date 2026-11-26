@@ -37,16 +37,13 @@
 .uh-motion [data-uh="card"]:not(.is-in) { translate: 0 var(--uh-dist-large); scale: .96; }
 
 /* Photos and covers: a curtain lifts from the bottom edge while the picture
-   inside settles from 114%. */
-.uh-motion [data-uh="image"]:not(.is-done) {
-	clip-path: inset(0);
-	transition:
-		clip-path var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms),
-		opacity var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms),
-		translate var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms);
-}
-.uh-motion [data-uh="image"]:not(.is-in) { opacity: 1; translate: 0 var(--uh-dist-text); clip-path: inset(100% 0 0 0); }
-.uh-motion [data-uh="image"]:not(.is-done) img { transition: scale calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
+   inside settles from 114%. The curtain is drawn on the photo's layers, not
+   on the observed element: a clip on that would hide it from the observer. */
+.uh-motion [data-uh="image"]:not(.is-done) { transition-duration: var(--uh-dur-large); }
+.uh-motion [data-uh="image"]:not(.is-in) { opacity: 1; translate: 0 var(--uh-dist-text); }
+.uh-motion [data-uh="image"]:not(.is-done) > * { clip-path: inset(0); transition: clip-path var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms); }
+.uh-motion [data-uh="image"]:not(.is-in) > * { clip-path: inset(100% 0 0 0); }
+.uh-motion [data-uh="image"]:not(.is-done) img { transition: clip-path var(--uh-dur-large) var(--uh-ease-out) var(--uh-delay, 0ms), scale calc(var(--uh-dur-large) * 1.3) var(--uh-ease-out) var(--uh-delay, 0ms); }
 .uh-motion [data-uh="image"]:not(.is-in) img { scale: var(--uh-settle); }
 
 /* Headings: line by line, each line rising out of nothing. */
@@ -127,6 +124,9 @@
 		figure.unhurried-frame:not(.unhurried-arch *):hover img { transform: scale(var(--uh-zoom-photo)); }
 		.wp-block-post:has(.wp-block-post-title a):hover .wp-block-post-featured-image img { transform: scale(var(--uh-zoom-photo)); }
 	}
+	/* Comment fields darken their edge under the pointer, as other fields do. */
+	.comment-form :is(input:not([type="submit"], [type="checkbox"]), textarea) { transition: border-color var(--uh-dur-quick) var(--uh-ease-out); }
+	.comment-form :is(input:not([type="submit"], [type="checkbox"]), textarea):hover { border-color: var(--wp--preset--color--contrast-2); }
 	/* A caption answers with its photo. */
 	.wp-block-image figcaption { transition: color var(--uh-dur-quick) var(--uh-ease-out); }
 	.wp-block-image:hover figcaption { color: var(--wp--preset--color--contrast); }

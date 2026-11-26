@@ -425,6 +425,11 @@
 			}, delay );
 		}
 		finish( el, delay );
+		// What waits inside it (a heading in a cover or a column) follows,
+		// a step later: under a curtain the observer cannot see it yet.
+		el.querySelectorAll( '[data-uh]:not(.is-in)' ).forEach( function ( inner ) {
+			enter( inner, step + 2 );
+		} );
 	}
 
 	// An element enters once 15% of it is in view.
