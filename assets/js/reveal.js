@@ -65,9 +65,12 @@
 			} );
 		}
 	}
-	// Only where such things can appear later (a cart, a variable product).
-	if ( window.MutationObserver && document.querySelector( '.wc-block-cart, .wc-block-mini-cart, .variations_form' ) ) {
-		new window.MutationObserver( function ( records ) {
+	// Watched only where a script redraws what is already shown: the cart
+	// page's block and a variable product's form. (A row arriving in the
+	// mini-cart drawer always follows the reader's Add to cart.)
+	var redrawn = document.querySelectorAll( '.wc-block-cart, .variations_form' );
+	if ( window.MutationObserver && redrawn.length ) {
+		var watcher = new window.MutationObserver( function ( records ) {
 			if ( Date.now() - actedAt < 1500 ) {
 				return;
 			}
@@ -78,7 +81,10 @@
 					}
 				} );
 			} );
-		} ).observe( document.body, { childList: true, subtree: true } );
+		} );
+		Array.prototype.forEach.call( redrawn, function ( el ) {
+			watcher.observe( el, { childList: true, subtree: true } );
+		} );
 	}
 	function loadScrollCss() {
 		if ( ! scrollCss || document.getElementById( 'unhurried-scroll-css' ) ) {
