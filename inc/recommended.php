@@ -201,7 +201,7 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 			'time'  => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => __( 'Keep the calm all the way to <em>checkout</em>', 'unhurried' ),
-				'body'    => __( 'Most shop pages shout. Pro gives WooCommerce the same quiet pace as the rest of Unhurried: tall product photos, hairline buttons, a floating cart panel and a checkout with nothing else on the page. One payment, with 14 days to change your mind.', 'unhurried' ),
+				'body'    => __( 'Most shop pages shout. Pro gives WooCommerce the same quiet pace as the rest of Unhurried: tall product photos, hairline buttons, a floating cart panel and a checkout with nothing else on the page. One payment. All sales are final.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 			'proof' => array(
