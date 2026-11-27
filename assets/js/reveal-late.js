@@ -394,6 +394,23 @@
 	} );
 	sides();
 
+	/* ── Reduced motion, asked for while the page is open ───────────────── */
+	// With reduced motion from the start nothing waits (reveal.js never sets
+	// uh-motion). Asked for later, what still waited below the window showed
+	// only once it was reached: now it all shows at once, as on a fresh load.
+	var calm = window.matchMedia( '(prefers-reduced-motion: reduce)' );
+	var settle = function () {
+		if ( ! calm.matches ) {
+			return;
+		}
+		document.querySelectorAll( '[data-uh]:not(.is-in)' ).forEach( function ( el ) {
+			el.classList.add( 'is-in', 'is-done' );
+		} );
+		html.classList.remove( 'uh-motion' );
+	};
+	if ( calm.addEventListener ) {
+		calm.addEventListener( 'change', settle );
+	}
 
 	/* ── Figures count up ─────────────────────────────────────────────── */
 	// From zero to their printed value, in the author's own format ("1,200",
