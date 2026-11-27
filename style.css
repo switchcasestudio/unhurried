@@ -840,8 +840,14 @@ footer.wp-block-template-part .wp-block-column a[href^="mailto:"] {
 :where(a, button, summary, label, [role="button"]) { -webkit-tap-highlight-color: color-mix(in srgb, currentColor 12%, transparent); }
 
 a:where(:not(.wp-element-button)) {
-	transition: color var(--uh-dur-quick) var(--uh-ease-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
+	transition: color var(--uh-dur-quick) var(--uh-ease-out), text-decoration-color var(--uh-dur-quick) var(--uh-ease-out), text-decoration-thickness var(--uh-dur-quick) var(--uh-ease-out), text-underline-offset var(--uh-dur-quick) var(--uh-ease-out);
 }
+/* Links in text (1.2.1): under the pointer the underline stays and grows a
+   step heavier, so a hovered link still differs from its words by more than
+   color (accessibility-ready, underlined links); it used to vanish. Only a
+   link that has an underline shows it: menus, buttons, titles, chips and the
+   footer's lists keep their own hover. */
+a:where(:not(.wp-element-button, .wp-block-navigation-item__content)):hover { text-decoration-thickness: max(2px, .08em); }
 /* Menu: the underline rises into place instead of blinking on. */
 .wp-block-navigation .wp-block-navigation-item__content {
 	text-decoration-line: underline;

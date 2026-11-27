@@ -392,11 +392,6 @@
 				"typography": {
 					"textDecoration": "underline"
 				},
-				":hover": {
-					"typography": {
-						"textDecoration": "none"
-					}
-				},
 				":focus-visible": {
 					"outline": {
 						"color": "var(--uh-focus, var(--wp--preset--color--accent))",
