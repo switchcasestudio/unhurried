@@ -240,7 +240,7 @@ if ( ! function_exists( 'unhurried_render_pro_card' ) ) :
 			<h2><?php echo esc_html( $card['eyebrow'] ); ?></h2>
 			<h3><?php echo wp_kses( $card['heading'], array( 'em' => array() ) ); ?></h3>
 			<p><?php echo esc_html( $card['body'] ); ?></p>
-			<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $card['button'] ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'unhurried' ); ?></span></a></p>
+			<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>"><?php echo esc_html( $card['button'] ); ?></a></p>
 		</div>
 		<?php
 	}
@@ -439,7 +439,7 @@ if ( ! function_exists( 'unhurried_admin_notices' ) ) :
 			?>
 			<div class="notice notice-info">
 				<p><strong><?php esc_html_e( 'WooCommerce is on.', 'unhurried' ); ?></strong> <?php esc_html_e( 'Your shop pages keep WooCommerce\'s own layout. Unhurried Pro adds the theme\'s. A header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it.', 'unhurried' ); ?></p>
-				<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'See Unhurried Pro', 'unhurried' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'unhurried' ); ?></span></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'pro' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( UNHURRIED_PRO_URL ); ?>"><?php esc_html_e( 'See Unhurried Pro', 'unhurried' ); ?></a> <a href="<?php echo esc_url( unhurried_dismiss_url( 'pro' ) ); ?>"><?php esc_html_e( 'Not now', 'unhurried' ); ?></a></p>
 			</div>
 			<?php
 			return;
