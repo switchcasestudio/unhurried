@@ -195,7 +195,7 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 				'heading' => $woo
 					? __( 'A layout for your <em>shop</em>', 'unhurried' )
 					: __( 'Want a <em>shop</em>?', 'unhurried' ),
-				'body'    => __( 'Unhurried Pro adds the shop layout. A header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it. Also a Shop shelf pattern, a lead-story blog layout and a Coming soon page. One payment, updates included, 14-day money-back guarantee.', 'unhurried' ),
+				'body'    => __( 'Unhurried Pro adds the shop layout. A header band, 4:5 product photos, a summary that follows the page, a checkout with nothing else on it. Also a Shop shelf pattern, a lead-story blog layout and a Coming soon page. One payment, updates included. All sales are final.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 			'time'  => array(
@@ -207,7 +207,7 @@ if ( ! function_exists( 'unhurried_pro_card' ) ) :
 			'proof' => array(
 				'eyebrow' => __( 'Unhurried Pro', 'unhurried' ),
 				'heading' => __( 'Made by the same <em>hands</em>', 'unhurried' ),
-				'body'    => __( 'Pro is built by the studio that designed Unhurried, as a child theme. Your pages, posts, products and menus stay. Pro copies your look and your Site Editor changes when you switch it on. Shop, product, cart and checkout pages, a Coming soon page, a Shop shelf and a lead story. One payment, 14-day money-back guarantee.', 'unhurried' ),
+				'body'    => __( 'Pro is built by the studio that designed Unhurried, as a child theme. Your pages, posts, products and menus stay. Pro copies your look and your Site Editor changes when you switch it on. Shop, product, cart and checkout pages, a Coming soon page, a Shop shelf and a lead story. One payment. All sales are final.', 'unhurried' ),
 				'button'  => __( 'See Unhurried Pro', 'unhurried' ),
 			),
 		);
