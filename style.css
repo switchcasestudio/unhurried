@@ -618,7 +618,8 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	white-space: nowrap;
 	border: 0;
 }
-/* Screen reader text (1.2.1, accessibility-ready; named in accessibility.txt).
+/* Screen reader text (1.2.1, named in accessibility.txt; a WordPress.org
+   accessibility requirement).
    Add the class to any block under Advanced: its text is hidden from sight
    and still read by screen readers. WordPress's own rules, carried by the
    theme. word-wrap is !important as in WordPress: a block's own setting must
@@ -876,9 +877,9 @@ a:where(:not(.wp-element-button)) {
 }
 /* Links in text (1.2.1): under the pointer the underline stays and grows a
    step heavier, so a hovered link still differs from its words by more than
-   color (accessibility-ready, underlined links); it used to vanish. Only a
-   link that has an underline shows it: menus, buttons, titles, chips and the
-   footer's lists keep their own hover. */
+   color (WordPress.org's accessibility rule on underlined links); it used to
+   vanish. Only a link that has an underline shows it: menus, buttons, titles,
+   chips and the footer's lists keep their own hover. */
 a:where(:not(.wp-element-button, .wp-block-navigation-item__content)):hover { text-decoration-thickness: max(2px, .08em); }
 /* Menu: the underline rises into place instead of blinking on. */
 .wp-block-navigation .wp-block-navigation-item__content {
