@@ -382,8 +382,25 @@
 				rise.push( el );
 			}
 		} );
+		if ( ! rise.length ) {
+			return;
+		}
+		// The offset goes at once, not over the entrance time, and the row
+		// clips sideways for that one layout: WebKit otherwise kept the page
+		// as wide as the old offset made it (scrollable by 16px at 640).
 		rise.forEach( function ( el ) {
+			el.style.transition = 'none';
 			el.setAttribute( 'data-uh', 'rise' );
+			if ( el.parentElement ) {
+				el.parentElement.style.overflowX = 'clip';
+			}
+		} );
+		void document.documentElement.offsetWidth;
+		rise.forEach( function ( el ) {
+			el.style.removeProperty( 'transition' );
+			if ( el.parentElement ) {
+				el.parentElement.style.removeProperty( 'overflow-x' );
+			}
 		} );
 	};
 	window.addEventListener( 'resize', function () {
