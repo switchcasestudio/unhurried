@@ -114,7 +114,7 @@ The map comes from Google: visitors' browsers load it from google.com only once 
 * Accessibility: an accessibility.txt file, a screen-reader-text class for your own hidden text, links in text that keep their underline under the pointer, and no sideways scrolling after a window is narrowed or zoomed.
 * Right to left, the homepage hero's words keep their contrast over the photograph and the film.
 * The footer's columns line up on one grid, and the focus ring shows for the keyboard, not after a mouse click.
-* The Unhurried Pro card and notice say that all sales are final, and open the Pro page in the same tab.
+* The Unhurried Pro card on About Unhurried says that all sales are final. Its button, and the button of the notice shown with WooCommerce, open the Pro page in the same tab.
 * The Theme URI is now https://unhurried.skin. The About Unhurried screen credits the photographs to the Cleveland Museum of Art and the Rijksmuseum.
 
 = 1.2.0 =
