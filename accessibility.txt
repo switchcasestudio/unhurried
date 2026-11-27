@@ -18,7 +18,7 @@ Automated tools:
 
 Scripted checks:
 
-* Keyboard only, in Chromium, Firefox and WebKit (Safari's engine): the skip link comes first, every stop shows a focus ring, and nothing hidden takes focus.
+* Keyboard only, in Chromium, Firefox and WebKit (Safari's engine): the skip link comes first, every stop shows a focus ring, and nothing hidden takes focus, though with motion on a part that focus brings into view can still be fading in for under a second.
 * Menus: the phone menu keeps focus inside while it is open and Escape closes it (Chromium); dropdowns open on hover and from the keyboard (Enter on their toggle), stay open while the pointer rests on them, and close with Escape (Chromium, Firefox and WebKit).
 * Headings, landmarks and the names of controls, read from the browser's accessibility tree.
 * Reflow: widths from 320 to 1920 pixels on a fresh load; and a page already open in a 1280-pixel window, narrowed to 640 and 320 pixels (the widths that 200% and 400% zoom give), in Chromium, Firefox and WebKit, and in Chromium also with the WCAG text spacing settings. The window was narrowed; the browser's zoom itself was not used.
