@@ -37,7 +37,7 @@ While Unhurried 1.2 was built, the work was tested again, in rounds, by separate
 
 `.screen-reader-text`
 
-Add it to a block under Advanced, Additional CSS class(es): the block's text is hidden from sight and still read by screen readers. A link or button with the class becomes visible while it has keyboard focus, as the skip link does. The theme's own templates also use `.unhurried-visually-hidden`, which hides text the same way.
+Add it to a block of text, such as a paragraph or a heading, under Advanced, Additional CSS class(es): the block's text is hidden from sight and still read by screen readers. Keep links and buttons out of a block hidden this way: a link or button inside it still takes keyboard focus, and stays out of sight while it has it. A link that carries the class itself (written in a Custom HTML block, for one) becomes visible while it has keyboard focus, as the skip link does. The theme's own templates also use `.unhurried-visually-hidden`, which hides text the same way.
 
 == Accessibility Features ==
 

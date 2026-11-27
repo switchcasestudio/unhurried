@@ -27,7 +27,7 @@ The theme includes:
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
-* Add the class `screen-reader-text` to any block to hide its text from sight while screen readers still read it.
+* Add the class `screen-reader-text` to a block of text, such as a paragraph or a heading, to hide its text from sight while screen readers still read it. Keep links and buttons out of a block hidden this way: they would still take keyboard focus, out of sight.
 * Two header patterns: centered title, and quiet (no navigation).
 * A journal with breadcrumbs, topic chips, a posts-only search, reading time, related posts, an author box and a reading progress bar, plus a Topics directory page pattern and a long-form Essay pattern.
 * An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section (a drawn map, or a live Google map with a free plugin, see Live Google map below), a quiet footer, and a footer with visit details for your address and email.
