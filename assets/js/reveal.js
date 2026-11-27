@@ -332,14 +332,22 @@
 				later( slice );
 				return;
 			}
-			// Read once more (a reader may have scrolled meanwhile), then write.
-			var tops = plan.map( function ( el ) {
-				return el.getBoundingClientRect().top;
+			// Read once more (a reader may have scrolled, or the window
+			// narrowed, meanwhile), then write.
+			var boxes = plan.map( function ( el ) {
+				return el.getBoundingClientRect();
 			} );
+			var narrowNow = window.innerWidth < 782;
+			var widthNow = document.documentElement.clientWidth;
 			plan.forEach( function ( el, n ) {
 				var kind = kindOf.get( el );
-				if ( 'draw' !== kind && 'words' !== kind && tops[ n ] < window.innerHeight ) {
+				if ( 'draw' !== kind && 'words' !== kind && boxes[ n ].top < window.innerHeight ) {
 					return;
+				}
+				// A column whose room to travel is gone rises instead
+				// (reveal-late.js keeps this true after a later resize).
+				if ( /^side-/.test( kind ) && ( narrowNow || ( ( 'side-start' === kind ) !== rtl ? boxes[ n ].left < 64 : widthNow - boxes[ n ].right < 64 ) ) ) {
+					kind = 'rise';
 				}
 				el.setAttribute( 'data-uh', kind );
 				if ( 'line' === kind && hooks.watch ) {

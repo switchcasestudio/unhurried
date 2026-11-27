@@ -352,6 +352,49 @@
 		document.querySelectorAll( '[data-uh="line"]:not(.uh-split):not(.is-in)' ).forEach( hooks.watch );
 	}
 
+	/* ── Split layouts after the window narrows ───────────────────────── */
+	// reveal.js lets the two columns of a split layout arrive from their own
+	// sides when the window is at least 782px wide and each column has 64px
+	// to travel, measured once, at load. A window narrowed later (resized,
+	// zoomed to 200 or 400%, a tablet turned) left a column that had not yet
+	// entered reaching past the edge, and the page scrolled sideways until it
+	// did. Such a column now rises instead, as it would after a fresh load.
+	var sidesQueued = false;
+	var sides = function () {
+		sidesQueued = false;
+		var waiting = document.querySelectorAll( '[data-uh="side-start"]:not(.is-in), [data-uh="side-end"]:not(.is-in)' );
+		if ( ! waiting.length ) {
+			return;
+		}
+		var width = document.documentElement.clientWidth;
+		var narrow = window.innerWidth < 782;
+		var rtl = 'rtl' === window.getComputedStyle( document.body ).direction;
+		// Read every box, then write.
+		var rise = [];
+		Array.prototype.forEach.call( waiting, function ( el ) {
+			var row = el.parentElement;
+			// The box as laid out, without the sideways offset it waits at.
+			var shift = parseFloat( window.getComputedStyle( el ).translate ) || 0;
+			var box = el.getBoundingClientRect();
+			var start = 'side-start' === el.getAttribute( 'data-uh' );
+			var room = start !== rtl ? box.left - shift : width - ( box.right - shift );
+			if ( narrow || ! row || 2 !== row.children.length || room < 64 ) {
+				rise.push( el );
+			}
+		} );
+		rise.forEach( function ( el ) {
+			el.setAttribute( 'data-uh', 'rise' );
+		} );
+	};
+	window.addEventListener( 'resize', function () {
+		if ( ! sidesQueued ) {
+			sidesQueued = true;
+			window.requestAnimationFrame( sides );
+		}
+	} );
+	sides();
+
+
 	/* ── Figures count up ─────────────────────────────────────────────── */
 	// From zero to their printed value, in the author's own format ("1,200",
 	// "12,5", "1.200.000"), ending as exactly what the author wrote. While
