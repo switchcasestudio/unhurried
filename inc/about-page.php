@@ -176,7 +176,7 @@ if ( ! function_exists( 'unhurried_about_screen' ) ) :
 				<h2><?php esc_html_e( 'Resources', 'unhurried' ); ?></h2>
 				<ul>
 					<li><?php esc_html_e( 'Hanken Grotesk, Inter and Fraunces: SIL Open Font License 1.1.', 'unhurried' ); ?></li>
-					<li><?php esc_html_e( 'Photographs: StockSnap.io, the WordPress.org Photo Directory and the Rijksmuseum, all CC0 1.0. Credits per file are in readme.txt.', 'unhurried' ); ?></li>
+					<li><?php esc_html_e( 'Photographs: the Cleveland Museum of Art\'s Open Access collection and the Rijksmuseum, all CC0 1.0. Credits per file are in readme.txt.', 'unhurried' ); ?></li>
 				</ul>
 				<p class="ua-review">
 					<?php
