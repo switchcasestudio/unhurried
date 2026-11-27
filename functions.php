@@ -30,6 +30,11 @@ if ( ! function_exists( 'unhurried_setup' ) ) :
 	 */
 	function unhurried_setup() {
 		add_theme_support( 'wp-block-styles' );
+		// HTML5 markup, said in the theme's own words: what WordPress gives
+		// every block theme, plus navigation-widgets, which wraps a classic
+		// Navigation Menu widget in a <nav> landmark (accessibility-ready).
+		// WordPress merges this list with its own, so nothing is dropped.
+		add_theme_support( 'html5', array( 'navigation-widgets', 'comment-form', 'comment-list', 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 		add_editor_style( 'style.css' );
 		// A short summary for pages, shown as the lede of service pages and
 		// on the cards that list them.
