@@ -27,6 +27,7 @@ The theme includes:
 * Two page templates without a title: Canvas and Ground artboard. Use Ground artboard with the Homepage pattern.
 * A small, optional reveal-on-scroll effect. Choose the Reveal on scroll block style, or add the class `unhurried-reveal` to any block. It is switched off for visitors who prefer reduced motion, and content stays visible without JavaScript.
 * Add the class `unhurried-mono` to any block to show its images in grayscale.
+* Add the class `screen-reader-text` to any block to hide its text from sight while screen readers still read it.
 * Two header patterns: centered title, and quiet (no navigation).
 * A journal with breadcrumbs, topic chips, a posts-only search, reading time, related posts, an author box and a reading progress bar, plus a Topics directory page pattern and a long-form Essay pattern.
 * An opening hours card, a newsletter band, a names strip for stockists or press, story rows, a gift card, a map and directions section (a drawn map, or a live Google map with a free plugin, see Live Google map below), a quiet footer, and a footer with visit details for your address and email.
@@ -54,6 +55,10 @@ Install the free Newsletter plugin (wordpress.org/plugins/newsletter), which kee
 = How do I add Privacy, Terms and Returns pages? =
 
 Create a page called Privacy, keep the default template, and pick the Policy page pattern when WordPress offers page patterns (or add it from the Patterns tab, under Pages). Put your own policy in place of the placeholder text, publish the page and choose it under Settings > Privacy. Make Terms and Returns the same way, at the addresses /terms/ and /returns/. The footer lists each page once it is published, and leaves out any you do not have.
+
+= Is Unhurried accessible? =
+
+It is built to WCAG 2.2 at level AA and to WordPress's accessibility-ready requirements: a skip link, landmarks, a visible focus ring for the keyboard, readable contrast in all 20 looks, underlined links in text, and no movement for visitors who ask for reduced motion. The file accessibility.txt in the theme's folder says how it was tested, what has not been tested yet (a screen reader pass), and where to report a problem.
 
 = How do I add my social profiles? =
 
@@ -96,6 +101,21 @@ Without a plugin:
 The map comes from Google: visitors' browsers load it from google.com only once they scroll within about a screen of it, and only on pages that show it. Mention Google Maps in your privacy policy.
 
 == Changelog ==
+
+= 1.2.1 =
+* The first update after 1.1.1: everything listed under 1.2.0 and 1.1.2 below comes with it. Requires WordPress 7.0; on an older WordPress, the site keeps 1.1.1.
+* The homepage hero can play a short silent film of your own behind the words, with a pause button. A new pattern, Hero, framed picture, sets the same David in a rounded frame beside the headline.
+* A live Google map, free and without an API key, with the Gmap Block plugin. It takes the theme's look, and a pin drops onto your place. The homepage now ends with a map and directions. Without the plugin, the drawn map shows as before.
+* A Policy page pattern for your Privacy, Terms and Returns pages. Once they are published, the footer links to each one.
+* Menu: a dropdown waits a moment before it opens or closes, so a pointer passing over the menu opens nothing. Menu items fill with a pill under the pointer. The site title is set in capitals and rolls like the footer wordmark. The header steps aside while you read down and comes back on the way up.
+* Motion: one calm set of timings for everything that moves. Headings arrive line by line and photographs drift gently inside their frames. With WooCommerce, product, cart, checkout and account pages hold still. Nothing moves for visitors who ask for reduced motion.
+* Touch screens: the menu buttons, the header button, topic chips and the film's pause button take taps across 44 pixels, and a tapped button no longer looks pressed.
+* Phones: the header fits at 200% page zoom, no page scrolls sideways, and the homepage hero fits a phone held sideways.
+* Accessibility: an accessibility.txt file, a screen-reader-text class for your own hidden text, links in text that keep their underline under the pointer, and no sideways scrolling after a window is narrowed or zoomed.
+* Right to left, the homepage hero's words keep their contrast over the photograph and the film.
+* The footer's columns line up on one grid, and the focus ring shows for the keyboard, not after a mouse click.
+* The Unhurried Pro card and notice say that all sales are final, and open the Pro page in the same tab.
+* The Theme URI is now https://unhurried.skin. The About Unhurried screen credits the photographs to the Cleveland Museum of Art and the Rijksmuseum.
 
 = 1.2.0 =
 * Requires WordPress 7.0. The journal's breadcrumbs, topic lists, results count and reading time need blocks first shipped together in 7.0. On an older WordPress, the site keeps the version it has.
