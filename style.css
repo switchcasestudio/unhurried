@@ -618,6 +618,38 @@ header.wp-block-template-part:has(> .unhurried-header > .unhurried-marquee) { --
 	white-space: nowrap;
 	border: 0;
 }
+/* Screen reader text (1.2.1, accessibility-ready; named in accessibility.txt).
+   Add the class to any block under Advanced: its text is hidden from sight
+   and still read by screen readers. WordPress's own rules, carried by the
+   theme. word-wrap is !important as in WordPress: a block's own setting must
+   not make a screen reader spell the text out letter by letter. */
+.screen-reader-text {
+	border: 0;
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+/* A focusable one, such as the skip link, shows at the top while it has focus. */
+.screen-reader-text:focus {
+	background-color: var(--wp--preset--color--base);
+	clip-path: none;
+	color: var(--wp--preset--color--contrast);
+	display: block;
+	font-size: 1em;
+	height: auto;
+	inset-inline-start: 5px;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+	z-index: 100000; /* Above the WordPress toolbar. */
+}
 
 /* Footer lead line: the site tagline, set large (Footer with wordmark, 1.1.2) */
 .unhurried-footer-lead { max-width: 24ch; text-wrap: balance; }

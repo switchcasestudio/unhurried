@@ -1,0 +1,56 @@
+=== Accessibility Statement ===
+
+Unhurried is made to be read and used by everyone: with a keyboard, with the browser's zoom or a screen magnifier, with your own text spacing, with reduced motion, and in right-to-left languages. We work to WCAG 2.2 at level AA and to the WordPress accessibility-ready requirements, and we fix what we find in the next release. The theme has not yet been reviewed for the accessibility-ready tag, and it has not yet been tested with a screen reader.
+
+== Quick Information ==
+
+Accessibility audit completed: No
+
+== Testing Tools and Methodology ==
+
+Unhurried 1.2 was built and tested in November 2026 by the theme's author, with automated tools and by hand, on test sites holding the theme's demo pages and posts.
+
+Automated tools:
+
+* axe-core (WCAG 2.0, 2.1 and 2.2, levels A and AA) through Playwright in Chromium, on the theme's pages in all 20 looks, at phone and desktop widths.
+* A contrast check of the theme's text and controls in all 20 looks, including their hover, focus and error states.
+* Block validation of every template, template part and pattern in the Site Editor.
+
+Checks by hand and by script:
+
+* Keyboard only, in Chromium, Firefox and WebKit (Safari's engine): the skip link comes first, every stop shows a focus ring, nothing hidden takes focus, the phone menu keeps focus inside while it is open, and Escape closes it.
+* Headings, landmarks and the names of controls, read from the browser's accessibility tree.
+* Reflow: widths from 320 to 1920 pixels, and a 1280-pixel window at 200% and 400%, both on a fresh load and after narrowing a page that is already open, with and without the WCAG text spacing settings.
+* Reduced motion (nothing moves), the browser's forced colors (high contrast) mode, printing, pages without JavaScript, and right-to-left languages.
+* Mobile Safari on iPhone and iPad simulators: touch targets and page zoom up to 200%.
+
+Not done yet:
+
+* No test with a screen reader (VoiceOver, NVDA, TalkBack). Hidden text and the names of controls were checked in the accessibility tree only.
+* No testing with people who use assistive technology, and no outside audit.
+* Firefox's Zoom text only setting.
+
+While Unhurried 1.2 was built, an independent reviewer tested each change again before it was merged.
+
+== Screen Reader Text Class ==
+
+`.screen-reader-text`
+
+Add it to a block under Advanced, Additional CSS class(es): the block's text is hidden from sight and still read by screen readers. A link or button with the class shows at the top of the window while it has keyboard focus, as the skip link does. The theme's own templates also use `.unhurried-visually-hidden`, which hides text the same way.
+
+== Accessibility Features ==
+
+* Motion follows the visitor's setting: with reduced motion, nothing moves. The moving line above the header and the homepage film each have a pause button. Add the class `unhurried-still` to any block to keep it still for everyone.
+* The focus ring shows for the keyboard on every surface and in every look, and not after a mouse click.
+* Every text color pair in all 20 looks passes WCAG AA contrast. The six dark looks tell the browser the page is dark, so its own scrollbars and form fields turn dark too.
+* Links in text are underlined, and the underline grows heavier under the pointer.
+* On touch screens, the menu buttons, the header button, topic chips and the film's pause button take taps across 44 pixels.
+* Right-to-left layouts mirror, and text over photographs keeps its contrast in both directions.
+
+== Accessibility Help Contact ==
+
+Email hello@switchcasestudio.com
+
+== Where to Report Issues ==
+
+Email hello@switchcasestudio.com with the page address, what you were doing, and the browser and any assistive technology you use.
