@@ -198,6 +198,12 @@
 						return;
 					}
 				}
+				// What a closed accordion holds never waits: it shows, with the
+				// opening fade (scroll.css), once opened. Chromium did not always
+				// report an answer planned while closed, which stayed invisible.
+				if ( el.parentElement && el.parentElement.closest( 'details:not([open])' ) && ! el.closest( 'summary' ) ) {
+					return;
+				}
 				candidates.push( el );
 			} );
 		} );
