@@ -30,7 +30,7 @@ Not done yet:
 * No testing with people who use assistive technology, and no outside audit.
 * Firefox's Zoom text only setting.
 
-While Unhurried 1.2 was built, an independent reviewer tested each change again before it was merged.
+While Unhurried 1.2 was built, independent reviewers tested the work again, in rounds, before it was merged.
 
 == Screen Reader Text Class ==
 
