@@ -41,7 +41,7 @@ Add it to a block of text, such as a paragraph or a heading, under Advanced, Add
 
 == Accessibility Features ==
 
-* Motion follows the visitor's setting: with reduced motion, nothing moves. The moving line above the header and the homepage film each have a pause button. Add the class `unhurried-still` to any block to keep it still for everyone.
+* Motion follows the visitor's setting: with reduced motion, nothing moves. The moving line above the header and the homepage film each have a pause button. Add the class `unhurried-still` to a block to keep it and everything in it still for everyone: nothing in it enters, drifts with the scroll or moves by itself. What answers the pointer or the keyboard (a photograph easing closer, the footer wordmark's roll) still moves, and a film in it plays until it is paused.
 * The focus ring shows for the keyboard on every surface and in every look, and not after a mouse click.
 * Every text color pair in all 20 looks passes WCAG AA contrast. The six dark looks tell the browser the page is dark, so its own scrollbars and form fields turn dark too.
 * Links in text are underlined, and the underline grows heavier under the pointer.

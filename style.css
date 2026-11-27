@@ -1097,6 +1097,20 @@ figure.unhurried-frame:not(.unhurried-arch *):has(a:focus-visible) { outline: 2p
 @keyframes uh-page-out { to { opacity: 0; } }
 @keyframes uh-page-in { from { opacity: 0; } }
 
+/* A block with the class unhurried-still (1.2.1) holds still for everyone, with
+   everything in it: reveal.js gives none of it an entrance, and here nothing in it
+   drifts or turns with the scroll, draws in or moves by itself (a Cover's photograph,
+   a moving line), on ::before and ::after too. What answers the pointer or the
+   keyboard still moves, and a film plays until it is paused (accessibility.txt).
+   Not the page itself: purchase pages carry the class on body for their entrances
+   only. !important: the moving rules are more specific. */
+:not(body).unhurried-still,
+:not(body).unhurried-still::before,
+:not(body).unhurried-still::after,
+:not(body).unhurried-still *,
+:not(body).unhurried-still *::before,
+:not(body).unhurried-still *::after { animation: none !important; }
+
 /* 5. Reduced motion. !important: the visitor wins. */
 @media (prefers-reduced-motion: reduce) {
 	:root {
