@@ -2,7 +2,7 @@
 
 All notable changes to the free Unhurried theme.
 
-## 1.2.1 (unreleased)
+## 1.2.1 (2026-11-28)
 
 - **Theme URI is https://unhurried.skin** (was https://switchcasestudio.com/projects/unhurried), the theme's own site (owner's decision, 2026-11-26). Author URI is unchanged.
 - **Accessibility-ready groundwork** (WordPress.org's 18 requirements; the `accessibility-ready` tag itself is not added, as the handbook asks, until the accessibility team has reviewed the theme):
